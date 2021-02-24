@@ -1,7 +1,7 @@
-<img align="right" src="https://raw.githubusercontent.com/Kibo/aws-chime-backbone-client/master/src/img/amazon-chime-logo.png?v1">
-<img align="right" src="https://raw.githubusercontent.com/Kibo/aws-chime-backbone-client/master/src/img/backbone-logo.png?v1">
-
 # AWS Chime Backbone webclient
+
+<img align="right" src="https://raw.githubusercontent.com/Kibo/aws-chime-backbone-client/master/src/img/amazon-chime-logo.png?v1"><br />
+<img align="right" src="https://raw.githubusercontent.com/Kibo/aws-chime-backbone-client/master/src/img/backbone-logo.png?v1">
 
 AWS Chime webclient in Backbone.js wrapper.
 
