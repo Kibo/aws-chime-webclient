@@ -1,0 +1,5 @@
+.project
+node_modules/*
+.grunt/*
+package-lock.json
+.env

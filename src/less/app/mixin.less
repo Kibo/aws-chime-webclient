@@ -1,0 +1,17 @@
+.property_(@property, @value) {
+    _: 0 ~"; @{property}:" @value;
+}
+ 
+.vendor(@property, @value) {
+    .property_('-webkit-@{property}', @value);
+    .property_( '-khtml-@{property}', @value);
+    .property_(   '-moz-@{property}', @value);
+    .property_(          @property,   @value);
+}
+
+/* clearfix */
+.clear-fix(){
+    content: "";
+    display: table;
+    clear: both;
+}
