@@ -1,7 +1,7 @@
 {
-  "name": "aws-chime-client-backbone",
-  "version": "0.0.0",
-  "description": "AWS Chime Backbone webclient.",
+  "name": "aws-chime-client-backbone-demo",
+  "version": "1.0.0",
+  "description": "AWS Chime Backbone webclient demo.",
   "author": "Tomas Jurman <tomasjurman@gmail.com> (https://github.com/Kibo)",
   "repository": {
     "type": "git",
@@ -24,6 +24,8 @@
     "grunt-git": "^1.0.14",
     "load-grunt-tasks": "^5.1.0"
   },
-  "scripts": {  	
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
   }
 }

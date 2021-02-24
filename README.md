@@ -18,6 +18,10 @@ AWS Chime webclient in Backbone.js wrapper.
 - [NPM](https://npmjs.org) - Node.js package manager.
 - [Grunt](http://gruntjs.com/) - The JavaScript Task Runner.
 
+### Prerequisites
+* Ensure you have AWS credentials configured in your ~/.aws folder for a role with a policy allowing chime:CreateMeeting, chime:DeleteMeeting, and chime:CreateAttendee.
+* [Amazon Chime SDK Pricing](https://aws.amazon.com/chime/pricing/#Chime_SDK_)
+
 ### Before Build
 - pls, see [build.config.js](https://github.com/Kibo/aws-chime-backbone-client/blob/master/build.config.js).
 
@@ -28,8 +32,8 @@ $ cd aws-chime-backbone-client
 $ npm install 
 $ grunt build
 ```
-### Demo
-```
-$ grunt demo
-http://localhost:3000/meeting/123
-```
+### Running the browser demos with a local server
+
+1. Navigate to the demos folder: cd demos
+2. Start the demo application: npm run start.
+3. Open http://localhost:3000 in your browser.
