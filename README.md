@@ -23,8 +23,8 @@ AWS Chime webclient in Backbone.js wrapper.
 
 ### Build
 ```
-$ git clone https://github.com/Kibo/aws-chime-backbone-client
-$ cd TODO
+$ git clone git@github.com:Kibo/aws-chime-backbone-client.git
+$ cd aws-chime-backbone-client
 $ npm install 
 $ grunt build
 ```
