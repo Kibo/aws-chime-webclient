@@ -1,11 +1,11 @@
 {
   "name": "aws-chime-client-backbone",
   "version": "0.0.0",
-  "description": "AWS Chime webclient.",
+  "description": "AWS Chime Backbone webclient.",
   "author": "Tomas Jurman <tomasjurman@gmail.com> (https://github.com/Kibo)",
   "repository": {
     "type": "git",
-    "url": "git@bitbucket.org:Kibo/TODO.git"
+    "url": "git@github.com:Kibo/aws-chime-backbone-client.git"
   },
   "license": "MIT",   
   "dependencies": {

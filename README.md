@@ -18,11 +18,11 @@ AWS Chime webclient in Backbone.js wrapper.
 - [Grunt](http://gruntjs.com/) - The JavaScript Task Runner.
 
 ### Before Build
-- pls, see [build.config.js](#).
+- pls, see [build.config.js](https://github.com/Kibo/aws-chime-backbone-client/blob/master/build.config.js).
 
 ### Build
 ```
-	$ git clone https://github.com/Kibo/TODO.git
+	$ git clone https://github.com/Kibo/aws-chime-backbone-client
 	$ cd TODO
 	$ npm install 
 	$ grunt build
