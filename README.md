@@ -1,48 +1,33 @@
-# Express bootstrap
+# AWS Chime webclient - Backbone
+<img align="right" src="https://raw.githubusercontent.com/Kibo/Pimp/master/public/img/pimp_logo_200.png">
 
-- Express 4
-- MongoDB/Mongoose
-- Less CSS pre-processor
-- EJS templates
-- I18n
-- Passport
-- GruntJS
+AWS Chime webclient in Backbone.js wrapper.
 
-### Tool Prerequisites
+## Version
+- 0.0.0 ( coding )
 
+### Dependencies
+- amazon-chime-sdk-js (2.5.0)
+- Backbone.js (1.4.0)
+- Underscore.js ( >= 1.8.3)
+- jQuery ( >= 1.11.0)
+
+### Tools
 - [NPM](https://npmjs.org) - Node.js package manager.
 - [Grunt](http://gruntjs.com/) - The JavaScript Task Runner.
-- [Genghis](http://genghisapp.com/) - The single-file MongoDB admin app.
 
-## Install
-```
-  $ git clone git@bitbucket.org:Kibo/express-bootstrap.git
-  $ cd express-bootstrap
-  $ npm install 
-  $ grunt
-```
+### Before Build
+- pls, see [build.config.js](#).
 
-### Directory structure
+### Build
 ```
--app/
-  |__config/
-  |__controllers/
-  |__helper/
-  |__locales/
-  |__models/
-  |__mailer/
-  |__views/
-  |__routes/
-
--public/
-  |__css/ (all files will generate from Grunt)
-  |__js/
-  |__less/
-  |__fonts/
-  |__img/
-  favicon.ico
-  
--grunfile.js
--package.json
--server.js
+	$ git clone https://github.com/Kibo/TODO.git
+	$ cd TODO
+	$ npm install 
+	$ grunt build
+```
+### Demo
+```
+    $ grunt demo
+	http://localhost:3000/meeting/123
 ```
