@@ -9,9 +9,10 @@
   },
   "license": "MIT",
   "dependencies": {
-    "aws-sdk": "^2.850.0",
+    "aws-sdk": "^2.851.0",
     "dotenv": "^8.2.0",
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "uuid": "^3.3.2"
   },
   "devDependencies": {
     "@babel/core": "^7.13.1",
@@ -22,7 +23,6 @@
     "grunt-contrib-cssmin": "^4.0.0",
     "grunt-contrib-less": "^3.0.0",
     "grunt-contrib-uglify": "^5.0.0",
-    "grunt-git": "^1.0.14",
     "load-grunt-tasks": "^5.1.0"
   },
   "scripts": {}

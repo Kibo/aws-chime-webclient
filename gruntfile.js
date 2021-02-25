@@ -58,41 +58,9 @@ module.exports = function( grunt ) {
 			    	'public/vendor/bootstrap/bootstrap-4.5.0-dist/js/bootstrap.min.js',
 			    	'public/js/app.babel.js']
 			}
-	    },
-	    
-	    socketClient : {
-			files : {
-				'public/js/socket.io.client.all.min.js' : [
-					'public/vendor/socket.io-client/v3-0-5/socket.io.js',			    	
-					'public/js/socket.io.client.babel.js'],
-				'public/js/socket.io.admin.all.min.js' : [
-					'public/vendor/socket.io-client/v3-0-5/socket.io.js',			    	
-					'public/js/socket.io.admin.babel.js'],
-				'public/js/socket.io.observer.all.min.js' : [
-					'public/vendor/socket.io-client/v3-0-5/socket.io.js',			    	
-					'public/js/socket.io.observer.babel.js']	
-			}
-	    }
-	    
+	    }	    	  	 
 	},
-		
-	cachebreaker: {
-	    dev: {
-	        options: {
-	            match: ['all.min.js', 'all.min.css'],
-	        },
-	        files: {
-	            src: ['app/views/includes/head.ejs', 'app/views/includes/footer.ejs']
-	        }
-	    }
-	},
-                      
-    nodemon: {
-			dev: {
-    			script: 'server.js'
-  			}
-		},
-      	
+			     
   	watch: {
 		scripts: {
 			files: [
@@ -105,97 +73,19 @@ module.exports = function( grunt ) {
 			},
 		},
 	},
-		
-	concurrent:{
-      		tasks: [
-        		"watch",
-        		"nodemon"
-      		],
-      		options:{
-	        	logConcurrentOutput: true
-       		}        
-       	},
-       	
-       	
-	sftp: {		  		   
-			deploy:{
-		    	options: {
-		      	path: '/var/www/html/TODO',
-		      	host: 'TODO',
-		      	username: 'git',
-		      	port:18900, 
-		      	//privateKey: grunt.file.read('/home/TODO/.ssh/id_rsa'),
-		      	showProgress: true,
-		      	createDirectories: true,
-		      	srcBasePath: "/home/jurman/workspace-html/TODO/"
-		    	},
-		    	files: {		      		
-		      		"./": ['app/**', 'public/**', '*.*']
-		    	}
-		   	}		  
-		},
-		
-	gitadd: {
-		    task: {
-		      options: {
-		      	cwd: "/home/jurman/workspace-html/chat.kibo.cz",
-		      	all:true
-		      }
-		    }
-		  },
-		  
-		gitcommit: {
-		    task: {
-		        options: {
-		            message: 'v<%= pkg.version %>' 	
-		            }
-		        }
-		   },
-		   
-		gitpush: {
-		    your_target: {
-		      options: {
-		        remote:"origin",
-		    	branch:"master"
-		      }
-		    }
-		  },
-		  
-		shell: {
-	      pm2_deploy: {
-	        command: 'pm2 deploy production',
-	      }
-	    }							             				    	   	    
+				      
+								             				    	   	    
 	});
-
-	grunt.registerTask("default", [    	   
-   		"concurrent"
-  	]);
-  	
-  	grunt.registerTask("client", [    	   
-   		"babel",
-   		"uglify"
-  	]);
 	
 	grunt.registerTask( 'dev', [
-		"less:compile"					
-	]);	
-	
-	grunt.registerTask( 'git', [
-		"gitadd",
-		"gitcommit",
-		"gitpush"					
-	]);	
-		
-	grunt.registerTask( 'deploy', [
-		"less:compile",		
-		"cssmin",
-		"babel",
-		"uglify",		
-		"cachebreaker",
-		"gitadd",
-		"gitcommit",
-		"gitpush",
-		'shell:pm2_deploy'
+							
 	]);
+	  
+  	grunt.registerTask("build", [    	   
+   		
+  	]);
+	
+	grunt.registerTask( 'demo', [
+							
+	]);	
 };
