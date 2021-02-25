@@ -10,9 +10,8 @@ AWS Chime webclient in Backbone.js wrapper.
 ### Dependencies
 - [amazon-chime-sdk-js (2.5.0)](https://github.com/aws/amazon-chime-sdk-js)
 - [Backbone.js (1.4.0)](https://backbonejs.org/)
-	- [Underscore.js (1.10.2)](https://underscorejs.org/)
-	- [jQuery (3.5.1)](https://jquery.com/)
-- [Bootstrap (4.0.0)](https://getbootstrap.com/docs/4.0/getting-started/introduction/)
+	- [Underscore.js (>= 1.8.3)](https://underscorejs.org/)
+	- [jQuery (>= 1.11.0)](https://jquery.com/)
 
 ### Tools
 - [NPM](https://npmjs.org) - Node.js package manager.
@@ -23,7 +22,7 @@ AWS Chime webclient in Backbone.js wrapper.
 * [Amazon Chime SDK Pricing](https://aws.amazon.com/chime/pricing/#Chime_SDK_)
 
 ### Before Build
-- pls, see [build.config.js](https://github.com/Kibo/aws-chime-backbone-client/blob/master/build.config.js).
+- pls, see [.env](https://github.com/Kibo/aws-chime-backbone-client/blob/master/.env). You can change HTML templates, config files.
 
 ### Build
 ```
