@@ -33,6 +33,8 @@ $ grunt build
 ```
 ### Running the browser demos with a local server
 
-1. Navigate to the demo folder: cd demo
-2. Start the demo application: npm run start.
-3. Open http://localhost:3000 in your browser.
+```
+$ npm install 
+$ npm run start
+```
+Open http://localhost:3000 in your browser.
