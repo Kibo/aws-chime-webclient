@@ -22,7 +22,7 @@ AWS Chime webclient in Backbone.js wrapper.
 * [Amazon Chime SDK Pricing](https://aws.amazon.com/chime/pricing/#Chime_SDK_)
 
 ### Before Build
-- pls, see [.env](https://github.com/Kibo/aws-chime-backbone-client/blob/master/.env). You can change HTML templates, config files.
+- pls, see [.env](https://github.com/Kibo/aws-chime-backbone-client/blob/master/.env) You can build a customized AWS Chime client.
 
 ### Build
 ```
