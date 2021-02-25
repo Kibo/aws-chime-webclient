@@ -7,11 +7,12 @@
     "type": "git",
     "url": "git@github.com:Kibo/aws-chime-backbone-client.git"
   },
-  "license": "MIT",   
+  "license": "MIT",
   "dependencies": {
     "aws-sdk": "^2.850.0",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1"
-  }
+  },
   "devDependencies": {
     "@babel/core": "^7.13.1",
     "@babel/preset-env": "^7.13.5",
@@ -24,6 +25,5 @@
     "grunt-git": "^1.0.14",
     "load-grunt-tasks": "^5.1.0"
   },
-  "scripts": {  	
-  }
+  "scripts": {}
 }

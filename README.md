@@ -35,6 +35,6 @@ $ grunt build
 
 ```
 $ npm install 
-$ npm run start
+$ grunt demo
 ```
 Open http://localhost:3000 in your browser.
