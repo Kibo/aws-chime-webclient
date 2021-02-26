@@ -2,7 +2,7 @@
 
 <img align="right" src="https://raw.githubusercontent.com/Kibo/aws-chime-backbone-client/master/src/img/aws-chime-backbone-logo.png">
 
-AWS Chime webclient in Backbone.js wrapper.
+AWS Chime webclient in Backbone.js structure.
 
 ## Version
 - 0.1.0 ( coding )
