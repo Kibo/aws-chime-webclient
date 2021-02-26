@@ -8,12 +8,10 @@ AWS Chime webclient in Backbone.js wrapper.
 - 0.0.0 ( coding )
 
 ### Dependencies
-- [amazon-chime-sdk-js (2.5.0)](https://github.com/aws/amazon-chime-sdk-js)
 - [Backbone.js (1.4.0)](https://backbonejs.org/)
 	- [Underscore.js (>= 1.8.3)](https://underscorejs.org/)
 	- [jQuery (>= 1.11.0)](https://jquery.com/)
-- [lit-html(1.3.0)](https://lit-html.polymer-project.org/) - The extensible HTML templating library for JavaScript.	
-
+	
 ### Tools
 - [NPM](https://npmjs.org) - Node.js package manager.
 - [Webpack](https://webpack.js.org/) - The JavaScript module bundler.
