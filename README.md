@@ -5,7 +5,7 @@
 AWS Chime webclient in Backbone.js wrapper.
 
 ## Version
-- 0.0.0 ( coding )
+- 0.1.0 ( coding )
 
 ### Dependencies
 - [Backbone.js (1.4.0)](https://backbonejs.org/)
