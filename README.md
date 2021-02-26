@@ -16,10 +16,6 @@ AWS Chime webclient in Backbone.js wrapper.
 - [NPM](https://npmjs.org) - Node.js package manager.
 - [Webpack](https://webpack.js.org/) - The JavaScript module bundler.
 
-### Prerequisites
-* Ensure you have AWS credentials configured in your ~/.aws folder for a role with a policy allowing chime:CreateMeeting, chime:DeleteMeeting, and chime:CreateAttendee.
-* [Amazon Chime SDK Pricing](https://aws.amazon.com/chime/pricing/#Chime_SDK_)
-
 ### Before Build
 - pls, see [.env](https://github.com/Kibo/aws-chime-backbone-client/blob/master/.env)
 - pls, see [constants.js](https://github.com/Kibo/aws-chime-backbone-client/blob/master/src/modules/constants.js)
@@ -33,6 +29,8 @@ $ npm install
 $ npm run build
 ```
 ### Running the browser demos with a local server
+* Ensure you have AWS credentials configured in your ~/.aws folder for a role with a policy allowing chime:CreateMeeting, chime:DeleteMeeting, and chime:CreateAttendee.
+* [Amazon Chime SDK Pricing](https://aws.amazon.com/chime/pricing/#Chime_SDK_)
 
 ```
 $ npm run start
