@@ -1,7 +1,7 @@
 const express = require('express')
 const app = express()
 const port = 3000
-app.use(express.static('src'))
+app.use(express.static('dist'))
 
 const AWS = require('aws-sdk');
 const { v4: uuidv4 } = require('uuid');
