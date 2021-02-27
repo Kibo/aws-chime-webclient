@@ -10,6 +10,7 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
+    "amazon-chime-sdk-js": "^2.5.0",
     "aws-sdk": "^2.851.0",
     "dotenv": "^8.2.0",
     "ejs": "^3.1.6",
@@ -20,6 +21,7 @@
   "devDependencies": {
     "clean-webpack-plugin": "^3.0.0",
     "ejs-compiled-loader": "^3.0.0",
+    "source-map-loader": "^2.0.1",
     "webpack": "^5.24.2",
     "webpack-cli": "^4.5.0"
   },

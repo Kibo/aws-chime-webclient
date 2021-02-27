@@ -5,8 +5,9 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const TerserPlugin = require("terser-webpack-plugin");
 
 module.exports = {
-	mode: 'development',
 	watch: true,
+	mode: 'development',
+	devtool: "source-map",
 	cache: false,
 	
 	entry: {
@@ -15,6 +16,7 @@ module.exports = {
 	
 	output: {
 		filename: '[name]-chime.js',
+		sourceMapFilename: "[name]-chime.js.map",
 		path: path.resolve(__dirname, 'dist'),
 	},
 	
@@ -42,7 +44,7 @@ module.exports = {
 					`${process.env.PATH_TO_VIEW_TEMPLATES || './templates/html/bootstrap/v4_5'}`
 				);
 			}  			
-		),	
+		)			
 	],
 	
 	/*
