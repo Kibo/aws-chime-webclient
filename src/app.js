@@ -1,13 +1,16 @@
 import * as setting from 'PATH_TO_SETTING_TEMPLATE'; //see .env
-import * as templates from 'PATH_TO_VIEW_TEMPLATE'; //see .env
 import * as Constant from './modules/constants.js';
-import {render as renderEngine} from 'lit-html';
+
+const tplLogin = require('PATH_TO_VIEW_TEMPLATES/login.ejs')
+
+
 
 /* ## MODELS ########################################### */
 
 
 
 /* ## VIEWS ########################################### */
+
 
 var LoginView = Backbone.View.extend({
 	el: `#${Constant.ID_APP}`,
@@ -17,8 +20,11 @@ var LoginView = Backbone.View.extend({
 	},
 
 	render: function(){  
-		renderEngine(templates.myTemplate('AWS Chime client.'), this.el);
+		this.$el.html( tplLogin({name:'AWS Chime client'}));	
 	}
 });
 
 var loginView = new LoginView();
+var test = '123'
+
+
