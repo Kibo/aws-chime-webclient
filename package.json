@@ -1,14 +1,9 @@
 {
-  "name": "aws-chime-client-backbone",
-  "version": "0.1.0",
-  "description": "AWS Chime Backbone webclient.",
-  "author": "Tomas Jurman <tomasjurman@gmail.com> (https://github.com/Kibo)",
-  "repository": {
-    "type": "git",
-    "url": "git@github.com:Kibo/aws-chime-backbone-client.git"
-  },
-  "license": "MIT",
   "private": true,
+  "scripts": {
+    "build": "webpack",
+    "start": "node server.js"
+  },
   "dependencies": {
     "amazon-chime-sdk-js": "^2.5.0",
     "aws-sdk": "^2.851.0",
@@ -16,18 +11,28 @@
     "ejs": "^3.1.6",
     "express": "^4.17.1",
     "path": "^0.12.7",
-    "uuid": "^3.3.2"
+    "uuid": "^3.3.2",
+    "vue": "^3.0.0-beta.3"
   },
   "devDependencies": {
-    "clean-webpack-plugin": "^3.0.0",
-    "ejs-compiled-loader": "^3.0.0",
-    "source-map-loader": "^2.0.1",
-    "webpack": "^5.24.2",
-    "webpack-cli": "^4.5.0"
+    "@vue/compiler-sfc": "^3.0.0-beta.3",
+    "css-loader": "^3.5.2",
+    "file-loader": "^6.0.0",
+    "mini-css-extract-plugin": "^0.9.0",
+    "stylus": "^0.54.7",
+    "stylus-loader": "^3.0.2",
+    "url-loader": "^4.1.0",
+    "vue-loader": "^16.0.0-alpha.3",
+    "vue-style-loader": "^4.1.2",
+    "webpack": "^4.42.1",
+    "webpack-cli": "^3.3.11"
   },
-  "scripts": {
-    "build": "webpack",
-    "start": "node server.js",
-    "patch": "npm version patch"
+  "version": "0.1.0",
+  "name": "aws-chime-client",
+  "description": "AWS Chime Backbone webclient.",
+  "author": "Tomas Jurman <tomasjurman@gmail.com> (https://github.com/Kibo)",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:Kibo/aws-chime-client.git"
   }
 }

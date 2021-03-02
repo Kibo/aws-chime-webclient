@@ -1,30 +1,28 @@
-# AWS Chime Backbone webclient
+# AWS Chime webclient
 
-<img align="right" src="https://raw.githubusercontent.com/Kibo/aws-chime-backbone-client/master/src/img/aws-chime-backbone-logo.png">
+<img align="right" src="https://raw.githubusercontent.com/Kibo/aws-chime-webclient/master/src/img/aws-chime-webclient-logo.png">
 
-AWS Chime webclient in Backbone.js structure.
+AWS Chime webclient using Vue.js, Bootstrap 4.
 
 ## Version
 - 0.1.0 ( coding )
 
 ### Dependencies
-- [Backbone.js (1.4.0)](https://backbonejs.org/)
-	- [Underscore.js (>= 1.8.3)](https://underscorejs.org/)
-	- [jQuery (>= 1.11.0)](https://jquery.com/)
+- TODO
 	
 ### Tools
 - [NPM](https://npmjs.org) - Node.js package manager.
 - [Webpack](https://webpack.js.org/) - The JavaScript module bundler.
 
 ### Before Build
-- pls, see [.env](https://github.com/Kibo/aws-chime-backbone-client/blob/master/.env)
-- pls, see [constants.js](https://github.com/Kibo/aws-chime-backbone-client/blob/master/src/modules/constants.js)
-- pls, see [setting templates](https://github.com/Kibo/aws-chime-backbone-client/blob/master/src/settings). You can build a customized AWS Chime client.
+- pls, see [.env](https://github.com/Kibo/aws-chime-webclient/blob/master/.env)
+- pls, see [constants.js](https://github.com/Kibo/aws-chime-webclient/blob/master/src/modules/constants.js)
+- pls, see [setting templates](https://github.com/Kibo/aws-chime-webclient/blob/master/src/settings). You can build a customized AWS Chime client.
 
 ### Build
 ```
-$ git clone git@github.com:Kibo/aws-chime-backbone-client.git
-$ cd aws-chime-backbone-client
+$ git clone git@github.com:Kibo/aws-chime-webclient.git
+$ cd aws-chime-client
 $ npm install 
 $ npm run build
 ```

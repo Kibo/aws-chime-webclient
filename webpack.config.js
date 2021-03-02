@@ -1,76 +1,66 @@
-const path = require('path');
-const webpack = require('webpack');
-require('dotenv').config()
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const TerserPlugin = require("terser-webpack-plugin");
+const path = require("path");
+const { VueLoaderPlugin } = require("vue-loader");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
-module.exports = {
+module.exports = (env = {}) => ({
 	watch: true,
-	mode: 'development',
-	devtool: "source-map",
-	cache: false,
-	
+	mode: env.prod ? "production" : "development",
+	devtool: env.prod ? "source-map" : "cheap-module-eval-source-map",
+
 	entry: {
-		client: './src/app.js'
+		client: './src/main.js'
 	},
-	
 	output: {
 		filename: '[name]-chime.js',
-		sourceMapFilename: "[name]-chime.js.map",
-		path: path.resolve(__dirname, 'dist'),
+		path: path.resolve(__dirname, "./dist"),
+		publicPath: "/dist/"
 	},
-	
-	plugins: [			
-		new CleanWebpackPlugin(),
-		
-		/*
-		 * This plugin replace a string placed in src/app.js with values placed in .env
-		 * @see .env 
-		 */
-		new webpack.NormalModuleReplacementPlugin(
-  			/(.*)PATH_TO_SETTING_TEMPLATE(\.*)/,
-  			function (resource) {    						
-				resource.request = resource.request.replace(
-					/PATH_TO_SETTING_TEMPLATE/,
-					`${process.env.PATH_TO_SETTING_TEMPLATE || './settings/allFeatures.js'}`
-				);
-			}  			
-		),
-		new webpack.NormalModuleReplacementPlugin(
-			/(.*)PATH_TO_VIEW_TEMPLATES(\.*)/,
-			function (resource) {    						
-				resource.request = resource.request.replace(
-					/PATH_TO_VIEW_TEMPLATES/,
-					`${process.env.PATH_TO_VIEW_TEMPLATES || './templates/html/bootstrap/v4_5'}`
-				);
-			}  			
-		)			
-	],
-	
-	/*
-	 * Suppress create LICENCE.txt file in dist folder.
-	 */		  	  	
-	optimization: {
-	    minimize: false,
-	    minimizer: [new TerserPlugin({extractComments:false})],
-  	},
-  	  	
-	/*
-	 * This compile ejs templates
-	 */	
-	module: { rules:[{
-			test : /\.ejs$/,
-			use : {
-				loader : 'ejs-compiled-loader',
-				options : {
-					compileDebug: true,
-					beautify: true,
-					htmlmin : true,
-					htmlminOptions : {
-						removeComments : true
-					}
-				}
-			}
-		}]
-	}
-};
+	resolve: {
+		alias: {
+		// this isn't technically needed, since the default `vue` entry for bundlers
+		// is a simple `export * from '@vue/runtime-dom`. However having this
+      // extra re-export somehow causes webpack to always invalidate the module
+      // on the first HMR update and causes the page to reload.
+      vue: "@vue/runtime-dom"
+    }
+  },
+  module: {
+    rules: [
+      {
+        test: /\.vue$/,
+        use: "vue-loader"
+      },
+      {
+        test: /\.png$/,
+        use: {
+          loader: "url-loader",
+          options: { limit: 8192 }
+        }
+      },
+      {
+        test: /\.css$/,
+        use: [
+          {
+            loader: MiniCssExtractPlugin.loader,
+            options: { hmr: !env.prod }
+          },
+          "css-loader"
+        ]
+      },
+      {
+        test: /\.stylus$/,
+        use: ["vue-style-loader", "css-loader", "stylus-loader"]
+      },
+      {
+        test: /\.pug$/,
+        loader: "pug-plain-loader"
+      }
+    ]
+  },
+  plugins: [
+    new VueLoaderPlugin(),
+    new MiniCssExtractPlugin({
+      filename: "[name].css"
+    })
+  ]
+});
