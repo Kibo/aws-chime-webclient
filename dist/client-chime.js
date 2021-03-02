@@ -28158,6 +28158,88 @@ function createVersionParts(count) {
 
 /***/ }),
 
+/***/ "./src/templates/html/bootstrap/v4_5/alert.ejs":
+/*!*****************************************************!*\
+  !*** ./src/templates/html/bootstrap/v4_5/alert.ejs ***!
+  \*****************************************************/
+/***/ ((module) => {
+
+module.exports = function anonymous(locals, escapeFn, include, rethrow
+) {
+rethrow = rethrow || function rethrow(err, str, flnm, lineno, esc){
+  var lines = str.split('\n');
+  var start = Math.max(lineno - 3, 0);
+  var end = Math.min(lines.length, lineno + 3);
+  var filename = esc(flnm); // eslint-disable-line
+  // Error context
+  var context = lines.slice(start, end).map(function (line, i){
+    var curr = i + start + 1;
+    return (curr == lineno ? ' >> ' : '    ')
+      + curr
+      + '| '
+      + line;
+  }).join('\n');
+
+  // Alter exception message
+  err.path = filename;
+  err.message = (filename || 'ejs') + ':'
+    + lineno + '\n'
+    + context + '\n\n'
+    + err.message;
+
+  throw err;
+};
+escapeFn = escapeFn || function (markup) {
+  return markup == undefined
+    ? ''
+    : String(markup)
+      .replace(_MATCH_HTML, encode_char);
+};
+var _ENCODE_HTML_RULES = {
+      "&": "&amp;"
+    , "<": "&lt;"
+    , ">": "&gt;"
+    , '"': "&#34;"
+    , "'": "&#39;"
+    }
+  , _MATCH_HTML = /[&<>'"]/g;
+function encode_char(c) {
+  return _ENCODE_HTML_RULES[c] || c;
+};
+;
+var __line = 1
+  , __lines = "\n<p>HEJ HEJ</p>\n\n<%for (const message of messages){%>\n\t<div class=\"alert alert-<%=message.get('type')%> alert-dismissible fade show\" role=\"alert\">\n\t\t<%=message.get('text')%>\n\t\t<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\">\n\t\t\t<span aria-hidden=\"true\">&times;</span>\n\t\t</button>\n\t</div>\n<%}%>\n\n"
+  , __filename = "src/templates/html/bootstrap/v4_5/alert.ejs";
+try {
+  var __output = "";
+  function __append(s) { if (s !== undefined && s !== null) __output += s }
+  with (locals || {}) {
+    ; __append("\n<p>HEJ HEJ</p>\n\n")
+    ; __line = 4
+    ; for (const message of messages){
+    ; __append("\n	<div class=\"alert alert-")
+    ; __line = 5
+    ; __append(escapeFn(message.get('type')))
+    ; __append(" alert-dismissible fade show\" role=\"alert\">\n		")
+    ; __line = 6
+    ; __append(escapeFn(message.get('text')))
+    ; __append("\n		<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\">\n			<span aria-hidden=\"true\">&times;</span>\n		</button>\n	</div>\n")
+    ; __line = 11
+    ; }
+    ; __append("\n\n")
+    ; __line = 13
+  }
+  return __output;
+} catch (e) {
+  rethrow(e, __lines, __filename, __line, escapeFn);
+}
+
+//# sourceURL=src/templates/html/bootstrap/v4_5/alert.ejs
+
+}
+
+/***/ }),
+
 /***/ "./src/templates/html/bootstrap/v4_5/login.ejs":
 /*!*****************************************************!*\
   !*** ./src/templates/html/bootstrap/v4_5/login.ejs ***!
@@ -28208,14 +28290,14 @@ function encode_char(c) {
 };
 ;
 var __line = 1
-  , __lines = "<div class=\"row mt-4\">\n\t<div class=\"col-12 col-sm-12 col-md-6 offset-md-3\">\n\t\t\n\t\t<div class=\"card\">\n\t\t\t<div class=\"card-header\">Join the meeting</div>\t\n\t\t\t<div class=\"card-body\">\t\t\t\t\n\t\t\t\t<form id=\"form-login\">\t\t\t\t\t\t\t\t\n\t\t\t\t\t<div class=\"form-group\">\t\t\t\t\t\t\n\t\t\t\t\t\t<div class=\"input-group mb-2\">\n\t\t\t\t\t\t\t<div class=\"input-group-prepend\">\n\t\t\t\t\t\t\t\t<div class=\"input-group-text\">&#128104;</div>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control\" name=\"name\" placeholder=\"Your name during the meeting.\" maxlength=\"100\" autocomplete=\"off\" required>\n\t\t\t\t\t\t</div>\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t</div>\n\t\t\t\t\t<div class=\"form-group\">\n\t\t\t\t\t\t<div class=\"input-group mb-2\">\n\t\t\t\t\t\t\t<div class=\"input-group-prepend\">\n\t\t\t\t\t\t\t\t<div class=\"input-group-text\">&#128273;</div>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control\" name=\"pin\" placeholder=\"PIN to join the meeting.\" maxlength=\"100\" autocomplete=\"off\" required>\n\t\t\t\t\t\t</div>\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t</div>\n\t\t\t\t\t\n\t\t\t\t\t<div>\n\t\t\t\t\t\t<button name=\"btn-join\" class=\"btn btn-block btn-success\">Join</button>\t\t\t\t\t\t\n\t\t\t\t\t</div>\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t</form>\n\t\t\t</div>\n\t\t</div>\n\t\t\t\t\t\n\t</div>\n</div>\n\n\n"
+  , __lines = "<div class=\"row mt-4\">\n\t<div class=\"col-12 col-sm-12 col-md-6 offset-md-3\">\n\t\t\n\t\t<div class=\"card\">\n\t\t\t<div class=\"card-header\">Join the meeting</div>\t\n\t\t\t<div class=\"card-body\">\t\t\t\t\n\t\t\t\t<form id=\"cz-kibo-meeting-chime-client-form-login\">\n\t\t\t\t\t<div class=\"cz-kibo-meeting-chime-client-alert-root\"></div>\t\t\t\t\t\t\t\t\n\t\t\t\t\t<div class=\"form-group\">\t\t\t\t\t\t\n\t\t\t\t\t\t<div class=\"input-group mb-2\">\n\t\t\t\t\t\t\t<div class=\"input-group-prepend\">\n\t\t\t\t\t\t\t\t<div class=\"input-group-text\">&#128104;</div>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control\" name=\"name\" placeholder=\"Your name during the meeting.\" maxlength=\"100\" autocomplete=\"off\" required>\n\t\t\t\t\t\t</div>\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t</div>\n\t\t\t\t\t<div class=\"form-group\">\n\t\t\t\t\t\t<div class=\"input-group mb-2\">\n\t\t\t\t\t\t\t<div class=\"input-group-prepend\">\n\t\t\t\t\t\t\t\t<div class=\"input-group-text\">&#128273;</div>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control\" name=\"pin\" placeholder=\"PIN to join the meeting.\" maxlength=\"100\" autocomplete=\"off\" required>\n\t\t\t\t\t\t</div>\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t\t</div>\n\t\t\t\t\t\n\t\t\t\t\t<div>\n\t\t\t\t\t\t<button name=\"btn-join\" class=\"btn btn-block btn-success\">Join</button>\t\t\t\t\t\t\n\t\t\t\t\t</div>\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\n\t\t\t\t</form>\n\t\t\t</div>\n\t\t</div>\n\t\t\t\t\t\n\t</div>\n</div>\n\n\n"
   , __filename = "src/templates/html/bootstrap/v4_5/login.ejs";
 try {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   with (locals || {}) {
-    ; __append("<div class=\"row mt-4\">\n	<div class=\"col-12 col-sm-12 col-md-6 offset-md-3\">\n		\n		<div class=\"card\">\n			<div class=\"card-header\">Join the meeting</div>	\n			<div class=\"card-body\">				\n				<form id=\"form-login\">								\n					<div class=\"form-group\">						\n						<div class=\"input-group mb-2\">\n							<div class=\"input-group-prepend\">\n								<div class=\"input-group-text\">&#128104;</div>\n							</div>\n							<input type=\"text\" class=\"form-control\" name=\"name\" placeholder=\"Your name during the meeting.\" maxlength=\"100\" autocomplete=\"off\" required>\n						</div>																							\n					</div>\n					<div class=\"form-group\">\n						<div class=\"input-group mb-2\">\n							<div class=\"input-group-prepend\">\n								<div class=\"input-group-text\">&#128273;</div>\n							</div>\n							<input type=\"text\" class=\"form-control\" name=\"pin\" placeholder=\"PIN to join the meeting.\" maxlength=\"100\" autocomplete=\"off\" required>\n						</div>																																		\n					</div>\n					\n					<div>\n						<button name=\"btn-join\" class=\"btn btn-block btn-success\">Join</button>						\n					</div>															\n				</form>\n			</div>\n		</div>\n					\n	</div>\n</div>\n\n\n")
-    ; __line = 36
+    ; __append("<div class=\"row mt-4\">\n	<div class=\"col-12 col-sm-12 col-md-6 offset-md-3\">\n		\n		<div class=\"card\">\n			<div class=\"card-header\">Join the meeting</div>	\n			<div class=\"card-body\">				\n				<form id=\"cz-kibo-meeting-chime-client-form-login\">\n					<div class=\"cz-kibo-meeting-chime-client-alert-root\"></div>								\n					<div class=\"form-group\">						\n						<div class=\"input-group mb-2\">\n							<div class=\"input-group-prepend\">\n								<div class=\"input-group-text\">&#128104;</div>\n							</div>\n							<input type=\"text\" class=\"form-control\" name=\"name\" placeholder=\"Your name during the meeting.\" maxlength=\"100\" autocomplete=\"off\" required>\n						</div>																							\n					</div>\n					<div class=\"form-group\">\n						<div class=\"input-group mb-2\">\n							<div class=\"input-group-prepend\">\n								<div class=\"input-group-text\">&#128273;</div>\n							</div>\n							<input type=\"text\" class=\"form-control\" name=\"pin\" placeholder=\"PIN to join the meeting.\" maxlength=\"100\" autocomplete=\"off\" required>\n						</div>																																		\n					</div>\n					\n					<div>\n						<button name=\"btn-join\" class=\"btn btn-block btn-success\">Join</button>						\n					</div>															\n				</form>\n			</div>\n		</div>\n					\n	</div>\n</div>\n\n\n")
+    ; __line = 37
   }
   return __output;
 } catch (e) {
@@ -31142,17 +31224,9 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/*!
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "ID_APP": () => (/* binding */ ID_APP),
-/* harmony export */   "CRENDTIALS_TO_MEETING_URL": () => (/* binding */ CRENDTIALS_TO_MEETING_URL)
+/* harmony export */   "CRENDTIALS_TO_MEETING_URL": () => (/* binding */ CRENDTIALS_TO_MEETING_URL),
+/* harmony export */   "ID_APP": () => (/* binding */ ID_APP)
 /* harmony export */ });
-/**
- * The App main wrapper element ID.
- * 
- * @constant
- * @type {string}
- */
-const ID_APP = "cz-kibo-meeting-chime-client";
-			
 /**
  * Server credentials URL
  * 
@@ -31164,6 +31238,18 @@ const ID_APP = "cz-kibo-meeting-chime-client";
  * @see server.js
  */
 const CRENDTIALS_TO_MEETING_URL = "http://localhost:3000/meeting/";
+
+
+/**
+ * The App main wrapper element ID.
+ * 
+ * @constant
+ * @type {string}
+ */
+const ID_APP = "cz-kibo-meeting-chime-client";
+
+			
+
 
 /***/ }),
 
@@ -31273,12 +31359,26 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
+/* ## UTILS ########################################### */
+
+
 /* ## TEMPLATES ########################################### */
 const tplLogin = __webpack_require__(/*! PATH_TO_VIEW_TEMPLATES/login.ejs */ "./src/templates/html/bootstrap/v4_5/login.ejs")
-
+const tplAlert = __webpack_require__(/*! PATH_TO_VIEW_TEMPLATES/alert.ejs */ "./src/templates/html/bootstrap/v4_5/alert.ejs")
 
 
 /* ## MODELS ########################################### */
+/**
+ * Creates a new AlertMessage.
+ * @class
+ */
+let AlerMessage = Backbone.Model.extend({
+	defaults: {			
+		type:'info',
+		text:''		
+	}			
+});
 
 /**
  * Creates a new Meeting.
@@ -31289,8 +31389,8 @@ let Meeting = Backbone.Model.extend({
 		logLevel:amazon_chime_sdk_js__WEBPACK_IMPORTED_MODULE_2__.LogLevel.INFO,		
 	},
 	
-	initialize: () => {
-		undefined.set('logger', new amazon_chime_sdk_js__WEBPACK_IMPORTED_MODULE_2__.ConsoleLogger('MeetingLogs', undefined.get('logLevel')) );					
+	initialize: function(){
+		this.set('logger', new amazon_chime_sdk_js__WEBPACK_IMPORTED_MODULE_2__.ConsoleLogger('MeetingLogs', this.get('logLevel')) );					
 	},
 		
 	/*
@@ -31310,7 +31410,28 @@ let Meeting = Backbone.Model.extend({
 								
 });
 
+/* ## COLLECTIONS ########################################### */
+let AlertMessageCollection = Backbone.Collection.extend({
+	model: AlerMessage
+});
+
+
+
 /* ## VIEWS ########################################### */
+let AlertMessagesView = Backbone.View.extend({
+	className:"cz-kibo-meeting-chime-client-alert-root",
+	
+	add:function( message ){
+		this.collection.add( message )	
+	},
+	
+	render: function(){
+		console.log("#################################RENDER")  
+		console.log( this.$el )
+		this.$el.html( tplAlert({messages: this.collection}));
+		return this;	
+	}
+});
 
 let LoginView = Backbone.View.extend({
 	el: `#${_modules_constants_js__WEBPACK_IMPORTED_MODULE_1__.ID_APP}`,
@@ -31320,7 +31441,7 @@ let LoginView = Backbone.View.extend({
 	},
 	
 	events:{
-		"click #form-login button[name='btn-join']": "fetchCredentialsFromServer"					
+		"click #cz-kibo-meeting-chime-client-form-login button[name='btn-join']": "fetchCredentialsFromServer"					
 	},
 	
 	/*
@@ -31331,12 +31452,15 @@ let LoginView = Backbone.View.extend({
 		e && e.preventDefault();
 					
 		let meeting = this.$el.attr('data-meeting')
-		let name = $("#form-login input[name='name']").val()
-		let pin = $("#form-login input[name='pin']").val()
+		let name = $("#cz-kibo-meeting-chime-client-form-login input[name='name']").val()
+		let pin = $("#cz-kibo-meeting-chime-client-form-login input[name='pin']").val()
 		
 		console.log( meeting )
 		console.log( name )
-		console.log( pin )
+		console.log( pin )	
+		
+		alertsView.add({message:'abc', type:'warning'})
+		alertsView.render()					
 	},
 
 	render: function(){  
@@ -31345,8 +31469,12 @@ let LoginView = Backbone.View.extend({
 	}
 });
 
+/* ## LOGIC ########################################### */
+let alertsView = new AlertMessagesView({collection: new AlertMessageCollection()})
 let loginView = new LoginView();
 
+
+		
 
 
 

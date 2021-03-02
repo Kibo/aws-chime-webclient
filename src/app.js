@@ -8,12 +8,26 @@ import {
 	MeetingSessionConfiguration,
 } from 'amazon-chime-sdk-js';
 
+
+/* ## UTILS ########################################### */
+
+
 /* ## TEMPLATES ########################################### */
 const tplLogin = require('PATH_TO_VIEW_TEMPLATES/login.ejs')
-
+const tplAlert = require('PATH_TO_VIEW_TEMPLATES/alert.ejs')
 
 
 /* ## MODELS ########################################### */
+/**
+ * Creates a new AlertMessage.
+ * @class
+ */
+let AlerMessage = Backbone.Model.extend({
+	defaults: {			
+		type:'info',
+		text:''		
+	}			
+});
 
 /**
  * Creates a new Meeting.
@@ -24,7 +38,7 @@ let Meeting = Backbone.Model.extend({
 		logLevel:LogLevel.INFO,		
 	},
 	
-	initialize: () => {
+	initialize: function(){
 		this.set('logger', new ConsoleLogger('MeetingLogs', this.get('logLevel')) );					
 	},
 		
@@ -45,7 +59,28 @@ let Meeting = Backbone.Model.extend({
 								
 });
 
+/* ## COLLECTIONS ########################################### */
+let AlertMessageCollection = Backbone.Collection.extend({
+	model: AlerMessage
+});
+
+
+
 /* ## VIEWS ########################################### */
+let AlertMessagesView = Backbone.View.extend({
+	className:"cz-kibo-meeting-chime-client-alert-root",
+	
+	add:function( message ){
+		this.collection.add( message )	
+	},
+	
+	render: function(){
+		console.log("#################################RENDER")  
+		console.log( this.$el )
+		this.$el.html( tplAlert({messages: this.collection}));
+		return this;	
+	}
+});
 
 let LoginView = Backbone.View.extend({
 	el: `#${Constant.ID_APP}`,
@@ -55,7 +90,7 @@ let LoginView = Backbone.View.extend({
 	},
 	
 	events:{
-		"click #form-login button[name='btn-join']": "fetchCredentialsFromServer"					
+		"click #cz-kibo-meeting-chime-client-form-login button[name='btn-join']": "fetchCredentialsFromServer"					
 	},
 	
 	/*
@@ -66,12 +101,15 @@ let LoginView = Backbone.View.extend({
 		e && e.preventDefault();
 					
 		let meeting = this.$el.attr('data-meeting')
-		let name = $("#form-login input[name='name']").val()
-		let pin = $("#form-login input[name='pin']").val()
+		let name = $("#cz-kibo-meeting-chime-client-form-login input[name='name']").val()
+		let pin = $("#cz-kibo-meeting-chime-client-form-login input[name='pin']").val()
 		
 		console.log( meeting )
 		console.log( name )
-		console.log( pin )
+		console.log( pin )	
+		
+		alertsView.add({message:'abc', type:'warning'})
+		alertsView.render()					
 	},
 
 	render: function(){  
@@ -80,7 +118,11 @@ let LoginView = Backbone.View.extend({
 	}
 });
 
+/* ## LOGIC ########################################### */
+let alertsView = new AlertMessagesView({collection: new AlertMessageCollection()})
 let loginView = new LoginView();
 
+
+		
 
 
