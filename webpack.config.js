@@ -50,10 +50,6 @@ module.exports = (env = {}) => ({
       {
         test: /\.stylus$/,
         use: ["vue-style-loader", "css-loader", "stylus-loader"]
-      },
-      {
-        test: /\.pug$/,
-        loader: "pug-plain-loader"
       }
     ]
   },

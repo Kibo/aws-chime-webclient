@@ -1,6 +1,6 @@
 # AWS Chime webclient
 
-<img align="right" src="https://raw.githubusercontent.com/Kibo/aws-chime-webclient/master/src/img/aws-chime-webclient-logo.png">
+<img align="right" src="https://raw.githubusercontent.com/Kibo/aws-chime-webclient/master/src/img/aws-chime-webclient-logo_300.png">
 
 AWS Chime webclient using Vue.js.
 

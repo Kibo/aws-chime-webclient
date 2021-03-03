@@ -20,3 +20,12 @@ export const CRENDTIALS_TO_MEETING_URL = "http://localhost:3000/meeting/";
 export const ID_APP = "cz-kibo-meeting-chime-client";
 
 			
+/**
+ * The app status
+ * 
+ * @constant
+ * @type {string}
+ */
+export const APP_STATUS_LOGIN = "login";
+export const APP_STATUS_CONFIGURE = "configure";
+
