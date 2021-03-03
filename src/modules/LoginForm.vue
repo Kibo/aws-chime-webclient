@@ -10,7 +10,7 @@
 						<HttpClient v-bind:url="getURL(this.form)" v-on:server-response="serverResponse" ></HttpClient>	
 					</div>
 					<div v-else>
-						<form v-if="!isWorking" @submit.prevent="getCredentials">
+						<form @submit.prevent="getCredentials">
 												
 							<div v-if="form.errors.length">						    						    													
 								<AlertMessage v-for="(error, index) in form.errors" v-bind:message="error" v-on:dismiss="dismissAlert(index)" />																										  

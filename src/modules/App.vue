@@ -1,40 +1,97 @@
 <template>
 	<div v-if="status === getConstant( 'APP_STATUS_LOGIN' )">
-		<LoginForm v-on:credentials="setCredentials"  />
+		<LoginForm v-on:credentials="createMeetingSession" />
 	</div>
 	
 	<div v-if="status === getConstant( 'APP_STATUS_CONFIGURE' )">
-		configure
+		<DeviceConfigurator v-bind:meetingSession="meetingSession" /> 
 	</div>
 	
 	
 </template>
 
 <script>
+import {
+  AsyncScheduler,
+  AudioInputDevice,
+  AudioProfile,
+  AudioVideoFacade,
+  AudioVideoObserver,
+  ClientMetricReport,
+  ClientVideoStreamReceivingReport,
+  ConsoleLogger,
+  ContentShareObserver,
+  DataMessage,
+  DefaultActiveSpeakerPolicy,
+  DefaultAudioMixController,
+  DefaultBrowserBehavior,
+  DefaultDeviceController,
+  DefaultMeetingSession,
+  DefaultModality,
+  DefaultVideoTransformDevice,
+  Device,
+  DeviceChangeObserver,
+  EventAttributes,
+  EventName,
+  Logger,
+  LogLevel,
+  MeetingSession,
+  MeetingSessionConfiguration,
+  MeetingSessionPOSTLogger,
+  MeetingSessionStatus,
+  MeetingSessionStatusCode,
+  MeetingSessionVideoAvailability,
+  MultiLogger,
+  NoOpVideoFrameProcessor,
+  RemovableAnalyserNode,
+  SimulcastLayers,
+  TimeoutScheduler,
+  Versioning,
+  VideoFrameProcessor,
+  VideoInputDevice,
+  VideoSource,
+  VideoTileState,
+  VoiceFocusDeviceTransformer,
+  VoiceFocusPaths,
+  VoiceFocusTransformDevice,
+  isAudioTransformDevice,
+} from 'amazon-chime-sdk-js';
 import LoginForm from "./LoginForm.vue"
+import DeviceConfigurator from "./DeviceConfigurator.vue"
 import * as Constants from './Constants.js';
+
+const logger = new ConsoleLogger('MeetingLogs', LogLevel.INFO);
 
 export default {
   components: {
-    LoginForm
+    LoginForm,
+    DeviceConfigurator
   },
          
   data() {
     return {
-    	status:Constants.APP_STATUS_LOGIN
+    	status:Constants.APP_STATUS_LOGIN,
+    	meetingSession:null
     }
   },
 
-  methods: {
-  	/*
+  methods: {  	   
+    /*
   	 * This handler is called after the LoginForm send a valid credentials from server.
   	 * 
   	 * @param {Object} - {meeting:{}, atendee:{}}
-  	 */  	  
-    setCredentials( credentials ){    	
-    	console.log( credentials )
-    	this.status = Constants.APP_STATUS_CONFIGURE
+  	 */ 
+    createMeetingSession( credentials){    	    	   
+    	const deviceController = new DefaultDeviceController(logger, {enableWebAudio: true});
+    	const configuration = new MeetingSessionConfiguration(credentials.meeting, credentials.atendee);
+    	this.meetingSession = new DefaultMeetingSession(configuration, logger, deviceController); 
+    	
+    	this.status = Constants.APP_STATUS_CONFIGURE   	    	   
     },
+    
+    
+    
+    
     
     /*
      * Helper method for attaching Constants in View template.
