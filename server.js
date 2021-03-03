@@ -21,22 +21,22 @@ app.get('/', (req, res) => {
 
 app.get('/meeting/:id/:pin/:name', async (req, res) => {
 	if(!MEETINGS.has(req.params.id)){
-		res.status(403)
+		res.status(403).json()		
 		return	
 	}
 		
 	if(!MEETINGS.get( req.params.id ).isActive){
-		res.status(403)
+		res.status(403).json()
 		return	
 	}
 	
 	if( MEETINGS.get( req.params.id ).isLocked ){
-		res.status(403)
+		res.status(403).json()
 		return		
 	}
 	
 	if(!PINS.has(req.params.pin)){
-		res.status(403)
+		res.status(403).json()
 		return	
 	}
 	
@@ -56,7 +56,7 @@ app.get('/meeting/:id/:pin/:name', async (req, res) => {
 		
 	}catch(e){
 		console.error(e)
-		res.status(500);		
+		res.status(500).json();		
 		return		
 	}
 					 

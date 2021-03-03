@@ -7,6 +7,7 @@
   "dependencies": {
     "amazon-chime-sdk-js": "^2.5.0",
     "aws-sdk": "^2.851.0",
+    "axios": "^0.21.1",
     "dotenv": "^8.2.0",
     "ejs": "^3.1.6",
     "express": "^4.17.1",

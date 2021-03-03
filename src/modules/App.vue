@@ -1,24 +1,25 @@
 <template>
-	<LoginForm v-bind:meeting="meeting"/>
+	<LoginForm v-on:credentials="setCredentials"  />
 </template>
 
 <script>
 import LoginForm from "./LoginForm.vue"
+import * as Constant from './Constants.js';
 
 export default {
   components: {
     LoginForm
   },
-
+		
   data() {
     return {
-         meeting:"12345" 
+    	
     }
   },
 
-  methods: {
-    getCredentials() {
-    	console.log("get credentials")    	
+  methods: {  	  
+    setCredentials( credentials ){
+    	console.log( credentials )
     },
   }
 }

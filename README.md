@@ -2,13 +2,14 @@
 
 <img align="right" src="https://raw.githubusercontent.com/Kibo/aws-chime-webclient/master/src/img/aws-chime-webclient-logo.png">
 
-AWS Chime webclient using Vue.js, Bootstrap 4.
+AWS Chime webclient using Vue.js.
 
 ## Version
-- 0.1.0 ( coding )
+- 0.2.0 ( coding )
 
 ### Dependencies
-- TODO
+- [amazon-chime-sdk-js](https://github.com/aws/amazon-chime-sdk-js)
+- [Vue.js](https://vuejs.org/) 
 	
 ### Tools
 - [NPM](https://npmjs.org) - Node.js package manager.
