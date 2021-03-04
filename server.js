@@ -60,7 +60,7 @@ app.get('/meeting/:id/:pin/:name', async (req, res) => {
 		return		
 	}
 					 
-	res.status(200).json({meeting:chimeCreateMeetingResponse.Meeting, atendee:chimeCreateAttendeeResponse.Attendee});
+	res.status(200).json({meeting:chimeCreateMeetingResponse.Meeting, attendee:chimeCreateAttendeeResponse.Attendee});
 	return  
 })
 

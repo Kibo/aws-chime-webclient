@@ -56,9 +56,9 @@ import {
   VoiceFocusTransformDevice,
   isAudioTransformDevice,
 } from 'amazon-chime-sdk-js';
-import LoginForm from "./LoginForm.vue"
-import DeviceConfigurator from "./DeviceConfigurator.vue"
-import * as Constants from './Constants.js';
+import LoginForm from "./login/LoginForm.vue"
+import DeviceConfigurator from "./configure/DeviceConfigurator.vue"
+import * as Constants from './constants/Constants.js';
 
 const logger = new ConsoleLogger('MeetingLogs', LogLevel.INFO);
 
@@ -83,15 +83,11 @@ export default {
   	 */ 
     createMeetingSession( credentials){    	    	   
     	const deviceController = new DefaultDeviceController(logger, {enableWebAudio: true});
-    	const configuration = new MeetingSessionConfiguration(credentials.meeting, credentials.atendee);
+    	const configuration = new MeetingSessionConfiguration(credentials.meeting, credentials.attendee);
     	this.meetingSession = new DefaultMeetingSession(configuration, logger, deviceController); 
     	
     	this.status = Constants.APP_STATUS_CONFIGURE   	    	   
     },
-    
-    
-    
-    
     
     /*
      * Helper method for attaching Constants in View template.
