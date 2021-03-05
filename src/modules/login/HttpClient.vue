@@ -9,6 +9,7 @@
 
 	export default { 
 		props:['url'],
+		emits: ['serverResponse'],
 		data() {
 			return {
 				response:null

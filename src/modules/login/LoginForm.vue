@@ -54,7 +54,8 @@
 		AlertMessage,
 		HttpClient
 		},
-		props: ['meeting'],											
+		props: ['meeting'],		
+		emits: ['credentials'],									
 		data() {
 			return {
 				isWorking: false,								
@@ -125,11 +126,15 @@
 					return	
 				}
 				
-				//if(response.data.meeting)
-				console.log( response.data.meeting.MeetingId )
-				console.log( response.data.attendee.AttendeeId )
+				if(!(response.data && response.data.meeting && response.data.meeting.MeetingId)){
+					throw new Error("There is not MeetingId.")	
+				}
 				
-				this.$emit('credentials', response.data)																		
+				if(!(response.data && response.data.attendee && response.data.attendee.AttendeeId)){
+					throw new Error("There is not AttendeeId.")	
+				}
+											
+				this.$emit('credentials', response.data)																					
 			}
 		}
 	}
