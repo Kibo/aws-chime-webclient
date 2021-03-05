@@ -1,13 +1,11 @@
 <template>
 	<div v-if="status === getConstant( 'APP_STATUS_LOGIN' )">
-		<LoginForm v-on:credentials="createMeetingSession" />
+		<LoginForm v-bind:meeting="meeting" v-on:credentials="createMeetingSession" />
 	</div>
 	
 	<div v-if="status === getConstant( 'APP_STATUS_CONFIGURE' )">
 		<DeviceConfigurator v-bind:meetingSession="meetingSession" /> 
 	</div>
-	
-	
 </template>
 
 <script>
@@ -67,14 +65,13 @@ export default {
     LoginForm,
     DeviceConfigurator
   },
-         
+  props: ['meeting'],       
   data() {
     return {
     	status:Constants.APP_STATUS_LOGIN,
     	meetingSession:null
     }
   },
-
   methods: {  	   
     /*
   	 * This handler is called after the LoginForm send a valid credentials from server.

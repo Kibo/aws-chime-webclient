@@ -6,8 +6,7 @@ module.exports = {
       "js"
     ],
     "transform": {
-	"^.+\\.js$": "babel-jest",
-	".*\\.(vue)$": "vue-jest"
+      "^.+\\.js$": "babel-jest",
+      ".*\\.(vue)$": "vue-jest"
     },
-    transformIgnorePatterns: ["/node_modules/(?!vue-awesome)"],
 }

@@ -53,7 +53,8 @@
 	export default { components: { 
 		AlertMessage,
 		HttpClient
-		},											
+		},
+		props: ['meeting'],											
 		data() {
 			return {
 				isWorking: false,								
@@ -61,16 +62,13 @@
 					errors : [],
 					name : null,
 					pin : null,
-					
-					// there is data-meeting attribute in App root element
-					// @see server.js
-					meeting:document.querySelector(`#${Constant.ID_APP}`).dataset.meeting
+					meeting:this.meeting
 				}				
 			}
 		}, 
 		methods: {
 			dismissAlert(index){							
-				this.form.errors.splice(index, 1);
+				this.form.errors.splice(index, 1);				
 			},
 			
 			/* 
