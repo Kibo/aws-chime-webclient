@@ -60,11 +60,10 @@ export default {
 					
 		
 		// TODO - remove observer after setting
-		this.meetingSession.audioVideo.addDeviceChangeObserver( this.deviceChangeObserver );
+		this.meetingSession.audioVideo.addDeviceChangeObserver( this.$options.deviceChangeObserver );
 		
 		
-		
-		console.log("########" )
+		console.log("########" + this.$options.deviceChangeObserver )
 				
 		this.isDeviceListReady = true;		
 	},
@@ -84,6 +83,5 @@ export default {
 			this.videoInputDevices = freshVideoInputDeviceList
 		}
 	}
-	
 }
 </script>
