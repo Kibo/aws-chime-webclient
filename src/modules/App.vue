@@ -4,8 +4,10 @@
 	</div>
 	
 	<div v-if="status === getConstant( 'APP_STATUS_CONFIGURE' )">
-		<DeviceConfigurator v-bind:meetingSession="meetingSession" /> 
+		<DeviceConfigurator v-bind:meetingSession="meetingSession" v-bind:meetingAudioElement="getMeetingAudioElement()" /> 
 	</div>
+		
+	<audio v-bind:id="getConstant('ID_MEETING_AUDIO_ELEMENT')" style="display:none"></audio>
 </template>
 
 <script>
@@ -94,6 +96,10 @@ export default {
      */
     getConstant( id ){
     	return Constants[id]
+    },
+    
+    getMeetingAudioElement(){
+    	return window.document.getElementById( Constants.ID_MEETING_AUDIO_ELEMENT )
     }
   }
 }
