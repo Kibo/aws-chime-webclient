@@ -97,7 +97,7 @@ export default {
     getConstant( id ){
     	return Constants[id]
     },
-    
+        
     getMeetingAudioElement(){
     	return window.document.getElementById( Constants.ID_MEETING_AUDIO_ELEMENT )
     }

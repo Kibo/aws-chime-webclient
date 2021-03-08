@@ -28,21 +28,27 @@ export const ID_APP = "cz-kibo-meeting-chime-client";
 export const ID_MEETING_AUDIO_ELEMENT = "cz-kibo-meeting-chime-client-meeting-audio";
 
 
-
 /**
  * This file uses the audio element to play test sound
  * 
  * @constant
  * @type {string}
  */
-export const AUDIO_TEST_SOUND_URL = "https://www.kozco.com/tech/LRMonoPhase4.wav";
+export const AUDIO_TEST_SOUND_URL = "https://www2.cs.uic.edu/~i101/SoundFiles/StarWars3.wav";
 	
 /**
- * The app status
+ * The app status - login
  * 
  * @constant
  * @type {string}
  */
 export const APP_STATUS_LOGIN = "login";
+
+/**
+ * The app status - configure
+ * 
+ * @constant
+ * @type {string}
+ */
 export const APP_STATUS_CONFIGURE = "configure";
 

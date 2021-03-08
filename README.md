@@ -18,7 +18,7 @@ AWS Chime webclient using Vue.js.
 ### Before Build
 - pls, see [.env](https://github.com/Kibo/aws-chime-webclient/blob/master/.env)
 - pls, see [Constants.js](https://github.com/Kibo/aws-chime-webclient/blob/master/src/modules/Constants.js)
-- pls, see [setting templates](https://github.com/Kibo/aws-chime-webclient/blob/master/src/settings). You can build a customized AWS Chime client.
+- pls, see [profile templates](https://github.com/Kibo/aws-chime-webclient/blob/master/src/profiles). You can build a customized AWS Chime client.
 
 ### Build
 ```

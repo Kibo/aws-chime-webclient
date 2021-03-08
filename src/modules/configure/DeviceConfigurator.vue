@@ -22,24 +22,13 @@
 			</div>
 		</div>
 					
-		<h3>Audio output</h3>
+		<h3>Audio output</h3>    
 		<div class="row">
 			<div class="col">
-				<div class="input-group">
-					<div class="input-group-prepend">
-    					<label class="input-group-text"><i class="fa fa-volume-off" aria-hidden="true"></i></label>
-  					</div>		
-					<select v-model="selectedAudioOutputDeviceId" v-on:change="audioOutputSelected()" class="form-control">
-						<option disabled value="">Please select one</option>
-						<option v-for="(mediaDeviceInfo, index) in audioOutputDevices" v-bind:value="mediaDeviceInfo.deviceId" >
-							{{mediaDeviceInfo.label}}
-						</option>
-					</select>
-					
-					<div class="input-group-append">
-    					<button v-on:click="startTestAudioOutput" v-bind:class="[audioOutputTestEnabled ? 'btn-success' : 'btn-outline-secondary'  ]" class="btn" type="button" v-bind:disabled="!audioOutputTestEnabled">Test</button>
-  					</div>					
-				</div>										
+				<AudioOutputDevice
+					v-bind:audioOutputDevices="audioOutputDevices" 
+					v-bind:meetingAudioElement="meetingAudioElement"  
+					v-on:audio-output-selected="audioOutputSelected" />
 			</div>			
 		</div>
 								
@@ -71,8 +60,13 @@
 </template>
 
 <script>
+import * as Constants from '../constants/Constants.js'
+import AudioOutputDevice from "./AudioOutputDevice.vue" 
 
 export default {	
+	components: { 
+		AudioOutputDevice	
+	},
 	props: ['meetingSession', 'meetingAudioElement'],
 	data() {
 			return {
@@ -83,11 +77,9 @@ export default {
 				videoInputDevices:null,
 				
 				selectedAudioInputDeviceId:'',
-				selectedAudioOutputDeviceId:'',
 				selectedVideoInputDeviceId:'',
 				
 				audioInputTestEnabled:false,
-				audioOutputTestEnabled:false,
 				videoInputTestEnabled:false,											
 			}
 		},
@@ -101,7 +93,6 @@ export default {
 		// TODO - remove observer after setting
 		this.meetingSession.audioVideo.addDeviceChangeObserver( this.getDeviceChangeObserver() );
 		
-					
 		this.isDeviceListReady = true;		
 	},
 	
@@ -127,15 +118,14 @@ export default {
 		/*
 		 * a user selected a device - change handler
 		 */
-		async audioOutputSelected(){
+		async audioOutputSelected( selectedAudioOutputDeviceId ){					
 			try {
-		      await this.meetingSession.audioVideo.chooseAudioOutputDevice( this.selectedAudioOutputDeviceId );		     
+		      await this.meetingSession.audioVideo.chooseAudioOutputDevice( selectedAudioOutputDeviceId );		      		     
+		      this.meetingSession.audioVideo.bindAudioElement( this.meetingAudioElement )	     
 		    } catch (e) {
 		      console.error(e)
 		      return		      
-		    }
-		    					
-			this.audioOutputTestEnabled = true
+		    }		    								
 		},
 		
 		/*
@@ -151,24 +141,7 @@ export default {
 		    
 			this.videoInputTestEnabled = true
 		},
-		
-		/*
-		 * a user clicked to audio test button - handler
-		 */
-		startTestAudioOutput(){
-			this.audioOutputTestEnabled = false
-			this.meetingSession.audioVideo.bindAudioElement( this.meetingAudioElement )
-			
-									
-		},
-		
-		/*
-		 * Audio player stop play test sound
-		 */
-		stopTestAudioOutput(){				
-			this.audioOutputTestEnabled = true	
-		},
-		
+							
 		/*
 		 * a user clicked to video test button - handler
 		 */
@@ -179,13 +152,22 @@ export default {
 		getDeviceChangeObserver(){
 			return {
 				audioInputsChanged: freshAudioInputDeviceList => {					
-					this.audioInputDevices = freshAudioInputDeviceList 					
+					this.audioInputDevices = freshAudioInputDeviceList																														
+					
+					this.selectedAudioInputDeviceId = ''					
+					this.audioInputTestEnabled = false																	 		
 				},
 				audioOutputsChanged: freshAudioOutputDeviceList => {
-					this.audioOutputDevices = freshAudioOutputDeviceList					
+					this.audioOutputDevices = freshAudioOutputDeviceList
+					
+					this.selectedAudioOutputDeviceId = ''					
+					this.audioOutputTestEnabled = false
 				},
 				videoInputsChanged: freshVideoInputDeviceList => {
-					this.videoInputDevices = freshVideoInputDeviceList					
+					this.videoInputDevices = freshVideoInputDeviceList
+					
+					this.selectedVideoInputDeviceId = ''					
+					this.videoInputTestEnabled = false
 				}
 			}
 		} 
