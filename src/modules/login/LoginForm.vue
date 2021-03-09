@@ -1,6 +1,6 @@
 <template>
 	<div class="row mt-4">
-		<div class="col-12 col-sm-12 col-md-6 offset-md-3">
+		<div class="col col-md-6 offset-md-3">
 			
 			<div class="card ">
 				<div class="card-header">Join the meeting</div>	

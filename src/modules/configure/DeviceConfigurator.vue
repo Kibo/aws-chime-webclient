@@ -1,46 +1,40 @@
 <template>
 	<div v-if="isDeviceListReady">
-					
-		<h3>Audio input</h3>
-		<div class="row">
-			<div class="col-10">
-				<div class="input-group">
-					
-					<div class="input-group-prepend">
-    					<label class="input-group-text"><i class="fa fa-microphone" aria-hidden="true"></i></label>
-  					</div>					
-					<select v-model="selectedAudioInputDeviceId" v-on:change="audioInputSelected()" class="form-control">
-						<option disabled value="">Please select one</option>
-						<option v-for="(mediaDeviceInfo, index) in audioInputDevices" v-bind:value="mediaDeviceInfo.deviceId" >
-							{{mediaDeviceInfo.label}}
-						</option>
-					</select>
-				</div>				
-			</div>
-			<div class="col-2">
-				<i class="fa fa-bar-chart" aria-hidden="true"></i>
+		<div class="row mt-4">
+			<div class="col col-md-6 offset-md-3">					
+				<div class="card ">
+					<div class="card-header">Configure devices</div>	
+						<div class="card-body">																				
+							<AudioInputDevice
+										v-bind:audioInputDevices="audioInputDevices" 
+										v-bind:meetingSession="meetingSession"  
+										v-on:audio-input-selected="audioInputSelected" />			
+							
+							<AudioOutputDevice
+										v-bind:audioOutputDevices="audioOutputDevices" 
+										v-bind:meetingAudioElement="meetingAudioElement"  
+										v-on:audio-output-selected="audioOutputSelected" />
+							
+							<VideoInputDevice
+										v-bind:videoInputDevices="videoInputDevices"
+										v-bind:meetingSession="meetingSession"
+										v-on:video-input-selected="videoInputSelected" />
+					</div>
+				</div>			
 			</div>
 		</div>
-		
-		<AudioOutputDevice
-					v-bind:audioOutputDevices="audioOutputDevices" 
-					v-bind:meetingAudioElement="meetingAudioElement"  
-					v-on:audio-output-selected="audioOutputSelected" />
-		
-		<VideoInputDevice
-					v-bind:videoInputDevices="videoInputDevices"
-					v-bind:meetingSession="meetingSession"
-					v-on:video-input-selected="videoInputSelected" />																		
 	</div>	
 </template>
 
 <script>
 import * as Constants from '../constants/Constants.js'
+import AudioInputDevice from "./AudioInputDevice.vue"
 import AudioOutputDevice from "./AudioOutputDevice.vue"
 import VideoInputDevice from "./VideoInputDevice.vue"  
 
 export default {	
-	components: { 
+	components: {
+		AudioInputDevice, 
 		AudioOutputDevice,
 		VideoInputDevice,	
 	},
@@ -78,15 +72,13 @@ export default {
 		/*
 		 * a user selected a device - change handler
 		 */
-		async audioInputSelected(){					
+		async audioInputSelected( selectedAudioInputDeviceId  ){					
 			try {
-		      await this.meetingSession.audioVideo.chooseAudioInputDevice( this.selectedAudioInputDeviceId );		     
+		      await this.meetingSession.audioVideo.chooseAudioInputDevice( selectedAudioInputDeviceId );		     
 		    } catch (e) {
 		      console.error(e)
 		      return		      
-		    }
-		    
-			this.audioInputTestEnabled = true		    									
+		    }		    				    							
 		},
 		
 		/*
