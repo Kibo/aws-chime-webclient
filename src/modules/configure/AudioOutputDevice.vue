@@ -1,19 +1,25 @@
-<template>
-	<div class="input-group">
-		<div class="input-group-prepend">
-			<label class="input-group-text"><i class="fa fa-volume-off" aria-hidden="true"></i></label>
-		</div>		
-		<select v-on:change="userChangeDevice($event)" class="form-control">
-			<option disabled value="">Please select one</option>
-			<option v-for="mediaDeviceInfo in audioOutputDevices" v-bind:value="mediaDeviceInfo.deviceId" >
-				{{mediaDeviceInfo.label}}
-			</option>
-		</select>
-		
-		<div class="input-group-append">
-			<button v-on:click="startTestAudioOutput" v-bind:class="[audioOutputTestEnabled ? 'btn-success' : 'btn-outline-secondary'  ]" class="btn" type="button" v-bind:disabled="!audioOutputTestEnabled">Test</button>
-		</div>
-	</div>
+<template>		   
+		<div class="row">
+			<div class="col mt-4">
+				<h3>Audio output</h3>
+				
+				<div class="input-group">
+					<div class="input-group-prepend">
+						<label class="input-group-text"><i class="fa fa-volume-off" aria-hidden="true"></i></label>
+					</div>		
+					<select v-on:change="userChangeDevice($event)" class="form-control">
+						<option value="">Please select one</option>
+						<option v-for="mediaDeviceInfo in audioOutputDevices" v-bind:value="mediaDeviceInfo.deviceId" >
+							{{mediaDeviceInfo.label}}
+						</option>
+					</select>
+					
+					<div class="input-group-append">
+						<button v-on:click="startTestAudioOutput" v-bind:class="[audioOutputTestEnabled ? 'btn-success' : 'btn-outline-secondary'  ]" class="btn" type="button" v-bind:disabled="!audioOutputTestEnabled">Test</button>
+					</div>
+				</div>										
+			</div>			
+		</div>	
 </template>
 
 <script>
@@ -51,11 +57,14 @@ export default {
 		/*
 		 * a user selected a device
 		 * emit selected device to a parent
+		 * 
+		 * @see https://aws.github.io/amazon-chime-sdk-js/interfaces/audiovideofacade.html#chooseaudiooutputdevice
 		 */
-		userChangeDevice( event ){				
-			this.$emit('audioOutputSelected', event.target.value )
-			
-			this.audioOutputTestEnabled = true
+		userChangeDevice( event ){
+			// null indicate default device
+			let deviceId = event.target.value == '' ? null : event.target.value
+			this.$emit('audioOutputSelected', deviceId )
+			this.audioOutputTestEnabled = deviceId ? true : false
 		}			
 	}
 }
