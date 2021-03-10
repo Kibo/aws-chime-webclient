@@ -33,6 +33,14 @@ export default {
 				audioOutputTestEnabled:false,
 			}
 		},
+		
+	mounted() {	
+		this.$watch('audioOutputDevices', (newVal, oldVal) => {			
+			// set 'Please select one' option
+			let event = {target:{value:''}}
+			this.userChangeDevice( event )
+    	})	
+	},	
 				
 	methods: {
 		/*

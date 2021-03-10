@@ -40,6 +40,14 @@ export default {
 				videoInputTestEnabled:false
 			}
 		},
+	
+	mounted() {	
+		this.$watch('videoInputDevices', (newVal, oldVal) => {			
+			// set 'Please select one' option
+			let event = {target:{value:''}}
+			this.userChangeDevice( event )
+    	})	
+	},
 		
 	beforeUnmount(){
 		this.stopVideoPreview()
@@ -51,8 +59,7 @@ export default {
 		 */
 		startVideoPreview(){
 			this.videoInputTestEnabled = false							
-			this.meetingSession.audioVideo.startVideoPreviewForVideoInput( this.getHTMLElementForVideoPreview() )						
-			//this.audioOutputTestEnabled = true
+			this.meetingSession.audioVideo.startVideoPreviewForVideoInput( this.getHTMLElementForVideoPreview() )			
 		},
 		
 		stopVideoPreview(){

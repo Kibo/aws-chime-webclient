@@ -45,10 +45,7 @@ export default {
 				
 				audioInputDevices:null,
 				audioOutputDevices:null,
-				videoInputDevices:null,
-				
-				selectedAudioInputDeviceId:'',
-				audioInputTestEnabled:false,														
+				videoInputDevices:null,																				
 			}
 		},
 		
@@ -109,22 +106,16 @@ export default {
 		getDeviceChangeObserver(){
 			return {
 				audioInputsChanged: freshAudioInputDeviceList => {					
-					this.audioInputDevices = freshAudioInputDeviceList																														
-					
-					this.selectedAudioInputDeviceId = ''					
-					this.audioInputTestEnabled = false																	 		
+					this.audioInputDevices = freshAudioInputDeviceList																																			
+					this.selectedAudioInputDeviceId = ''																										 	
 				},
 				audioOutputsChanged: freshAudioOutputDeviceList => {
 					this.audioOutputDevices = freshAudioOutputDeviceList
-					
 					this.selectedAudioOutputDeviceId = ''					
-					this.audioOutputTestEnabled = false
 				},
 				videoInputsChanged: freshVideoInputDeviceList => {
 					this.videoInputDevices = freshVideoInputDeviceList
-					
-					this.selectedVideoInputDeviceId = ''					
-					this.videoInputTestEnabled = false
+					this.selectedVideoInputDeviceId = ''
 				}
 			}
 		} 
