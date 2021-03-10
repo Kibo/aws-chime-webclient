@@ -23,21 +23,28 @@
 		
 	<div class="row">			
 		<div class="col mt-2">
-			AnalyserNode
+			<div v-if="isOsciloscope">
+				<AudioOscilloscope v-bind:analyserNode="analyserNode" />
+			</div>
 		</div>
 	</div>
 </template>
 
 <script>
 import * as Constants from '../constants/Constants.js';
+import AudioOscilloscope from "./AudioOscilloscope.vue"  
 
-export default {	
+export default {
+	components: {
+		AudioOscilloscope
+	},	
 	props: ['audioInputDevices', 'meetingSession'],
 	emits: ['audioInputSelected'],
 	data() {
 			return {
 				audioInputTestEnabled:false,
-				analyserNode:null
+				analyserNode:null,
+				isOsciloscope:false
 			}
 		},
 	
@@ -59,24 +66,14 @@ export default {
 		 * a user clicked to audio test button - handler
 		 */
 		startTestAudioInput(){
-			this.audioInputTestEnabled = false
-			//this.$nextTick()
-			
-			console.log("AudioInput")			
-			
+			this.audioInputTestEnabled = false												
 			this.analyserNode = this.meetingSession.audioVideo.createAnalyserNodeForAudioInput()
 								
 			if (!this.analyserNode) {
       			return;
     		}
-    		     		    		        		        		    			
-			const sample = new Uint8Array( this.analyserNode.fftSize );
-			for(let i = 0; i<600; i++){			
-				this.analyserNode.getByteTimeDomainData( sample );				
-				console.log( this.getAverageVolume( sample ) )															
-			}
-			
-			this.stopTestAudioInput()							
+    		
+    		this.isOsciloscope = true    		     		    		        		        		    											
 		},
 		
 		stopTestAudioInput(){
@@ -85,6 +82,8 @@ export default {
       			this.analyserNode.removeOriginalInputs();
       			this.analyserNode = undefined;										
 			}
+			
+			this.isOsciloscope = false
 		},
 						
 		/*
@@ -93,33 +92,12 @@ export default {
 		 * 
 		 * @see https://aws.github.io/amazon-chime-sdk-js/interfaces/audiovideofacade.html#chooseaudioinputdevice
 		 */
-		userChangeDevice( event ){		
-			console.log( "CHANGEEEEEEEEEEEEEEEE")	
+		userChangeDevice( event ){
 			// null indicate default device
 			let deviceId = event.target.value == '' ? null : event.target.value
 			this.$emit('audioInputSelected', deviceId )
 			this.stopTestAudioInput()
 			this.audioInputTestEnabled = deviceId ? true : false
-		},
-		
-		/**
-		 * Get the average value from input array
-		 * 
-		 * @param {Array} sample
-		 */
-		getAverageVolume( sample ){							
-			let values = 0;
-	        let average;
-	
-	        let length = sample.length;
-		        	        	      
-	        // get all the frequency amplitudes
-	        for (const val of sample) {
-         		 values += val;
-        	}
-	        	
-	        average = values / length;
-	        return average;					
 		}		
 	}
 }
