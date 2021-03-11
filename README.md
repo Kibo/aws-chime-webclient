@@ -43,8 +43,6 @@ $ npm run test
 
 ### Screens
 
-Configure
-
 <img src="https://raw.githubusercontent.com/Kibo/aws-chime-webclient/master/src/img/screens/configure.png" alt="Configure">
 
 
