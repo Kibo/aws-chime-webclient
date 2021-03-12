@@ -1,5 +1,5 @@
 <template>		   
-	<div class="row">
+	<div class="row mt-4">
 		<div class="col">
 			<h3>Audio input</h3>
 			

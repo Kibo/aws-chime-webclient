@@ -16,7 +16,6 @@ export const FULLBAND_SPEECH_MONO_QUALITY = true
  */
 export const IS_AUDIO_INPUT_DEVICE = true
 
-
 /**
  * Specifies whether the option to set up the device is displayed.
  * 
@@ -24,3 +23,50 @@ export const IS_AUDIO_INPUT_DEVICE = true
  * @type {Boolean}
  */
 export const IS_VIDEO_INPUT_DEVICE = true
+
+// ## VIDEO QUALITY #################################################3
+
+/**
+ * Default video width
+ * 
+ * max 1280px
+ * 
+ * @constant
+ * @type {Number}
+ */
+export const VIDEO_INPUT_QUALITY_WIDTH=960
+
+/**
+ * Default video height
+ * 
+ * max 720px
+ * 
+ * @constant
+ * @type {Number}
+ */
+export const VIDEO_INPUT_QUALITY_HEIGHT=540
+
+/**
+ * Default video framerate
+ * 
+ *  max 30 fps
+ * 
+ * @constant
+ * @type {Number}
+ */
+export const VIDEO_INPUT_QUALITY_FRAMERATE=15
+
+/**
+ * Default video bandWidth
+ * 
+ *  max 2400 Kbps
+ * 
+ * @constant
+ * @type {Number}
+ */
+export const VIDEO_INPUT_QUALITY_BANDWIDTH=1400
+
+
+
+
+

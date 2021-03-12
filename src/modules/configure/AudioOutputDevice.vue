@@ -1,6 +1,6 @@
 <template>		   
 		<div class="row">
-			<div class="col mt-4">
+			<div class="col">
 				<h3>Audio output</h3>
 				
 				<div class="input-group">

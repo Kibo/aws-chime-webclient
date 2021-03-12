@@ -1,3 +1,5 @@
+const webpack = require('webpack');
+require('dotenv').config()
 const path = require("path");
 const { VueLoaderPlugin } = require("vue-loader");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
@@ -57,6 +59,20 @@ module.exports = (env = {}) => ({
     new VueLoaderPlugin(),
     new MiniCssExtractPlugin({
       filename: "[name].css"
-    })
+    }),
+    
+    /*
+	 * This plugin replace a string 'SETTING_PROFILE_NAME' with value placed in .env
+	 * @see .env 
+	 */
+	new webpack.NormalModuleReplacementPlugin(
+  			/(.*)SETTING_PROFILE_NAME(\.*)/,
+  			function (resource) {    						
+				resource.request = resource.request.replace(
+					/SETTING_PROFILE_NAME/,
+					`${process.env.SETTING_PROFILE_FILE_NAME || 'allFeatures.js'}`
+			);
+		}  			
+	)	      
   ]
 });

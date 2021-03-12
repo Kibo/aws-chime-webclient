@@ -10,7 +10,6 @@
  */
 export const CRENDTIALS_TO_MEETING_URL = "http://localhost:3000/meeting/";
 
-
 /**
  * The App main wrapper element ID.
  * 
@@ -20,6 +19,7 @@ export const CRENDTIALS_TO_MEETING_URL = "http://localhost:3000/meeting/";
 export const ID_APP = "cz-kibo-meeting-chime-client";
 
 // ## MAIN STATUSES #######################################
+
 /**
  * The app status - login
  * 
@@ -36,7 +36,7 @@ export const APP_STATUS_LOGIN = "login";
  */
 export const APP_STATUS_CONFIGURE = "configure";
 
-// ## configure - confiAUDIO SETTING  #######################################
+// ## configure - AUDIO SETTING  #######################################
 /**
  * The ID of the audio meeting element.
  * 
@@ -44,7 +44,6 @@ export const APP_STATUS_CONFIGURE = "configure";
  * @type {string}
  */
 export const ID_MEETING_AUDIO_ELEMENT = "cz-kibo-meeting-chime-client-meeting-audio";
-
 
 /**
  * This file uses the audio element to play test sound

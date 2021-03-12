@@ -1,6 +1,6 @@
 <template>	
-	<div class="row">
-		<div class="col mt-4">
+	<div class="row mt-4">
+		<div class="col">
 			<h3>Video input</h3>			
 			<div class="input-group">
 				<div class="input-group-prepend">
