@@ -1,13 +1,24 @@
 <template>
 	<div v-if="status === getConstant( 'APP_STATUS_LOGIN' )">
-		<LoginForm v-bind:meeting="meeting" v-on:credentials="createMeetingSession" />
+		<LoginForm 
+			v-bind:meeting="meeting"
+			v-on:credentials="createMeetingSession" />
 	</div>
 	
 	<div v-if="status === getConstant( 'APP_STATUS_CONFIGURE' )">
-		<DeviceConfigurator v-bind:meetingSession="meetingSession" v-bind:meetingAudioElement="getMeetingAudioElement()" /> 
+		<DeviceConfigurator 
+			v-bind:meetingSession="meetingSession" 
+			v-bind:meetingAudioElement="getMeetingAudioElement()"
+			v-on:start-session="startSession()" /> 
+	</div>
+	
+	<div v-if="status === getConstant( 'APP_STATUS_SESSION' )">
+		<Session 
+			v-bind:meetingSession="meetingSession" /> 
 	</div>
 		
-	<audio v-bind:id="getConstant('ID_MEETING_AUDIO_ELEMENT')" style="display:none"></audio>
+	<audio style="display:none" 
+		v-bind:id="getConstant('ID_MEETING_AUDIO_ELEMENT')" ></audio>
 </template>
 
 <script>
@@ -58,6 +69,7 @@ import {
 } from 'amazon-chime-sdk-js';
 import LoginForm from "./login/LoginForm.vue"
 import DeviceConfigurator from "./configure/DeviceConfigurator.vue"
+import Session from "./meeting/Session.vue"
 import * as Constants from './constants/Constants.js';
 
 const logger = new ConsoleLogger('MeetingLogs', LogLevel.INFO);
@@ -65,7 +77,8 @@ const logger = new ConsoleLogger('MeetingLogs', LogLevel.INFO);
 export default {
   components: {
     LoginForm,
-    DeviceConfigurator
+    DeviceConfigurator,
+    Session
   },
   props: ['meeting'],       
   data() {
@@ -86,6 +99,14 @@ export default {
     	this.meetingSession = new DefaultMeetingSession(configuration, logger, deviceController); 
     	
     	this.status = Constants.APP_STATUS_CONFIGURE   	    	   
+    },
+    
+    /*
+     * This handler is called after a user click to a button 'Start a session'
+     */
+    startSession(){
+    	console.log(" Start a session")
+    	this.status = Constants.APP_STATUS_SESSION
     },
     
     /*

@@ -4,23 +4,28 @@
 			<div class="col col-md-6 offset-md-3">					
 				<div class="card ">
 					<div class="card-header">Configure devices</div>	
-						<div class="card-body">
-							<AudioOutputDevice
-								v-bind:audioOutputDevices="audioOutputDevices" 
-								v-bind:meetingAudioElement="meetingAudioElement"  
-								v-on:audio-output-selected="audioOutputSelected" />
-																																	
-							<AudioInputDevice
-								v-if="isAudioInputDevice"
-								v-bind:audioInputDevices="audioInputDevices" 
-								v-bind:meetingSession="meetingSession"  
-								v-on:audio-input-selected="audioInputSelected" />			
-																			
-							<VideoInputDevice
-								v-if="isVideoInputDevice"
-								v-bind:videoInputDevices="videoInputDevices"
-								v-bind:meetingSession="meetingSession"
-								v-on:video-input-selected="videoInputSelected" />
+					<div class="card-body">
+						<AudioOutputDevice
+							v-bind:audioOutputDevices="audioOutputDevices" 
+							v-bind:meetingAudioElement="meetingAudioElement"  
+							v-on:audio-output-selected="audioOutputSelected" />
+																																
+						<AudioInputDevice
+							v-if="isAudioInputDevice"
+							v-bind:audioInputDevices="audioInputDevices" 
+							v-bind:meetingSession="meetingSession"  
+							v-on:audio-input-selected="audioInputSelected" />			
+																		
+						<VideoInputDevice
+							v-if="isVideoInputDevice"
+							v-bind:videoInputDevices="videoInputDevices"
+							v-bind:meetingSession="meetingSession"
+							v-on:video-input-selected="videoInputSelected" />													
+					</div>
+					
+					<div class="card-footer">	
+						<button class="btn btn-success btn-block" 												
+								v-on:click.prevent="userWantStartSession()" >Start a session</button>
 					</div>
 				</div>			
 			</div>
@@ -46,17 +51,20 @@ export default {
 		AudioOutputDevice,
 		VideoInputDevice,	
 	},
+	emits: ['startSession'],	
 	props: ['meetingSession', 'meetingAudioElement'],
 	data() {
 			return {
 				isDeviceListReady:false,
 				
+				isBindAudioElement:false,
+														
 				isAudioInputDevice:true,
 				isVideoInputDevice:true,
 				
 				audioInputDevices:null,
 				audioOutputDevices:null,
-				videoInputDevices:null,																				
+				videoInputDevices:null,
 			}
 		},
 		
@@ -96,7 +104,8 @@ export default {
 		async audioOutputSelected( selectedAudioOutputDeviceId ){											
 			try {
 		      await this.meetingSession.audioVideo.chooseAudioOutputDevice( selectedAudioOutputDeviceId );		      		     
-		      this.meetingSession.audioVideo.bindAudioElement( this.meetingAudioElement )	     
+		      this.meetingSession.audioVideo.bindAudioElement( this.meetingAudioElement )	
+		      this.isBindAudioElement = true	          
 		    } catch (e) {
 		      console.error(e)
 		      return		      
@@ -114,6 +123,19 @@ export default {
 		      return		      
 		    }		    		
 		},
+		
+		/*
+		 * a user click to 'Start a session' button
+		 */
+		userWantStartSession(){
+			
+			if(!this.isBindAudioElement){				
+				// Null specifies the default device.			
+				this.audioOutputSelected(null)
+			}
+			
+			this.$emit("startSession")
+		},
 									
 		getDeviceChangeObserver(){
 			return {
@@ -123,7 +145,7 @@ export default {
 				},
 				audioOutputsChanged: freshAudioOutputDeviceList => {
 					this.audioOutputDevices = freshAudioOutputDeviceList
-					this.selectedAudioOutputDeviceId = ''					
+					this.selectedAudioOutputDeviceId = ''									
 				},
 				videoInputsChanged: freshVideoInputDeviceList => {
 					this.videoInputDevices = freshVideoInputDeviceList
@@ -133,7 +155,8 @@ export default {
 		},
 		
 		/*
-		 * This setting depends on setting template
+		 * This setting depends on chosen setting template
+		 * 
 		 * @see .env 
 		 * @see /src/profiles
 		 */

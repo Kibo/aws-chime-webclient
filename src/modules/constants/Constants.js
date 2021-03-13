@@ -23,6 +23,8 @@ export const ID_APP = "cz-kibo-meeting-chime-client";
 /**
  * The app status - login
  * 
+ * a user can login to the local server
+ * 
  * @constant
  * @type {string}
  */
@@ -31,10 +33,23 @@ export const APP_STATUS_LOGIN = "login";
 /**
  * The app status - configure
  * 
+ * a user can configure devices - audio, video
+ * 
  * @constant
  * @type {string}
  */
 export const APP_STATUS_CONFIGURE = "configure";
+
+/**
+ * The app status - session
+ * 
+ * a meeting session begins
+ * 
+ * @constant
+ * @type {string}
+ */
+export const APP_STATUS_SESSION = "session";
+
 
 // ## configure - AUDIO SETTING  #######################################
 /**
