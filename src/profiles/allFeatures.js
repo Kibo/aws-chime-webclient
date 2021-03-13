@@ -24,7 +24,8 @@ export const IS_AUDIO_INPUT_DEVICE = true
  */
 export const IS_VIDEO_INPUT_DEVICE = true
 
-// ## VIDEO QUALITY #################################################3
+
+// ## VIDEO QUALITY #################################################
 
 /**
  * Default video width
@@ -65,6 +66,21 @@ export const VIDEO_INPUT_QUALITY_FRAMERATE=15
  * @type {Number}
  */
 export const VIDEO_INPUT_QUALITY_BANDWIDTH=1400
+
+
+// ## SESSION #####################################################
+
+/**
+ * NUmber of Video tiles
+ * 
+ * min 1 
+ * max 16
+ * 
+ * @constant
+ * @type {Number}
+ */
+export const NUMBER_OF_VIDEO_TILES=16
+
 
 
 

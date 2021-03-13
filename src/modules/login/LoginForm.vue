@@ -13,7 +13,10 @@
 						<form @submit.prevent="getCredentials">
 												
 							<div v-if="form.errors.length">						    						    													
-								<AlertMessage v-for="(error, index) in form.errors" v-bind:message="error" v-on:dismiss="dismissAlert(index)" />																										  
+								<AlertMessage 
+									v-for="(error, index) in form.errors" 
+									v-bind:message="error" 
+									v-on:dismiss="dismissAlert(index)" />																										  
 							</div>
 																									
 							<div class="form-group">						

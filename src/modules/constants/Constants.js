@@ -78,8 +78,20 @@ export const AUDIO_TEST_SOUND_URL = "https://www2.cs.uic.edu/~i101/SoundFiles/St
  */
 export const ID_VIDEO_ELEMENT_FOR_PREVIEW = "cz-kibo-meeting-chime-client-video-preview";
 
-
-
+// ## session #######################################
+/**
+ * The Prefix ID of the HTMLVideoElement for video tile.
+ * 
+ * Example:
+ * PREFIX_FOR_ID_VIDEO_ELEMENT + '1'
+ * PREFIX_FOR_ID_VIDEO_ELEMENT + '2'
+ * ... 
+ * PREFIX_FOR_ID_VIDEO_ELEMENT + '16'
+ * 
+ * @constant
+ * @type {string}
+ */
+export const PREFIX_FOR_ID_VIDEO_ELEMENT = "cz-kibo-meeting-chime-client-video-tile-";
 
 
 

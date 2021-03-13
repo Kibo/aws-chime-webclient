@@ -66,7 +66,7 @@ export default {
 				audioOutputDevices:null,
 				videoInputDevices:null,
 			}
-		},
+	},
 		
 	//@see https://stackoverflow.com/questions/53513538/is-async-await-available-in-vue-js-mounted	
 	async mounted() {				
