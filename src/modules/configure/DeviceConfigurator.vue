@@ -35,15 +35,11 @@
 
 <script>
 import { AudioProfile } from 'amazon-chime-sdk-js'
-import * as Constants from '../constants/Constants.js'
+
 import AudioInputDevice from "./AudioInputDevice.vue"
 import AudioOutputDevice from "./AudioOutputDevice.vue"
 import VideoInputDevice from "./VideoInputDevice.vue"
-/*
- * This "SETTING_PROFILE_NAME" will replace by value from .env
- * @see webpack.config.js
- */
-import * as SettingProfile from "../../profiles/SETTING_PROFILE_NAME" 
+import Utils from "../tools/Utils.js"
 
 export default {	
 	components: {
@@ -162,12 +158,12 @@ export default {
 		 */
 		async applyProfileSetting(){
 			
-			if(!SettingProfile.IS_AUDIO_INPUT_DEVICE){
+			if(!Utils.getSetting('IS_AUDIO_INPUT_DEVICE')){
 				this.audioInputSelected( null )
 				this.isAudioInputDevice = false		
 			}
 			
-			if(SettingProfile.IS_VIDEO_INPUT_DEVICE){
+			if(Utils.getSetting('IS_VIDEO_INPUT_DEVICE')){
 				/*
 				 * Example:
 				 * 360p - (640, 360, 15, 600)
@@ -177,17 +173,17 @@ export default {
 				 * @see https://aws.github.io/amazon-chime-sdk-js/classes/defaultaudiovideofacade.html#choosevideoinputquality
 				 */
 				await this.meetingSession.audioVideo.chooseVideoInputQuality(
-					SettingProfile.VIDEO_INPUT_QUALITY_WIDTH,
-					SettingProfile.VIDEO_INPUT_QUALITY_HEIGHT,
-					SettingProfile.VIDEO_INPUT_QUALITY_FRAMERATE,
-					SettingProfile.VIDEO_INPUT_QUALITY_BANDWIDTH);
+					Utils.getSetting('VIDEO_INPUT_QUALITY_WIDTH'),
+					Utils.getSetting('VIDEO_INPUT_QUALITY_HEIGHT'),
+					Utils.getSetting('VIDEO_INPUT_QUALITY_FRAMERATE'),
+					Utils.getSetting('VIDEO_INPUT_QUALITY_BANDWIDTH'));
 													
 			}else{
 				this.videoInputSelected( null )
 				this.isVideoInputDevice = false
 			}
 						
-			if(SettingProfile.FULLBAND_SPEECH_MONO_QUALITY){
+			if(Utils.getSetting('FULLBAND_SPEECH_MONO_QUALITY')){
 				this.setFulbandSpeech()	
 			}									
 		},

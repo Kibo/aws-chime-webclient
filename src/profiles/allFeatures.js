@@ -82,7 +82,3 @@ export const VIDEO_INPUT_QUALITY_BANDWIDTH=1400
 export const NUMBER_OF_VIDEO_TILES=16
 
 
-
-
-
-

@@ -27,16 +27,3 @@ test('HTML Video element does not exist', async () => {
   	}				
 })
 
-test('Get value from SettingProfile', async () => {
-	const wrapper = mount( Session )
-	
-	expect(wrapper.vm.getSetting('NUMBER_OF_VIDEO_TILES' ))
-	.toBe( SettingProfile.NUMBER_OF_VIDEO_TILES )		
-})
-
-test('Get value from Constant', async () => {
-	const wrapper = mount( Session )
-	
-	expect(wrapper.vm.getConstant('PREFIX_FOR_ID_VIDEO_ELEMENT' ))
-	.toBe( Constant.PREFIX_FOR_ID_VIDEO_ELEMENT )		
-})

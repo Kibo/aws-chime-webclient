@@ -1,24 +1,24 @@
 <template>
-	<div v-if="status === getConstant( 'APP_STATUS_LOGIN' )">
+	<div v-if="status === utils.getConstant( 'APP_STATUS_LOGIN' )">
 		<LoginForm 
 			v-bind:meeting="meeting"
 			v-on:credentials="createMeetingSession" />
 	</div>
 	
-	<div v-if="status === getConstant( 'APP_STATUS_CONFIGURE' )">
+	<div v-if="status === utils.getConstant( 'APP_STATUS_CONFIGURE' )">
 		<DeviceConfigurator 
 			v-bind:meetingSession="meetingSession" 
 			v-bind:meetingAudioElement="getMeetingAudioElement()"
 			v-on:start-session="startSession()" /> 
 	</div>
 	
-	<div v-if="status === getConstant( 'APP_STATUS_SESSION' )">
+	<div v-if="status === utils.getConstant( 'APP_STATUS_SESSION' )">
 		<Session 
 			v-bind:meetingSession="meetingSession" /> 
 	</div>
 		
 	<audio style="display:none" 
-		v-bind:id="getConstant('ID_MEETING_AUDIO_ELEMENT')" ></audio>
+		v-bind:id="utils.getConstant('ID_MEETING_AUDIO_ELEMENT')" ></audio>
 </template>
 
 <script>
@@ -70,7 +70,7 @@ import {
 import LoginForm from "./login/LoginForm.vue"
 import DeviceConfigurator from "./configure/DeviceConfigurator.vue"
 import Session from "./meeting/Session.vue"
-import * as Constants from './constants/Constants.js';
+import Utils from "./tools/Utils.js"
 
 const logger = new ConsoleLogger('MeetingLogs', LogLevel.INFO);
 
@@ -83,7 +83,8 @@ export default {
   props: ['meeting'],       
   data() {
     return {
-    	status:Constants.APP_STATUS_LOGIN,
+    	utils:Utils,
+    	status:Utils.getConstant('APP_STATUS_LOGIN'),
     	meetingSession:null
     }
   },
@@ -98,7 +99,7 @@ export default {
     	const configuration = new MeetingSessionConfiguration(credentials.meeting, credentials.attendee);
     	this.meetingSession = new DefaultMeetingSession(configuration, logger, deviceController); 
     	
-    	this.status = Constants.APP_STATUS_CONFIGURE   	    	   
+    	this.status = Utils.getConstant('APP_STATUS_CONFIGURE')   	    	   
     },
     
     /*
@@ -106,21 +107,11 @@ export default {
      */
     startSession(){
     	console.log(" Start a session")
-    	this.status = Constants.APP_STATUS_SESSION
+    	this.status = Utils.getConstant('APP_STATUS_SESSION')
     },
-    
-    /*
-     * Helper method for attaching Constants in View template.
-     * 
-     * @param {String} - Constant name. For instance: 'ID_APP'
-     * @returns - Constant value.
-     */
-    getConstant( id ){
-    	return Constants[id]
-    },
-        
+             
     getMeetingAudioElement(){
-    	return window.document.getElementById( Constants.ID_MEETING_AUDIO_ELEMENT )
+    	return window.document.getElementById( Utils.getConstant('ID_MEETING_AUDIO_ELEMENT'))
     }
   }
 }
