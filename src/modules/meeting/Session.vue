@@ -33,11 +33,15 @@ export default {
 	},
 	
 	mounted() {				
-			
+		this.meetingSession.audioVideo.addObserver( this.getSessionObserver() );	
+		
+		
+		
+		//meetingSession.audioVideo.startLocalVideoTile();	
 	},
 	
 	beforeUnmount(){
-	
+		this.meetingSession.audioVideo.removeObserver( this.getSessionObserver() )
 	},
 		
 	methods:{
@@ -83,6 +87,197 @@ export default {
 				throw new Error('No video element is available: ' + id);
 			}
 			return videoElement
+		},
+		
+		/*
+		 * Audio Video observer
+		 * 
+		 * @see https://aws.github.io/amazon-chime-sdk-js/interfaces/audiovideoobserver.html
+		 */
+		getSessionObserver(){
+			return {
+				
+				/*
+				 * Called when the session has started.
+				 */
+				audioVideoDidStart: () => {				
+				    console.log('audioVideoDidStart');	
+				},
+				
+				/*
+				 * Called when the session is connecting or reconnecting.
+				 */
+				audioVideoDidStartConnecting: reconnecting => {
+				    if (reconnecting) {
+				      // e.g. the WiFi connection is dropped.
+				      console.log('Attempting to reconnect');
+				    }
+				},
+											
+				/*
+				 * Called when the session has stopped from a started state with the reason provided in the status.
+				 * 
+				 * @param sessionStatus - https://aws.github.io/amazon-chime-sdk-js/classes/meetingsessionstatus.html
+				 */
+				audioVideoDidStop: sessionStatus => {					
+					console.log('Stopped with a session status code: ', sessionStatus.statusCode());
+				},
+											
+				/*
+				 * Called when connection has changed to good from poor.
+				 */
+				connectionDidBecomeGood: () =>{
+					console.log('connectionDidBecomeGood');	
+				},
+				
+				/*
+				 * Called when the connection has been poor for a while if meeting only uses audio.
+				 */
+				connectionDidBecomePoor: () =>{
+					console.log('connectionDidBecomePoor');		
+				},
+				
+				/*
+				 * Called when the connection has been poor if meeting uses video so that the observer can prompt the user about turning off video.
+				 */
+				connectionDidSuggestStopVideo: () =>{
+					console.log('connectionDidSuggestStopVideo');	
+				},
+				
+				/*
+				 * Called when connection health has changed.
+				 * 
+				 * @param connectionHealthData
+				 * @see https://aws.github.io/amazon-chime-sdk-js/classes/connectionhealthdata.html
+				 */
+				connectionHealthDidChange: connectionHealthData =>{
+					console.log('connectionHealthDidChange');	
+				},
+				
+				/*
+				 * Called when simulcast is enabled and simulcast uplink encoding layers get changed.
+				 * 
+				 * @param simulcastLayers
+				 * @see https://aws.github.io/amazon-chime-sdk-js/enums/simulcastlayers.html
+				 */
+				encodingSimulcastLayersDidChange: simulcastLayers =>{
+					console.log('encodingSimulcastLayersDidChange');
+				},
+				
+				/*
+				 * Called when total downlink video bandwidth estimation is less than required video bitrates.
+				 * 
+				 * @param {Number} estimatedBandwidth
+				 * @param {Number} requiredBandwidth
+				 */
+				estimatedDownlinkBandwidthLessThanRequired: ( estimatedBandwidth, requiredBandwidth ) =>{
+					console.log('estimatedDownlinkBandwidthLessThanRequired');	
+				},
+				
+				/*
+				 * Called when specific events occur during the meeting and includes attributes of the event. 
+				 * This can be used to create analytics around meeting metric.
+				 * 
+				 * @param name - https://aws.github.io/amazon-chime-sdk-js/globals.html#eventname
+				 * @param attributes - https://aws.github.io/amazon-chime-sdk-js/interfaces/eventattributes.html
+				 * 
+				 */
+				eventDidReceive: (name, attributes) =>{
+					console.log('eventDidReceive');
+				},
+				
+				/*
+				 * Called when the media stats are available.
+				 * 
+				 * @param clientMetricReport - https://aws.github.io/amazon-chime-sdk-js/interfaces/clientmetricreport.html
+				 */
+				metricsDidReceive: clientMetricReport =>{
+					console.log('metricsDidReceive');
+				},
+				
+				/*
+				 * Called when the remote video sending sources get changed.
+				 */
+				remoteVideoSourcesDidChange: videoSources => {
+					console.log('remoteVideoSourcesDidChange');
+				},
+				
+				/*
+				 * Called when video availability has changed. 
+				 * This information can be used to decide whether to switch the connection type to video and whether or 
+				 * not to offer the option to start the local video tile.
+				 * 
+				 * @param availability - https://aws.github.io/amazon-chime-sdk-js/classes/meetingsessionvideoavailability.html
+				 */
+				videoAvailabilityDidChange: availability =>{
+					console.log('videoAvailabilityDidChange');	
+				},
+				
+				/*
+				 * Called when one or more remote video streams do not meet expected average bitrate.
+				 */
+				videoNotReceivingEnoughData: receivingDataMap => {
+					console.log('videoNotReceivingEnoughData');
+				},
+				
+				/*
+				 * Called when available video receiving bandwidth changed to trigger video subscription if needed.
+				 */
+				videoReceiveBandwidthDidChange: ( newBandwidthKbps, oldBandwidthKbps ) => {
+					console.log('videoReceiveBandwidthDidChange');
+				},
+				
+				/*
+				 * Called when available video sending bandwidth changed.
+				 */
+				videoSendBandwidthDidChange: ( newBandwidthKbps, oldBandwidthKbps ) => {
+					console.log('videoSendBandwidthDidChange');
+				},
+				
+				/*
+				 * Called when a user tries to start a video but by the time the backend processes the request, 
+				 * video capacity has been reached and starting local video is not possible. This can be used to trigger 
+				 * a message to the user about the situation.
+				 */
+				videoSendDidBecomeUnavailable: () =>{
+					console.log('videoSendDidBecomeUnavailable');
+				},
+				
+				/*
+				 * Called when metric of video outbound traffic is received.
+				 */
+				videoSendHealthDidChange: (bitrateKbps, packetsPerSecond) =>{
+					console.log('videoSendHealthDidChange');
+				},
+											
+				/*
+				* Called whenever a tile has been created or updated.
+				* 
+				* States:
+				* @see https://aws.github.io/amazon-chime-sdk-js/classes/videotilestate.html
+				*/				
+				videoTileDidUpdate: tileState => {
+					console.log('videoTileDidUpdate');
+				
+					// Ignore a tile without attendee ID, a local tile (your video), and a content share.
+				 	if (!tileState.boundAttendeeId || tileState.localTile || tileState.isContent) {
+						return;
+				 	}
+				
+				    this.meetingSession.audioVideo.bindVideoElement(
+				      tileState.tileId,
+				      this.acquireVideoElement(tileState.tileId)
+				    );
+				},
+				
+				/*
+				* Called whenever a tile has been removed.
+				*/
+				videoTileWasRemoved: tileId => {
+					console.log('videoTileWasRemoved');
+					this.releaseVideoElement(tileId);
+			  }
+			}
 		}					
 	}	
 }
