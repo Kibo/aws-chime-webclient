@@ -36,7 +36,8 @@ export default {
 		this.meetingSession.audioVideo.addObserver( this.getSessionObserver() );	
 		
 		
-		
+		//meetingSession.audioVideo.start()
+		// meetingSession.audioVideo.stop()
 		//meetingSession.audioVideo.startLocalVideoTile();	
 	},
 	
@@ -120,7 +121,16 @@ export default {
 				 * @param sessionStatus - https://aws.github.io/amazon-chime-sdk-js/classes/meetingsessionstatus.html
 				 */
 				audioVideoDidStop: sessionStatus => {					
-					console.log('Stopped with a session status code: ', sessionStatus.statusCode());
+					const sessionStatusCode = sessionStatus.statusCode();
+					if (sessionStatusCode === MeetingSessionStatusCode.Left) {
+					/*
+						- You called meetingSession.audioVideo.stop().
+						- When closing a browser window or page, Chime SDK attempts to leave the session.
+					*/
+						console.log('You left the session');
+					} else {
+						console.log('Stopped with a session status code: ', sessionStatusCode);
+					}										
 				},
 											
 				/*
@@ -134,7 +144,8 @@ export default {
 				 * Called when the connection has been poor for a while if meeting only uses audio.
 				 */
 				connectionDidBecomePoor: () =>{
-					console.log('connectionDidBecomePoor');		
+					console.log('connectionDidBecomePoor');	
+					console.log('Your connection is poor');	
 				},
 				
 				/*
@@ -142,6 +153,7 @@ export default {
 				 */
 				connectionDidSuggestStopVideo: () =>{
 					console.log('connectionDidSuggestStopVideo');	
+					console.log('Recommend turning off your video');
 				},
 				
 				/*
@@ -211,6 +223,11 @@ export default {
 				 */
 				videoAvailabilityDidChange: availability =>{
 					console.log('videoAvailabilityDidChange');	
+					if (videoAvailability.canStartLocalVideo) {
+						console.log('You can share your video');
+					} else {
+						console.log('You cannot share your video');
+					}
 				},
 				
 				/*
@@ -225,6 +242,7 @@ export default {
 				 */
 				videoReceiveBandwidthDidChange: ( newBandwidthKbps, oldBandwidthKbps ) => {
 					console.log('videoReceiveBandwidthDidChange');
+					console.log(`Receiving bandwidth changed from ${oldBandwidthKbps} to ${newBandwidthKbps}`);
 				},
 				
 				/*
@@ -232,15 +250,19 @@ export default {
 				 */
 				videoSendBandwidthDidChange: ( newBandwidthKbps, oldBandwidthKbps ) => {
 					console.log('videoSendBandwidthDidChange');
+					console.log(`Sending bandwidth changed from ${oldBandwidthKbps} to ${newBandwidthKbps}`);
 				},
 				
-				/*
-				 * Called when a user tries to start a video but by the time the backend processes the request, 
-				 * video capacity has been reached and starting local video is not possible. This can be used to trigger 
-				 * a message to the user about the situation.
+				/*				
+				 *	Chime SDK allows a total of 16 simultaneous videos per meeting. 
+				 *	If you try to share more video, this method will be called.
+				 *	This can be used to trigger a message to the user about the situation.
+				 * 
+				 * @see 'videoAvailabilityDidChange' to find out when it becomes available.
 				 */
 				videoSendDidBecomeUnavailable: () =>{
 					console.log('videoSendDidBecomeUnavailable');
+					console.log('You cannot share your video');
 				},
 				
 				/*
@@ -248,6 +270,7 @@ export default {
 				 */
 				videoSendHealthDidChange: (bitrateKbps, packetsPerSecond) =>{
 					console.log('videoSendHealthDidChange');
+					console.log(`Sending bitrate in kilobits per second: ${bitrateKbps} and ${packetsPerSecond}`);
 				},
 											
 				/*
@@ -264,10 +287,10 @@ export default {
 						return;
 				 	}
 				
-				    this.meetingSession.audioVideo.bindVideoElement(
-				      tileState.tileId,
-				      this.acquireVideoElement(tileState.tileId)
-				    );
+					this.meetingSession.audioVideo.bindVideoElement(
+						tileState.tileId,
+						this.acquireVideoElement(tileState.tileId)
+				 	);
 				},
 				
 				/*
@@ -276,6 +299,9 @@ export default {
 				videoTileWasRemoved: tileId => {
 					console.log('videoTileWasRemoved');
 					this.releaseVideoElement(tileId);
+					
+					//TODO
+					//To unbind a tile, call meetingSession.audioVideo.unbindVideoElement(tileId).
 			  }
 			}
 		}					
