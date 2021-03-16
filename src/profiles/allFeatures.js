@@ -81,4 +81,16 @@ export const VIDEO_INPUT_QUALITY_BANDWIDTH=1400
  */
 export const NUMBER_OF_VIDEO_TILES=16
 
-
+/**
+ * The function names that you want to remove from AudioVideoObserver.
+ *
+ * There are implemented all callbacks in default. But you dont want to send messages from all callbacks to visitors.
+ * You can use this array of function names for remove inappropriate callbacks.
+ * 
+ * For instance:
+ * Moderator:[] 
+ * Visitor:['encodingSimulcastLayersDidChange', 'eventDidReceive', 'metricsDidReceive', 'remoteVideoSourcesDidChange']
+ * 
+ * @see https://aws.github.io/amazon-chime-sdk-js/interfaces/audiovideoobserver.html
+ */
+export const AUDIO_VIDEO_OBSERVER_CALLBACKS_FOR_REMOVE = []

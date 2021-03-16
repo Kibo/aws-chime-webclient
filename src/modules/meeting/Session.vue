@@ -1,7 +1,20 @@
 <template>
+	
+	<div class="row">
+		<div class="col">
+			<div v-if="messages.length">
+				<AlertMessage 
+					v-for="(message, index) in messages" 
+					v-bind:message="message" 
+					v-on:dismiss="dismissAlert(index)" />
+			</div>			
+		</div>		
+	</div>
+	
 	<div class="row">
 		<div class="col">Prezentation</div>		
 	</div>
+	
 	<div class="row">
 		<template 
 			v-for="n in utils.getSetting('NUMBER_OF_VIDEO_TILES')" 
@@ -15,16 +28,20 @@
 </template>
 
 <script>
+import AlertMessage from "../common/AlertMessage.vue"
 import VideoTile from "./VideoTile.vue"
 import Utils from "../tools/Utils.js"
 
 export default {
 	components: {
-		VideoTile			
+		VideoTile,
+		AlertMessage
 	},
 	props: ['meetingSession'],
 	data() {
 			return {
+				messages : [],
+				
 				utils:Utils,
 											
 				// index-tileId pairs
@@ -35,17 +52,24 @@ export default {
 	mounted() {				
 		this.meetingSession.audioVideo.addObserver( this.getSessionObserver() );	
 		
+		//this.meetingSession.audioVideo.start()
 		
-		//meetingSession.audioVideo.start()
-		// meetingSession.audioVideo.stop()
-		//meetingSession.audioVideo.startLocalVideoTile();	
+		// TODO create button
+		//meetingSession.audioVideo.startLocalVideoTile();
+		
+		this.messages.push({text:'Testa message'})		
 	},
 	
 	beforeUnmount(){
 		this.meetingSession.audioVideo.removeObserver( this.getSessionObserver() )
+		this.meetingSession.audioVideo.stop()
 	},
 		
 	methods:{
+		
+		dismissAlert(index){							
+			this.messages.splice(index, 1);				
+		},
 		
 		acquireVideoElement( tileId ){
 		  
@@ -96,7 +120,7 @@ export default {
 		 * @see https://aws.github.io/amazon-chime-sdk-js/interfaces/audiovideoobserver.html
 		 */
 		getSessionObserver(){
-			return {
+			let audioVideoObserver = {
 				
 				/*
 				 * Called when the session has started.
@@ -304,6 +328,16 @@ export default {
 					//To unbind a tile, call meetingSession.audioVideo.unbindVideoElement(tileId).
 			  }
 			}
+			
+			Utils.getSetting('AUDIO_VIDEO_OBSERVER_CALLBACKS_FOR_REMOVE').forEach(function( functionName ){
+				
+				if( audioVideoObserver[functionName] && typeof audioVideoObserver[functionName] === 'function' ){
+					console.log( 'Callback ' + functionName + ' has been remove.')
+					delete audioVideoObserver[functionName]									
+				}										
+			})
+			
+			return audioVideoObserver;
 		}					
 	}	
 }
