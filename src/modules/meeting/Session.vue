@@ -84,6 +84,8 @@ export default {
 	mounted() {				
 		this.meetingSession.audioVideo.addObserver( this.getSessionObserver() );
 		this.meetingSession.audioVideo.start()
+				
+		console.log( this.showVideoInputQualitySettings() )			
 	},
 	
 	beforeUnmount(){
@@ -374,7 +376,7 @@ export default {
 						return;
 				 	}
 				 	
-				 	console.log('videoTileDidUpdate ########');
+				 	console.log('videoTileDidUpdate');
 				 								
 					this.meetingSession.audioVideo.bindVideoElement(
 						tileState.tileId,
@@ -400,7 +402,12 @@ export default {
 			})
 			
 			return audioVideoObserver;
-		}					
+		},
+		
+		showVideoInputQualitySettings(){
+			let setting = this.meetingSession.audioVideo.getVideoInputQualitySettings()
+			return `VideoQuality: width: ${setting.videoWidth}, height: ${setting.videoHeight}, fps: ${setting.videoFrameRate}, , bandWidth: ${setting.videoMaxBandwidthKbps} Kbps`
+		}								
 	}	
 }
 </script>

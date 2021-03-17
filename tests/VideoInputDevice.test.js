@@ -40,13 +40,6 @@ test('User change device - option', async () => {
 	expect(wrapper.emitted().videoInputSelected[0][0]).toBe('123')		
 })
 
-test('Get Constant', async () => {
-	const wrapper = mount(VideoInputDevice)
-	    			
-	expect(wrapper.vm.getConstant( 'ID_APP' ))
-	.toBe( Constant.ID_APP )		
-})
-
 
 
 

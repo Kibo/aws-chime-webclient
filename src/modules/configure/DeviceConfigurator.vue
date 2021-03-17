@@ -85,9 +85,10 @@ export default {
 		/*
 		 * a user selected a device - change handler
 		 */
-		async audioInputSelected( selectedAudioInputDeviceId ){					
+		async audioInputSelected( deviceId ){
+			this.$store.commit('audioInputId', deviceId )					
 			try {
-		      await this.meetingSession.audioVideo.chooseAudioInputDevice( selectedAudioInputDeviceId );		     
+		      await this.meetingSession.audioVideo.chooseAudioInputDevice( deviceId );			      		      		      		    
 		    } catch (e) {
 		      console.error(e)
 		      return		      
@@ -97,11 +98,12 @@ export default {
 		/*
 		 * a user selected a device - change handler
 		 */
-		async audioOutputSelected( selectedAudioOutputDeviceId ){											
+		async audioOutputSelected( deviceId ){
+			this.$store.commit('audioOutputId', deviceId )										
 			try {
-		      await this.meetingSession.audioVideo.chooseAudioOutputDevice( selectedAudioOutputDeviceId );		      		     
+		      await this.meetingSession.audioVideo.chooseAudioOutputDevice( deviceId );		      		     
 		      this.meetingSession.audioVideo.bindAudioElement( this.meetingAudioElement )	
-		      this.isBindAudioElement = true	          
+		      this.isBindAudioElement = true			      		      		      		            
 		    } catch (e) {
 		      console.error(e)
 		      return		      
@@ -111,9 +113,10 @@ export default {
 		/*
 		 * a user selected a device - change handler
 		 */
-		async videoInputSelected( selectedVideoInputDeviceId ){																
+		async videoInputSelected( deviceId ){
+			this.$store.commit('videoInputId', deviceId)
 			try {
-		      await this.meetingSession.audioVideo.chooseVideoInputDevice( selectedVideoInputDeviceId );		     
+		      await this.meetingSession.audioVideo.chooseVideoInputDevice( deviceId );		      		      		      		      		 
 		    } catch (e) {
 		      console.error(e)
 		      return		      

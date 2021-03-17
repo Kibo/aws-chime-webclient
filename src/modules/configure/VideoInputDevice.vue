@@ -23,7 +23,7 @@
 	<div class="row">			
 		<div class="col mt-2">
 			<div class="embed-responsive embed-responsive-16by9">
-				<video v-bind:id="getConstant('ID_VIDEO_ELEMENT_FOR_PREVIEW')" class="w-100 h-100" ></video>
+				<video v-bind:id="utils.getConstant('ID_VIDEO_ELEMENT_FOR_PREVIEW')" class="w-100 h-100" ></video>
 			</div>	
 		</div>					
 	</div>
@@ -31,14 +31,15 @@
 
 <script>
 import * as Constants from '../constants/Constants.js';
+import Utils from "../tools/Utils.js"
 
 export default {	
 	props: ['videoInputDevices', 'meetingSession'],
 	emits: ['videoInputSelected'],
 	data() {
 			return {
-				videoInputTestEnabled:false,
-				deviceId:null				
+				utils:Utils,
+				videoInputTestEnabled:false						
 			}
 		},
 	
@@ -64,11 +65,7 @@ export default {
 		},
 		
 		stopVideoPreview(){
-			// 1) this call remove selectedVideoInputDeviceId from this.meetingSession.audioVideo
-			this.meetingSession.audioVideo.stopVideoPreviewForVideoInput( this.getHTMLElementForVideoPreview() )
-			
-			// 2) send selectedVideoInputDeviceId once again
-			this.$emit('videoInputSelected', this.deviceId )	
+			this.meetingSession.audioVideo.stopVideoPreviewForVideoInput( this.getHTMLElementForVideoPreview() )					
 		},
 		
 		/*
@@ -79,22 +76,12 @@ export default {
 		 */
 		userChangeDevice( event ){			
 			// null indicate no device
-			this.deviceId = event.target.value == '' ? null : event.target.value
+			let deviceId = event.target.value == '' ? null : event.target.value
 			this.stopVideoPreview() 																						
-			this.$emit('videoInputSelected', this.deviceId )			
-			this.videoInputTestEnabled = this.deviceId ? true : false 																		
+			this.$emit('videoInputSelected', deviceId )			
+			this.videoInputTestEnabled = deviceId ? true : false 																		
 		},
-		
-		/*
-		 * Helper method for attaching Constants in View template.
-		 * 
-		 * @param {String} - Constant name. For instance: 'ID_APP'
-		 * @returns - Constant value.
-		 */
-		getConstant( id ){
-			return Constants[id]
-		},
-		
+				
 		getHTMLElementForVideoPreview(){
 			return window.document.getElementById( Constants.ID_VIDEO_ELEMENT_FOR_PREVIEW ) 
 		}						
