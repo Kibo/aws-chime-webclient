@@ -111,7 +111,7 @@ export default {
 		/*
 		 * a user selected a device - change handler
 		 */
-		async videoInputSelected( selectedVideoInputDeviceId ){										
+		async videoInputSelected( selectedVideoInputDeviceId ){																
 			try {
 		      await this.meetingSession.audioVideo.chooseVideoInputDevice( selectedVideoInputDeviceId );		     
 		    } catch (e) {

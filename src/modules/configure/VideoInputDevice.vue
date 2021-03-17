@@ -37,7 +37,8 @@ export default {
 	emits: ['videoInputSelected'],
 	data() {
 			return {
-				videoInputTestEnabled:false
+				videoInputTestEnabled:false,
+				deviceId:null				
 			}
 		},
 	
@@ -63,7 +64,11 @@ export default {
 		},
 		
 		stopVideoPreview(){
-			this.meetingSession.audioVideo.stopVideoPreviewForVideoInput( this.getHTMLElementForVideoPreview() )	
+			// 1) this call remove selectedVideoInputDeviceId from this.meetingSession.audioVideo
+			this.meetingSession.audioVideo.stopVideoPreviewForVideoInput( this.getHTMLElementForVideoPreview() )
+			
+			// 2) send selectedVideoInputDeviceId once again
+			this.$emit('videoInputSelected', this.deviceId )	
 		},
 		
 		/*
@@ -72,12 +77,12 @@ export default {
 		 * 
 		 * @see https://aws.github.io/amazon-chime-sdk-js/interfaces/audiovideofacade.html#choosevideoinputdevice
 		 */
-		userChangeDevice( event ){
+		userChangeDevice( event ){			
 			// null indicate no device
-			let deviceId = event.target.value == '' ? null : event.target.value 																						
-			this.$emit('videoInputSelected', deviceId )
-			this.stopVideoPreview()
-			this.videoInputTestEnabled = deviceId ? true : false 																		
+			this.deviceId = event.target.value == '' ? null : event.target.value
+			this.stopVideoPreview() 																						
+			this.$emit('videoInputSelected', this.deviceId )			
+			this.videoInputTestEnabled = this.deviceId ? true : false 																		
 		},
 		
 		/*

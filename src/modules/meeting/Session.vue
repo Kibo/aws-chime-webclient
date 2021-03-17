@@ -24,10 +24,39 @@
 			</div>
 			<div class="w-100" v-if="n%4===0"></div>
 		</template>				
-	</div>	
+	</div>
+	
+	<div class="row mb-2">
+		<div class="col text-center">
+			<div class="btn-group" role="group">
+			  <button type="button" class="btn"
+			  	v-bind:class="isAudio ? 'btn-success' :'btn-secondary'"
+			  	v-on:click="toggleAudio"
+			  ><i class="fa fa-microphone" aria-hidden="true"></i> Voice</button>
+			  		
+			  <button type="button" class="btn btn-secondary" 
+			  	v-bind:class="isVideo ? 'btn-success' :'btn-secondary'"
+			  	v-on:click="toggleVideo"
+			   ><i class="fa fa-video-camera" aria-hidden="true"></i> Video</button>
+			   			   
+			  <button type="button" class="btn btn-secondary"
+				v-bind:class="isShare ? 'btn-success' :'btn-secondary'"
+				v-on:click="toggleShare"
+			  ><i class="fa fa-share-alt" aria-hidden="true"></i> Share</button>
+			  
+			  <button type="button" class="btn btn-danger"
+			  	v-on:click="leaveMeeting"			  
+			  ><i class="fa fa-sign-out" aria-hidden="true"></i> Leave</button>
+			</div>	
+		</div>		
+	</div>
+		
 </template>
 
 <script>
+import {
+  MeetingSessionStatusCode
+} from 'amazon-chime-sdk-js';
 import AlertMessage from "../common/AlertMessage.vue"
 import VideoTile from "./VideoTile.vue"
 import Utils from "../tools/Utils.js"
@@ -40,6 +69,9 @@ export default {
 	props: ['meetingSession'],
 	data() {
 			return {
+				isAudio:false,
+				isVideo:false,
+				isShare:false,
 				messages : [],
 				
 				utils:Utils,
@@ -50,22 +82,54 @@ export default {
 	},
 	
 	mounted() {				
-		this.meetingSession.audioVideo.addObserver( this.getSessionObserver() );	
-		
-		//this.meetingSession.audioVideo.start()
-		
-		// TODO create button
-		//meetingSession.audioVideo.startLocalVideoTile();
-		
-		this.messages.push({text:'Testa message'})		
+		this.meetingSession.audioVideo.addObserver( this.getSessionObserver() );
+		this.meetingSession.audioVideo.start()
 	},
 	
 	beforeUnmount(){
-		this.meetingSession.audioVideo.removeObserver( this.getSessionObserver() )
-		this.meetingSession.audioVideo.stop()
+		this.leaveMeeting()
 	},
 		
 	methods:{
+		
+		/*
+		 * User click to Audio button
+		 */
+		toggleAudio(){
+			console.log('toggleAudio')
+			this.isAudio = this.isAudio ? false : true	
+		},
+		
+		/*
+		 * User click to Audio button
+		 */
+		async toggleVideo(){
+			console.log('toggleVideo')
+			this.isVideo = this.isVideo ? false : true
+			if( this.isVideo ){
+				this.meetingSession.audioVideo.startLocalVideoTile();													
+			}else{
+				this.meetingSession.audioVideo.stopLocalVideoTile();
+			}
+			
+		},
+		
+		/*
+		 * User click to Share button
+		 */
+		toggleShare(){
+			console.log('toggleShare')
+			this.isShare = this.isShare ? false : true	
+		},
+		
+		/*
+		 * User click to Leave button
+		 */
+		leaveMeeting(){
+			console.log('Leave meeting')
+			this.meetingSession.audioVideo.stop()
+			this.meetingSession.audioVideo.removeObserver( this.getSessionObserver() )
+		},
 		
 		dismissAlert(index){							
 			this.messages.splice(index, 1);				
@@ -92,8 +156,9 @@ export default {
 		
 		releaseVideoElement( tileId ){
 		  for (let i = 0; i < Utils.getSetting('NUMBER_OF_VIDEO_TILES'); i += 1) {
-		    if (indexMap[i] === tileId) {
+		    if (this.indexMap[i] === tileId) {
 		      delete this.indexMap[i];
+		      this.meetingSession.audioVideo.unbindVideoElement(tileId)
 		      return;
 		    }
 		  }
@@ -245,7 +310,7 @@ export default {
 				 * 
 				 * @param availability - https://aws.github.io/amazon-chime-sdk-js/classes/meetingsessionvideoavailability.html
 				 */
-				videoAvailabilityDidChange: availability =>{
+				videoAvailabilityDidChange: videoAvailability =>{
 					console.log('videoAvailabilityDidChange');	
 					if (videoAvailability.canStartLocalVideo) {
 						console.log('You can share your video');
@@ -303,14 +368,14 @@ export default {
 				* States:
 				* @see https://aws.github.io/amazon-chime-sdk-js/classes/videotilestate.html
 				*/				
-				videoTileDidUpdate: tileState => {
-					console.log('videoTileDidUpdate');
-				
+				videoTileDidUpdate: tileState => {																
 					// Ignore a tile without attendee ID, a local tile (your video), and a content share.
-				 	if (!tileState.boundAttendeeId || tileState.localTile || tileState.isContent) {
+				 	if (!tileState.boundAttendeeId || tileState.isContent) {
 						return;
 				 	}
-				
+				 	
+				 	console.log('videoTileDidUpdate ########');
+				 								
 					this.meetingSession.audioVideo.bindVideoElement(
 						tileState.tileId,
 						this.acquireVideoElement(tileState.tileId)
@@ -323,9 +388,6 @@ export default {
 				videoTileWasRemoved: tileId => {
 					console.log('videoTileWasRemoved');
 					this.releaseVideoElement(tileId);
-					
-					//TODO
-					//To unbind a tile, call meetingSession.audioVideo.unbindVideoElement(tileId).
 			  }
 			}
 			

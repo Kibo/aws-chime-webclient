@@ -72,7 +72,7 @@ import DeviceConfigurator from "./configure/DeviceConfigurator.vue"
 import Session from "./meeting/Session.vue"
 import Utils from "./tools/Utils.js"
 
-const logger = new ConsoleLogger('MeetingLogs', LogLevel.INFO);
+const logger = new ConsoleLogger('MeetingLogs', LogLevel.WARN);
 
 export default {
   components: {
