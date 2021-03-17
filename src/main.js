@@ -11,20 +11,7 @@ const store = createStore({
 		audioOutputDeviceId:null,
     }
   },
-  getters: {
-    getVideoInputId (state) {
-      return state.videoInputDeviceId
-    },
-    
-    getAudioInputId (state) {
-      return state.audioInputDeviceId
-    },
-    
-    getAudioOutputId (state) {
-      return state.audiooutputDeviceId
-    }
-  },
-  
+   
   mutations: {  	
   	videoInputId(state, deviceId) {
       state.videoInputDeviceId = deviceId
