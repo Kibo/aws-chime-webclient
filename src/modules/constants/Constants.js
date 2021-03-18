@@ -93,5 +93,13 @@ export const ID_VIDEO_ELEMENT_FOR_PREVIEW = "cz-kibo-meeting-chime-client-video-
  */
 export const PREFIX_FOR_ID_VIDEO_ELEMENT = "cz-kibo-meeting-chime-client-video-tile-";
 
+/**
+ * The HTMLVideoElement ID for shared video content.
+ * 
+ * @constant
+ * @type {string}
+ */
+export const SHARE_CONTENT_ID_VIDEO_ELEMENT = "cz-kibo-meeting-chime-client-video-tile-share"
+
 
 

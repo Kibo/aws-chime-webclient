@@ -59,9 +59,9 @@ export default {
 		/*
 		 * a user clicked to audio test button - handler
 		 */
-		startVideoPreview(){
-			this.videoInputTestEnabled = false							
-			this.meetingSession.audioVideo.startVideoPreviewForVideoInput( this.getHTMLElementForVideoPreview() )			
+		startVideoPreview(){								
+			this.meetingSession.audioVideo.startVideoPreviewForVideoInput( this.getHTMLElementForVideoPreview() )
+			this.videoInputTestEnabled = false				
 		},
 		
 		stopVideoPreview(){

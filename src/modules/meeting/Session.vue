@@ -12,21 +12,23 @@
 	</div>
 	
 	<div class="row">
-		<div class="col">Prezentation</div>		
+		<div class="col">
+			<VideoTile class="d-none"
+				v-bind:id="utils.getConstant('SHARE_CONTENT_ID_VIDEO_ELEMENT')" />
+		</div>		
 	</div>
 	
 	<div class="row">
 		<template 
 			v-for="n in utils.getSetting('NUMBER_OF_VIDEO_TILES')" 
-			v-bind:id="n">			
-			<div class="col">							
+			v-bind:id="n">
+			<div class="col-12 col-sm-12 col-md-3">												
 				<VideoTile v-bind:id="utils.getConstant('PREFIX_FOR_ID_VIDEO_ELEMENT') + (n-1)" />
-			</div>
-			<div class="w-100" v-if="n%4===0"></div>
+			</div>						
 		</template>				
 	</div>
 	
-	<div class="row mb-2">
+	<div class="row my-2">
 		<div class="col text-center">
 			<div class="btn-group" role="group">
 			  <button type="button" class="btn"
@@ -108,12 +110,20 @@ export default {
 		async toggleVideo(){
 			console.log('toggleVideo')
 			this.isVideo = this.isVideo ? false : true
+			
 			if( this.isVideo ){
-				this.meetingSession.audioVideo.startLocalVideoTile();													
+				
+				try {
+		      		await this.meetingSession.audioVideo.chooseVideoInputDevice( this.$store.state.videoInputDeviceId );
+		      		this.meetingSession.audioVideo.startLocalVideoTile();		      		      		      		      		 
+		    	} catch (e) {
+		      		console.error(e)
+		      		return
+		    	}
+																							
 			}else{
 				this.meetingSession.audioVideo.stopLocalVideoTile();
-			}
-			
+			}			
 		},
 		
 		/*
@@ -314,6 +324,8 @@ export default {
 				 */
 				videoAvailabilityDidChange: videoAvailability =>{
 					console.log('videoAvailabilityDidChange');	
+										
+					// TODO it depends on Profile.NUMBER_OF_VIDEO_TILES
 					if (videoAvailability.canStartLocalVideo) {
 						console.log('You can share your video');
 					} else {
