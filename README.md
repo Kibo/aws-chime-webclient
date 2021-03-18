@@ -5,7 +5,7 @@
 AWS Chime webclient using Vue.js.
 
 ## Version
-- 0.2.0 ( coding )
+- 0.3.0 ( coding )
 
 ### Dependencies
 - [amazon-chime-sdk-js](https://github.com/aws/amazon-chime-sdk-js)

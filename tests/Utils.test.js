@@ -28,3 +28,31 @@ test('no value in Constant', async () => {
     	expect(error.toString()).toBe('Error: No value for constant: abcde');
   	}		
 })
+
+test('Create responsive wrapper for video element', async () => {		
+	
+	let id = "testa-wrapper-id"
+	let isContent = false
+
+	let wrapper = Utils.createVideoElementWrapper(id, isContent)
+	
+	expect( wrapper.id ).toBe( id )
+	expect( wrapper.classList.contains("col-md-3") ).toBe(true)
+	
+	
+	isContent = true
+	
+	wrapper = Utils.createVideoElementWrapper(id, isContent)	
+	expect( wrapper.classList.contains("col-md-3") ).toBe(false)
+	
+	
+	expect( wrapper.querySelector('.embed-responsive') ).toBeTruthy()		
+})
+
+test('Create video element', async () => {		
+	
+	let videoElement = Utils.createVideoElement()
+	expect( videoElement.nodeName ).toBe("VIDEO")
+	expect( videoElement.classList.contains("w-100") ).toBe(true)
+	expect( videoElement.classList.contains("h-100") ).toBe(true)			
+})

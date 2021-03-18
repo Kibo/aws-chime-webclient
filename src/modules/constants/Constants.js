@@ -80,6 +80,22 @@ export const ID_VIDEO_ELEMENT_FOR_PREVIEW = "cz-kibo-meeting-chime-client-video-
 
 // ## session #######################################
 /**
+ * The ID for the wrapper where are video elements.
+ * * 
+ * @constant
+ * @type {string}
+ */
+export const ID_VIDEO_ELEMENT_CONTAINER_TILES = "cz-kibo-meeting-chime-client-video-container-tiles";
+
+/**
+ * The ID for the wrapper where is place share content.
+ * 
+ * @constant
+ * @type {string}
+ */
+export const ID_VIDEO_ELEMENT_CONTAINER_SHARE = "cz-kibo-meeting-chime-client-video-share"
+
+/**
  * The Prefix ID of the HTMLVideoElement for video tile.
  * 
  * Example:
@@ -93,13 +109,7 @@ export const ID_VIDEO_ELEMENT_FOR_PREVIEW = "cz-kibo-meeting-chime-client-video-
  */
 export const PREFIX_FOR_ID_VIDEO_ELEMENT = "cz-kibo-meeting-chime-client-video-tile-";
 
-/**
- * The HTMLVideoElement ID for shared video content.
- * 
- * @constant
- * @type {string}
- */
-export const SHARE_CONTENT_ID_VIDEO_ELEMENT = "cz-kibo-meeting-chime-client-video-tile-share"
+
 
 
 

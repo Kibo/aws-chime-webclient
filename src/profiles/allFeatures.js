@@ -94,3 +94,11 @@ export const NUMBER_OF_VIDEO_TILES=16
  * @see https://aws.github.io/amazon-chime-sdk-js/interfaces/audiovideoobserver.html
  */
 export const AUDIO_VIDEO_OBSERVER_CALLBACKS_FOR_REMOVE = []
+
+/**
+ * Can share content
+ *  
+ * @constant
+ * @type {Boolean}
+ */
+export const CAN_SHARE_CONTENT=false

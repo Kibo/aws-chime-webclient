@@ -12,36 +12,31 @@
 	</div>
 	
 	<div class="row">
-		<div class="col">
-			<VideoTile class="d-none"
-				v-bind:id="utils.getConstant('SHARE_CONTENT_ID_VIDEO_ELEMENT')" />
-		</div>		
+		<div v-bind:id="utils.getConstant('ID_VIDEO_ELEMENT_CONTAINER_SHARE')"></div>						
 	</div>
 	
 	<div class="row">
-		<template 
-			v-for="n in utils.getSetting('NUMBER_OF_VIDEO_TILES')" 
-			v-bind:id="n">
-			<div class="col-12 col-sm-12 col-md-3">												
-				<VideoTile v-bind:id="utils.getConstant('PREFIX_FOR_ID_VIDEO_ELEMENT') + (n-1)" />
-			</div>						
-		</template>				
+		<div v-bind:id="utils.getConstant('ID_VIDEO_ELEMENT_CONTAINER_TILES')"></div>
 	</div>
 	
 	<div class="row my-2">
 		<div class="col text-center">
 			<div class="btn-group" role="group">
+				
 			  <button type="button" class="btn"
+			  	v-if="utils.getSetting('IS_AUDIO_INPUT_DEVICE')"
 			  	v-bind:class="isAudio ? 'btn-success' :'btn-secondary'"
 			  	v-on:click="toggleAudio"
 			  ><i class="fa fa-microphone" aria-hidden="true"></i> Voice</button>
 			  		
-			  <button type="button" class="btn btn-secondary" 
+			  <button type="button" class="btn btn-secondary"
+			  	v-if="utils.getSetting('IS_VIDEO_INPUT_DEVICE')" 
 			  	v-bind:class="isVideo ? 'btn-success' :'btn-secondary'"
 			  	v-on:click="toggleVideo"
 			   ><i class="fa fa-video-camera" aria-hidden="true"></i> Video</button>
 			   			   
 			  <button type="button" class="btn btn-secondary"
+			  	v-if="utils.getSetting('CAN_SHARE_CONTENT')"
 				v-bind:class="isShare ? 'btn-success' :'btn-secondary'"
 				v-on:click="toggleShare"
 			  ><i class="fa fa-share-alt" aria-hidden="true"></i> Share</button>
@@ -147,12 +142,20 @@ export default {
 			this.messages.splice(index, 1);				
 		},
 		
-		acquireVideoElement( tileId ){
+		/*
+		 * Acquire HTML video element for tile binding
+		 * 
+		 * @param {Number} tileId
+		 * @param {Boolean} isContent - is share content?
+		 * 
+		 * @returns {Object} - HTMLVideoElement
+		 */
+		acquireVideoElement( tileId, isContent=false){
 		  
 		  // Return the same video element if already bound.
 		  for (let i = 0; i < Utils.getSetting('NUMBER_OF_VIDEO_TILES'); i += 1) {
 		    if (this.indexMap[i] === tileId) {
-		      return this.getHTMLVideoElement(i)
+		      return this.getHTMLVideoElement( tileId, isContent )
 		    }
 		  }
 		  
@@ -160,7 +163,7 @@ export default {
 		  for (let i = 0; i < Utils.getSetting('NUMBER_OF_VIDEO_TILES'); i += 1) {
 		    if (!this.indexMap.hasOwnProperty(i)) {
 		      this.indexMap[i] = tileId;
-		      return this.getHTMLVideoElement(i)
+		      return this.getHTMLVideoElement( tileId, isContent )
 		    }
 		  }
 		  throw new Error('no video element is available');
@@ -169,8 +172,17 @@ export default {
 		releaseVideoElement( tileId ){
 		  for (let i = 0; i < Utils.getSetting('NUMBER_OF_VIDEO_TILES'); i += 1) {
 		    if (this.indexMap[i] === tileId) {
-		      delete this.indexMap[i];
 		      this.meetingSession.audioVideo.unbindVideoElement(tileId)
+		      
+		      let success = Utils.removeElementById( Utils.getConstant('PREFIX_FOR_ID_VIDEO_ELEMENT') + tileId )
+		      
+		      if(success){
+		      	console.log( 'Remove Video Element' )
+		      }else{
+		      	console.log( 'Error - Remove Video Element' )
+		      }
+		      		      		      		    
+		      delete this.indexMap[i];		      
 		      return;
 		    }
 		  }
@@ -179,16 +191,18 @@ export default {
 		/*
 		 * Get HTMLVideoElement from DOM
 		 * 
-		 * @param {Number} idx, index 
+		 * @param {Number} tileId
+		 * @param {Boolean} isContent - is share content?
 		 * @return {HTMLVideoElement}
 		 */
-		getHTMLVideoElement( idx ){
-			let id = Utils.getConstant('PREFIX_FOR_ID_VIDEO_ELEMENT') + idx
-			let videoElement = window.document.getElementById( id )
-			if( !videoElement ){
-				throw new Error('No video element is available: ' + id);
+		getHTMLVideoElement( tileId, isContent ){					
+			let id = Utils.getConstant('PREFIX_FOR_ID_VIDEO_ELEMENT') + tileId			
+			let videoWrapper = window.document.getElementById( id )
+			if( videoWrapper ){
+				return videoWrapper.querySelector("video")
 			}
-			return videoElement
+																																			
+			return Utils.buildVideoElement( id, isContent )
 		},
 		
 		/*
@@ -296,7 +310,7 @@ export default {
 				 * 
 				 */
 				eventDidReceive: (name, attributes) =>{
-					console.log('eventDidReceive');
+					console.log(`eventDidReceive: ${name}`);
 				},
 				
 				/*
@@ -405,6 +419,9 @@ export default {
 			  }
 			}
 			
+			/*
+			 * Remove unwanted callbacks from observer
+			 */
 			Utils.getSetting('AUDIO_VIDEO_OBSERVER_CALLBACKS_FOR_REMOVE').forEach(function( functionName ){
 				
 				if( audioVideoObserver[functionName] && typeof audioVideoObserver[functionName] === 'function' ){
