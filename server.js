@@ -12,8 +12,10 @@ const MEETINGS = new Map()
 MEETINGS.set('abcdefg', {id:'abcdefg', title:"Demo", isActive: true, isLocked:false, region:"eu-west-1"})
 
 const PINS = new Map()
-PINS.set('1234', {id:'1234', role:"demo"})
-
+PINS.set('lektor', {id:'1', role:"lektor"})
+PINS.set('listener', {id:'2', role:"listener"})
+PINS.set('moderator', {id:'3', role:"moderator"})
+PINS.set('broadcaster', {id:'4', role:"broadcaster"})
 
 app.get('/', (req, res) => {
   res.sendFile('demo/meeting.html', {root: __dirname })
@@ -60,7 +62,10 @@ app.get('/meeting/:id/:pin/:name', async (req, res) => {
 		return		
 	}
 					 
-	res.status(200).json({meeting:chimeCreateMeetingResponse.Meeting, attendee:chimeCreateAttendeeResponse.Attendee});
+	res.status(200).json({
+		role: PINS.get(req.params.pin).role ,
+		meeting:chimeCreateMeetingResponse.Meeting, 
+		attendee:chimeCreateAttendeeResponse.Attendee});
 	return  
 })
 
