@@ -79,13 +79,25 @@ export const AUDIO_TEST_SOUND_URL = "https://www2.cs.uic.edu/~i101/SoundFiles/St
 export const ID_VIDEO_ELEMENT_FOR_PREVIEW = "cz-kibo-meeting-chime-client-video-preview";
 
 // ## session #######################################
+
+/**
+ * Number of Video tiles
+ * 
+ * min 1 
+ * max 16
+ * 
+ * @constant
+ * @type {Number}
+ */
+export const NUMBER_OF_VIDEO_TILES=16
+
 /**
  * The ID for the wrapper where are video elements.
  * * 
  * @constant
  * @type {string}
  */
-export const ID_VIDEO_ELEMENT_CONTAINER_TILES = "cz-kibo-meeting-chime-client-video-container-tiles";
+export const ID_VIDEO_ELEMENT_TILES_CONTAINER = "cz-kibo-meeting-chime-client-video-tiles-container";
 
 /**
  * The ID for the wrapper where is place share content.
@@ -93,7 +105,7 @@ export const ID_VIDEO_ELEMENT_CONTAINER_TILES = "cz-kibo-meeting-chime-client-vi
  * @constant
  * @type {string}
  */
-export const ID_VIDEO_ELEMENT_CONTAINER_SHARE = "cz-kibo-meeting-chime-client-video-share"
+export const ID_VIDEO_ELEMENT_PRESENTERS_CONTAINER = "cz-kibo-meeting-chime-client-video-presenter-container"
 
 /**
  * The Prefix ID of the HTMLVideoElement for video tile.
@@ -107,7 +119,7 @@ export const ID_VIDEO_ELEMENT_CONTAINER_SHARE = "cz-kibo-meeting-chime-client-vi
  * @constant
  * @type {string}
  */
-export const PREFIX_FOR_ID_VIDEO_ELEMENT = "cz-kibo-meeting-chime-client-video-tile-";
+export const ID_PREFIX_FOR_VIDEO_ELEMENT = "cz-kibo-meeting-chime-client-video-tile-";
 
 
 

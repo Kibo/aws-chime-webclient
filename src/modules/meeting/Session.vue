@@ -1,5 +1,4 @@
 <template>
-	
 	<div class="row">
 		<div class="col">
 			<div v-if="messages.length">
@@ -11,13 +10,8 @@
 		</div>		
 	</div>
 	
-	<div class="row">
-		<div v-bind:id="utils.getConstant('ID_VIDEO_ELEMENT_CONTAINER_SHARE')"></div>						
-	</div>
-	
-	<div class="row">
-		<div v-bind:id="utils.getConstant('ID_VIDEO_ELEMENT_CONTAINER_TILES')"></div>
-	</div>
+	<div class="row" style="min-height:50%" v-bind:id="utils.getConstant('ID_VIDEO_ELEMENT_PRESENTERS_CONTAINER')"></div>
+	<div class="row" style="min-height:20%" v-bind:id="utils.getConstant('ID_VIDEO_ELEMENT_TILES_CONTAINER')"></div>
 	
 	<div class="row my-2">
 		<div class="col text-center">
@@ -101,6 +95,8 @@ export default {
 		
 		/*
 		 * User click to Audio button
+		 * 
+		 * it starts and stops local video tile here
 		 */
 		async toggleVideo(){
 			console.log('toggleVideo')
@@ -109,15 +105,30 @@ export default {
 			if( this.isVideo ){
 				
 				try {
+					// TODO					
 		      		await this.meetingSession.audioVideo.chooseVideoInputDevice( this.$store.state.videoInputDeviceId );
-		      		this.meetingSession.audioVideo.startLocalVideoTile();		      		      		      		      		 
+		      		
+		      		this.meetingSession.audioVideo.startLocalVideoTile();	
+		      		
+		      		let localTile = this.meetingSession.audioVideo.getLocalVideoTile()
+		      		if( localTile ){
+		      			this.meetingSession.audioVideo.bindVideoElement(
+							localTile.id(),
+							this.acquireVideoElement( localTile.id() )
+				 		);	
+		      		}		      		
+		      			      		      		      		      		 
 		    	} catch (e) {
 		      		console.error(e)
 		      		return
 		    	}
 																							
 			}else{
-				this.meetingSession.audioVideo.stopLocalVideoTile();
+				let localTile = this.meetingSession.audioVideo.getLocalVideoTile()
+				if( localTile ){
+					this.meetingSession.audioVideo.stopLocalVideoTile();
+					this.releaseVideoElement( localTile.id() )	
+				}														
 			}			
 		},
 		
@@ -146,65 +157,39 @@ export default {
 		 * Acquire HTML video element for tile binding
 		 * 
 		 * @param {Number} tileId
-		 * @param {Boolean} isContent - is share content?
+		 * @param {Boolean} isMainTile 
 		 * 
 		 * @returns {Object} - HTMLVideoElement
 		 */
-		acquireVideoElement( tileId, isContent=false){
-		  
+		acquireVideoElement( tileId ){		  		  		
 		  // Return the same video element if already bound.
-		  for (let i = 0; i < Utils.getSetting('NUMBER_OF_VIDEO_TILES'); i += 1) {
+		  for (let i = 0; i < Utils.getConstant('NUMBER_OF_VIDEO_TILES'); i += 1) {
 		    if (this.indexMap[i] === tileId) {
-		      return this.getHTMLVideoElement( tileId, isContent )
+		      return Utils.getHTMLVideoElement( tileId )
 		    }
 		  }
 		  
 		  // Return the next available video element.
-		  for (let i = 0; i < Utils.getSetting('NUMBER_OF_VIDEO_TILES'); i += 1) {
+		  for (let i = 0; i < Utils.getConstant('NUMBER_OF_VIDEO_TILES'); i += 1) {		  			  			  			  		
 		    if (!this.indexMap.hasOwnProperty(i)) {
-		      this.indexMap[i] = tileId;
-		      return this.getHTMLVideoElement( tileId, isContent )
+		      this.indexMap[i] = tileId;		      
+		      return Utils.getHTMLVideoElement( tileId )
 		    }
 		  }
 		  throw new Error('no video element is available');
 		},
 		
 		releaseVideoElement( tileId ){
-		  for (let i = 0; i < Utils.getSetting('NUMBER_OF_VIDEO_TILES'); i += 1) {
+		  for (let i = 0; i < Utils.getConstant('NUMBER_OF_VIDEO_TILES'); i += 1) {
 		    if (this.indexMap[i] === tileId) {
-		      this.meetingSession.audioVideo.unbindVideoElement(tileId)
-		      
-		      let success = Utils.removeElementById( Utils.getConstant('PREFIX_FOR_ID_VIDEO_ELEMENT') + tileId )
-		      
-		      if(success){
-		      	console.log( 'Remove Video Element' )
-		      }else{
-		      	console.log( 'Error - Remove Video Element' )
-		      }
-		      		      		      		    
-		      delete this.indexMap[i];		      
+		      this.meetingSession.audioVideo.unbindVideoElement(tileId)		      		     		      		      		      		      		      		      		      		
+		      delete this.indexMap[i];
+		      Utils.removeElementById( Utils.getConstant('ID_PREFIX_FOR_VIDEO_ELEMENT') + tileId )		      
 		      return;
 		    }
 		  }
 		},
-		
-		/*
-		 * Get HTMLVideoElement from DOM
-		 * 
-		 * @param {Number} tileId
-		 * @param {Boolean} isContent - is share content?
-		 * @return {HTMLVideoElement}
-		 */
-		getHTMLVideoElement( tileId, isContent ){					
-			let id = Utils.getConstant('PREFIX_FOR_ID_VIDEO_ELEMENT') + tileId			
-			let videoWrapper = window.document.getElementById( id )
-			if( videoWrapper ){
-				return videoWrapper.querySelector("video")
-			}
-																																			
-			return Utils.buildVideoElement( id, isContent )
-		},
-		
+					
 		/*
 		 * Audio Video observer
 		 * 
@@ -339,7 +324,7 @@ export default {
 				videoAvailabilityDidChange: videoAvailability =>{
 					console.log('videoAvailabilityDidChange');	
 										
-					// TODO it depends on Profile.NUMBER_OF_VIDEO_TILES
+					// TODO it depends on Constant.NUMBER_OF_VIDEO_TILES
 					if (videoAvailability.canStartLocalVideo) {
 						console.log('You can share your video');
 					} else {
@@ -398,12 +383,12 @@ export default {
 				*/				
 				videoTileDidUpdate: tileState => {																
 					// Ignore a tile without attendee ID, a local tile (your video), and a content share.
-				 	if (!tileState.boundAttendeeId || tileState.isContent) {
+				 	if (!tileState.boundAttendeeId || tileState.localTile || tileState.isContent) {
 						return;
 				 	}
 				 	
 				 	console.log('videoTileDidUpdate');
-				 								
+				 					 				 					 						
 					this.meetingSession.audioVideo.bindVideoElement(
 						tileState.tileId,
 						this.acquireVideoElement(tileState.tileId)

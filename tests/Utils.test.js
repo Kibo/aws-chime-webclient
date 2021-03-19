@@ -17,8 +17,8 @@ test('no value in SettingProfile', async () => {
 })
 
 test('Get value from Constant', async () => {	
-	expect(Utils.getConstant('PREFIX_FOR_ID_VIDEO_ELEMENT' ))
-	.toBe( Constant.PREFIX_FOR_ID_VIDEO_ELEMENT )		
+	expect(Utils.getConstant('ID_PREFIX_FOR_VIDEO_ELEMENT' ))
+	.toBe( Constant.ID_PREFIX_FOR_VIDEO_ELEMENT )		
 })
 
 test('no value in Constant', async () => {		
@@ -29,24 +29,26 @@ test('no value in Constant', async () => {
   	}		
 })
 
-test('Create responsive wrapper for video element', async () => {		
+test('Create space wrapper for video element', async () => {		
 	
 	let id = "testa-wrapper-id"
-	let isContent = false
+	let isPresenterTile = false
 
-	let wrapper = Utils.createVideoElementWrapper(id, isContent)
+	let wrapper = Utils.createSpaceWrapper(id, isPresenterTile)
 	
 	expect( wrapper.id ).toBe( id )
 	expect( wrapper.classList.contains("col-md-3") ).toBe(true)
 	
 	
-	isContent = true
+	isPresenterTile = true
 	
-	wrapper = Utils.createVideoElementWrapper(id, isContent)	
-	expect( wrapper.classList.contains("col-md-3") ).toBe(false)
-	
-	
-	expect( wrapper.querySelector('.embed-responsive') ).toBeTruthy()		
+	wrapper = Utils.createSpaceWrapper(id, isPresenterTile)	
+	expect( wrapper.classList.contains("col") ).toBe(true)		
+})
+
+test('Create responsive wrapper for video element', async () => {			
+	let wrapper = Utils.createResponsiveWrapper()		
+	expect( wrapper.classList.contains("embed-responsive") ).toBe(true)	
 })
 
 test('Create video element', async () => {		

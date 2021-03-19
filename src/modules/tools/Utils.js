@@ -35,38 +35,78 @@ const Utils = {
 		return val
 	},
 	
-	buildVideoElement( id, isContent ){		
-		let parentId = isContent ? 
-				this.getConstant('ID_VIDEO_ELEMENT_CONTAINER_SHARE') : 
-				this.getConstant('ID_VIDEO_ELEMENT_CONTAINER_TILES')
-		let parent = window.document.getElementById( parentId )
-		
-		let videoWrapper = this.createVideoElementWrapper( id, isContent )									
-		let videoElement = this.createVideoElement()
-			
-		//TODO
-		videoWrapper.querySelector('.embed-responsive').append( videoElement )
-		
-		parent.append( videoWrapper )
-		
-		return videoElement			
+	/*
+	 * Get HTMLVideoElement from DOM
+	 * 
+	 * @param {Number} tileId
+	 * @param {Boolean} isPresenterTile
+	 * @return {HTMLVideoElement}
+	 */
+	getHTMLVideoElement( tileId, isPresenterTile=false ){
+		let id = this.getConstant('ID_PREFIX_FOR_VIDEO_ELEMENT') + tileId
+		let videoWrapper = document.getElementById(id)
+		if( videoWrapper ){
+			return videoWrapper.querySelector('video')
+		}
+						
+		return this.buildVideoElement( id, isPresenterTile )		
 	},
 	
 	/*
-	 * Remove element from DOM
+	 * Create DOM for VideoElement
 	 * 
-	 * @param {String} id - element ID
-	 * @return {Boolean} - is deleted?
+	 * @param {String} id - element wrapper ID
+	 * @param {Boolean} isPresenterTile
+	 * 
+	 * @returns {HTMLVideoElement}
 	 */
-	removeElementById( id ){
-		let element = document.getElementById(id)
-		if(element){
-			element.outerHTML = "";
-			return true
-			
+	buildVideoElement( id, isPresenterTile ){		
+		let parentId = isPresenterTile ? 
+				this.getConstant('ID_VIDEO_ELEMENT_PRESENTERS_CONTAINER') : 
+				this.getConstant('ID_VIDEO_ELEMENT_TILES_CONTAINER')
+		let parent = document.getElementById( parentId )
+		
+		let spaceWrapper = this.createSpaceWrapper(id, isPresenterTile)
+		let responsiveWrapper = this.createResponsiveWrapper()
+		let videoElement = this.createVideoElement()
+		
+		responsiveWrapper.append( videoElement )
+		spaceWrapper.append( responsiveWrapper )
+		parent.append( spaceWrapper )
+														
+		return videoElement			
+	},
+		
+	/*
+	 * Create a space wrapper for video element
+	 * 
+	 * @param {Strint} id - element ID
+	 * @param {Boolean} isPresenterTile
+	 * 
+	 * @returns {Node} - DOM element with ID
+	 */
+	createSpaceWrapper(id, isPresenterTile){
+		let wrapper = document.createElement("div")
+		wrapper.id = id;
+		
+		if( isPresenterTile ){
+			wrapper.classList.add("col");	
 		}else{
-			return false
-		}		 		
+			wrapper.classList.add("col-12", "col-sm-12","col-md-3");
+		}
+					
+		return wrapper							
+	},
+	
+	/*
+	 * Create a responsive wrapper for video element
+	 * 
+	 * @returns {Node} - DOM element
+	 */
+	createResponsiveWrapper(){
+		let wrapper = document.createElement("div")
+		wrapper.classList.add("embed-responsive", "embed-responsive-16by9");						
+		return wrapper							
 	},
 	
 	/*
@@ -81,29 +121,20 @@ const Utils = {
 	},
 	
 	/*
-	 * Create a responsive wrapper for video element
+	 * Remove element from DOM
 	 * 
-	 * @param {Strint} id - element ID
-	 * @param {Boolean} isContent - is share content?
-	 * @returns {Node} - DOM element with ID
+	 * @param {String} id - element ID
+	 * @return {Boolean} - is deleted?
 	 */
-	createVideoElementWrapper(id, isContent){
-		let wrapper = document.createElement("div")
-		wrapper.id = id;
-		if( isContent ){
-			wrapper.classList.add("col");	
+	removeElementById( id ){
+		let element = document.getElementById(id)
+		if(element){			
+			element.outerHTML = "";
+			return true			
 		}else{
-			wrapper.classList.add("col-12", "col-sm-12","col-md-3");
-		}
-		
-		let responsive = document.createElement("div")
-		responsive.classList.add("embed-responsive", "embed-responsive-16by9");
-		
-		wrapper.append( responsive )
-		
-		return wrapper							
-	}
-		
+			return false
+		}		 		
+	}		
 }
 
 

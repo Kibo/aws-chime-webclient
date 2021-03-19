@@ -69,18 +69,6 @@ export const VIDEO_INPUT_QUALITY_BANDWIDTH=1400
 
 
 // ## SESSION #####################################################
-
-/**
- * NUmber of Video tiles
- * 
- * min 1 
- * max 16
- * 
- * @constant
- * @type {Number}
- */
-export const NUMBER_OF_VIDEO_TILES=16
-
 /**
  * The function names that you want to remove from AudioVideoObserver.
  *

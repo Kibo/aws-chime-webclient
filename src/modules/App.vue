@@ -118,5 +118,9 @@ export default {
 </script>
 
 <style lang="stylus">
-
+html, body{ 
+	min-height: 100vh;
+	overflow: auto;
+	background:green;
+}
 </style>
