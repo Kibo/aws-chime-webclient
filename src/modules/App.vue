@@ -94,7 +94,8 @@ export default {
   	 * 
   	 * @param {Object} - {meeting:{}, atendee:{}}
   	 */ 
-    createMeetingSession( credentials){    	    	   
+    createMeetingSession( credentials){
+    	this.$store.commit('role', credentials.role )    	    	    	    	    	
     	const deviceController = new DefaultDeviceController(logger, {enableWebAudio: true});
     	const configuration = new MeetingSessionConfiguration(credentials.meeting, credentials.attendee);
     	this.meetingSession = new DefaultMeetingSession(configuration, logger, deviceController); 

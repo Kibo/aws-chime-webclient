@@ -1,9 +1,5 @@
 import * as Constants from '../constants/Constants.js'
-/*
- * This "SETTING_PROFILE_NAME" will replace by value from .env
- * @see webpack.config.js
- */
-import * as SettingProfile from "../../profiles/SETTING_PROFILE_NAME"
+import SettingManager from './SettingManager.js'
 
 const Utils = {
 	
@@ -20,19 +16,28 @@ const Utils = {
 		} 
 		return val 
 	},
-	
+			
 	/*
 	* Helper method for attaching SettingProfile in View template.
 	* 
-	* @param {String} - SettingProfile name.
-	* @returns - SettingProfile value.
+	* @param {String} key.
+	* @param {String} role, role name
+	* 
+	* @returns value
 	*/
-	getSetting( id ){
-		let val = SettingProfile[id] 
-		if( typeof val === 'undefined' ){
-			throw new Error('No value for setting: ' + id)	
-		} 
-		return val
+	getSetting( key, role ){			
+							
+		if( SettingManager[role] && 
+			typeof SettingManager[role][key] !== 'undefined' ){
+			return SettingManager[role][key]
+		}
+				
+		if(SettingManager['default'] && 
+		typeof SettingManager['default'][key] !== 'undefined'){
+			return SettingManager['default'][key]
+		}
+				
+		throw new Error('No default value for key: ' + key)
 	},
 	
 	/*

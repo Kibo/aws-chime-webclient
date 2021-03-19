@@ -1,18 +1,25 @@
 import { mount, shallowMount } from '@vue/test-utils'
 import Utils from "../src/modules/tools/Utils.js"
 import * as Constant from '../src/modules/constants/Constants.js';
-import * as SettingProfile from "../src/profiles/SETTING_PROFILE_NAME" 
 
-test('Get value from SettingProfile', async () => {	
-	expect(Utils.getSetting('NUMBER_OF_VIDEO_TILES' ))
-	.toBe( SettingProfile.NUMBER_OF_VIDEO_TILES )		
+import DefaultSetting from '../src/roles/default.js';
+import LektorSetting from '../src/roles/default.js';
+
+test('Get value from Setting - default', async () => {	
+	expect(Utils.getSetting('CAN_SHARE_CONTENT' ))
+	.toBe( false )		
+})
+
+test('Get value from Setting - role', async () => {	
+	expect(Utils.getSetting('CAN_SHARE_CONTENT', 'lektor' ))
+	.toBe( true )		
 })
 
 test('no value in SettingProfile', async () => {		
 	try {
     	expect(Utils.getSetting('abcde' ))
   	} catch (error) {  		
-    	expect(error.toString()).toBe('Error: No value for setting: abcde');
+    	expect(error.toString()).toBe('Error: No default value for key: abcde');
   	}		
 })
 
