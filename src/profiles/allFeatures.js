@@ -89,4 +89,4 @@ export const AUDIO_VIDEO_OBSERVER_CALLBACKS_FOR_REMOVE = []
  * @constant
  * @type {Boolean}
  */
-export const CAN_SHARE_CONTENT=false
+export const CAN_SHARE_CONTENT=true

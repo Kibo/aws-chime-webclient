@@ -1,18 +1,4 @@
 <template>
-	<div class="row">
-		<div class="col">
-			<div v-if="messages.length">
-				<AlertMessage 
-					v-for="(message, index) in messages" 
-					v-bind:message="message" 
-					v-on:dismiss="dismissAlert(index)" />
-			</div>			
-		</div>		
-	</div>
-	
-	<div class="row" style="min-height:50%" v-bind:id="utils.getConstant('ID_VIDEO_ELEMENT_PRESENTERS_CONTAINER')"></div>
-	<div class="row" style="min-height:20%" v-bind:id="utils.getConstant('ID_VIDEO_ELEMENT_TILES_CONTAINER')"></div>
-	
 	<div class="row my-2">
 		<div class="col text-center">
 			<div class="btn-group" role="group">
@@ -41,7 +27,21 @@
 			</div>	
 		</div>		
 	</div>
-		
+	
+	<div class="row">
+		<div class="col">
+			<div v-if="messages.length">
+				<AlertMessage 
+					v-for="(message, index) in messages" 
+					v-bind:message="message" 
+					v-on:dismiss="dismissAlert(index)" />
+			</div>			
+		</div>		
+	</div>
+	
+	<div class="row" v-bind:id="utils.getConstant('ID_VIDEO_ELEMENT_TILES_CONTAINER')"></div>
+	
+	<div class="row" v-bind:id="utils.getConstant('ID_VIDEO_ELEMENT_PRESENTERS_CONTAINER')"></div>		
 </template>
 
 <script>
@@ -49,12 +49,10 @@ import {
   MeetingSessionStatusCode
 } from 'amazon-chime-sdk-js';
 import AlertMessage from "../common/AlertMessage.vue"
-import VideoTile from "./VideoTile.vue"
 import Utils from "../tools/Utils.js"
 
 export default {
 	components: {
-		VideoTile,
 		AlertMessage
 	},
 	props: ['meetingSession'],

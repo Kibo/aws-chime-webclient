@@ -16,6 +16,7 @@
     "path": "^0.12.7",
     "uuid": "^3.3.2",
     "vue": "^3.0.7",
+    "vue-router": "^4.0.5",
     "vuex": "^4.0.0"
   },
   "devDependencies": {

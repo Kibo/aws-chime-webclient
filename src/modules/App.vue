@@ -118,9 +118,12 @@ export default {
 </script>
 
 <style lang="stylus">
-html, body{ 
-	min-height: 100vh;
-	overflow: auto;
-	background:green;
+html {
+  height: 100%;
+}
+body {
+	min-height: 100%;
+	background: rgb(63,181,30);
+	background: linear-gradient(180deg, rgba(63,181,30,1) 20%, rgba(14,117,0,1) 80%);
 }
 </style>
