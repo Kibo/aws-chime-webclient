@@ -51,6 +51,8 @@ export default {
 	props: ['meetingSession', 'meetingAudioElement'],
 	data() {
 			return {
+				role: this.$store.getters.role,
+				
 				isDeviceListReady:false,
 				
 				isBindAudioElement:false,
@@ -161,12 +163,12 @@ export default {
 		 */
 		async applyProfileSetting(){
 			
-			if(!Utils.getSetting('IS_AUDIO_INPUT_DEVICE')){
+			if(!Utils.getSetting('IS_AUDIO_INPUT_DEVICE', this.role )){
 				this.audioInputSelected( null )
 				this.isAudioInputDevice = false		
 			}
 			
-			if(Utils.getSetting('IS_VIDEO_INPUT_DEVICE')){
+			if(Utils.getSetting('IS_VIDEO_INPUT_DEVICE', this.role)){
 				/*
 				 * Example:
 				 * 360p - (640, 360, 15, 600)
@@ -176,17 +178,17 @@ export default {
 				 * @see https://aws.github.io/amazon-chime-sdk-js/classes/defaultaudiovideofacade.html#choosevideoinputquality
 				 */
 				await this.meetingSession.audioVideo.chooseVideoInputQuality(
-					Utils.getSetting('VIDEO_INPUT_QUALITY_WIDTH'),
-					Utils.getSetting('VIDEO_INPUT_QUALITY_HEIGHT'),
-					Utils.getSetting('VIDEO_INPUT_QUALITY_FRAMERATE'),
-					Utils.getSetting('VIDEO_INPUT_QUALITY_BANDWIDTH'));
+					Utils.getSetting('VIDEO_INPUT_QUALITY_WIDTH', this.role),
+					Utils.getSetting('VIDEO_INPUT_QUALITY_HEIGHT', this.role),
+					Utils.getSetting('VIDEO_INPUT_QUALITY_FRAMERATE', this.role),
+					Utils.getSetting('VIDEO_INPUT_QUALITY_BANDWIDTH', this.role));
 													
 			}else{
 				this.videoInputSelected( null )
 				this.isVideoInputDevice = false
 			}
 						
-			if(Utils.getSetting('FULLBAND_SPEECH_MONO_QUALITY')){
+			if(Utils.getSetting('FULLBAND_SPEECH_MONO_QUALITY', this.role)){
 				this.setFulbandSpeech()	
 			}									
 		},

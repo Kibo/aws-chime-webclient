@@ -6,12 +6,11 @@ state () {
 		videoInputDeviceId : null,
 		audioInputDeviceId : null,
 		audioOutputDeviceId : null,
-		role : 'default'
+		credentials: null
 	}
 }, mutations: {
-	
-	role(state, role){
-		state.role = role
+	credentials(state, credentials){
+		state.credentials = credentials
 	},
 	
 	videoInputId(state, deviceId) {
@@ -25,7 +24,12 @@ state () {
 	audioOutputId(state, deviceId) {
 		state.audioOutputDeviceId = deviceId
 	}
-}
+},
+getters: {
+    role(state) {
+      return state.credentials.role
+    }
+  }
 })
 
 export default Store

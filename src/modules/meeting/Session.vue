@@ -4,19 +4,19 @@
 			<div class="btn-group" role="group">
 				
 			  <button type="button" class="btn"
-			  	v-if="utils.getSetting('IS_AUDIO_INPUT_DEVICE')"
+			  	v-if="utils.getSetting('IS_AUDIO_INPUT_DEVICE', role)"
 			  	v-bind:class="isAudio ? 'btn-success' :'btn-secondary'"
 			  	v-on:click="toggleAudio"
 			  ><i class="fa fa-microphone" aria-hidden="true"></i> Voice</button>
 			  		
 			  <button type="button" class="btn btn-secondary"
-			  	v-if="utils.getSetting('IS_VIDEO_INPUT_DEVICE')" 
+			  	v-if="utils.getSetting('IS_VIDEO_INPUT_DEVICE', role)" 
 			  	v-bind:class="isVideo ? 'btn-success' :'btn-secondary'"
 			  	v-on:click="toggleVideo"
 			   ><i class="fa fa-video-camera" aria-hidden="true"></i> Video</button>
 			   			   
 			  <button type="button" class="btn btn-secondary"
-			  	v-if="utils.getSetting('CAN_SHARE_CONTENT')"
+			  	v-if="utils.getSetting('CAN_SHARE_CONTENT', role)"
 				v-bind:class="isShare ? 'btn-success' :'btn-secondary'"
 				v-on:click="toggleShare"
 			  ><i class="fa fa-share-alt" aria-hidden="true"></i> Share</button>
@@ -58,6 +58,8 @@ export default {
 	props: ['meetingSession'],
 	data() {
 			return {
+				role: this.$store.getters.role,
+				
 				isAudio:false,
 				isVideo:false,
 				isShare:false,
@@ -405,7 +407,7 @@ export default {
 			/*
 			 * Remove unwanted callbacks from observer
 			 */
-			Utils.getSetting('AUDIO_VIDEO_OBSERVER_CALLBACKS_FOR_REMOVE').forEach(function( functionName ){
+			Utils.getSetting('AUDIO_VIDEO_OBSERVER_CALLBACKS_FOR_REMOVE', this.role).forEach(function( functionName ){
 				
 				if( audioVideoObserver[functionName] && typeof audioVideoObserver[functionName] === 'function' ){
 					console.log( 'Callback ' + functionName + ' has been remove.')
