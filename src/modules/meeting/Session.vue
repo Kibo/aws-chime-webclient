@@ -1,46 +1,47 @@
 <template>
-	<nav class="navbar navbar-expand-md sticky-top navbar-dark bg-dark mb-2">
-		<a class="navbar-brand" href="#">
-			<img src="/docs/4.6/assets/brand/bootstrap-solid.svg" width="30" height="30" class="d-inline-block align-top" alt="Logo"> AWS Chime
-		</a>
-
-		<button class="navbar-toggler" type="button" data-toggle="collapse" v-bind:data-target="'#' + utils.getConstant('ID_MAIN_NAV')">
-			<span class="navbar-toggler-icon"></span>
-		</button>
-
-		<div class="collapse navbar-collapse" v-bind:id="utils.getConstant('ID_MAIN_NAV')">
-			<ul class="navbar-nav mr-auto">
-				
-				<li class="nav-item"
-					v-if="utils.getSetting('IS_AUDIO_INPUT_DEVICE', role)">
-					<a class="nav-link" href="#"
-						v-bind:class="isAudio ? 'active text-success' :''" 
-						v-on:click.prevent="toggleAudio"><i class="fa fa-microphone"></i> Voice</a>
-				</li>
-				
-				<li class="nav-item"
-					v-if="utils.getSetting('IS_VIDEO_INPUT_DEVICE', role)" >
-					<a class="nav-link" href="#"
-						v-bind:class="isVideo ? 'active text-success' :''" 
-						v-on:click.prevent="toggleVideo"><i class="fa fa-video-camera"></i> Video</a>
-				</li>
-				
-				<li class="nav-item"
-					v-if="utils.getSetting('CAN_SHARE_CONTENT', role)">
-					<a class="nav-link" href="#"
-						v-bind:class="isShare ? 'active text-success' :''"
-						v-on:click.prevent="toggleShare"><i class="fa fa-share-alt"></i> Share</a>
-				</li>
-				
-				<li class="nav-item">
-					<a class="nav-link text-danger" href="#"						
-						v-on:click.prevent="leaveMeeting"><i class="fa fa-sign-out"></i> Leave</a>
-				</li>
-			</ul>
-
-		</div>
-	</nav>
+		
+	<div class="row">
+		<div class="col-3 text-white text-left">
 			
+		</div>
+				
+		<div class="col text-center">
+			
+			<div class="btn-group" role="group">				
+			  <button type="button" class="btn btn-sm text-uppercase"
+			  	v-if="utils.getSetting('IS_AUDIO_INPUT_DEVICE', role)"
+			  	v-bind:class="isAudio ? 'btn-success' :'btn-secondary'"
+			  	v-on:click.prevent="toggleAudio"
+			  ><i class="fa fa-microphone" aria-hidden="true"></i> Voice</button>
+			  		
+			  <button type="button" class="btn btn-sm text-uppercase"
+			  	v-if="utils.getSetting('IS_VIDEO_INPUT_DEVICE', role)"  
+			  	v-bind:class="isVideo ? 'btn-success' :'btn-secondary'"
+			  	v-on:click="toggleVideo"
+			   ><i class="fa fa-video-camera" aria-hidden="true"></i> Video</button>
+			   			   
+			  <button type="button" class="btn btn-sm text-uppercase"
+			  	v-if="utils.getSetting('CAN_SHARE_CONTENT', role)"
+				v-bind:class="isShare ? 'btn-success' :'btn-secondary'"
+				v-on:click="toggleShare"
+			  ><i class="fa fa-share-alt" aria-hidden="true"></i> Share</button>
+			  
+			  <button type="button" class="btn btn-sm btn-danger text-uppercase"
+			  	v-on:click="leaveMeeting"			  
+			  ><i class="fa fa-sign-out" aria-hidden="true"></i> Leave</button>
+			</div>
+						
+		</div>
+		
+		<div class="col-3 text-white text-right">
+			<span class="badge badge-secondary">				
+				<i class="fa fa-users" aria-hidden="true"></i> {{this.attendeePresenceSet.size}} | 
+				<i class="fa fa-arrow-circle-o-up" aria-hidden="true"></i> {{uplink}} | 
+				<i class="fa fa-arrow-circle-o-down" aria-hidden="true"></i> {{downlink}}
+			</span>			
+		</div>		
+	</div>
+				
 	<div class="row">
 		<div class="col">
 			<div v-if="messages.length">
@@ -82,6 +83,11 @@ export default {
 											
 				// index-tileId pairs
 				indexMap:{},
+				
+				uplink:0,
+				downlink:0,
+				
+				attendeePresenceSet:new Set()
 			}
 	},
 	
@@ -226,7 +232,7 @@ export default {
 				 * Called when the session has started.
 				 */
 				audioVideoDidStart: () => {				
-				    console.log('audioVideoDidStart');	
+					//console.log('audioVideoDidStart');	
 				},
 				
 				/*
@@ -261,23 +267,23 @@ export default {
 				 * Called when connection has changed to good from poor.
 				 */
 				connectionDidBecomeGood: () =>{
-					console.log('connectionDidBecomeGood');	
+					//console.log('connectionDidBecomeGood');	
 				},
 				
 				/*
 				 * Called when the connection has been poor for a while if meeting only uses audio.
 				 */
 				connectionDidBecomePoor: () =>{
-					console.log('connectionDidBecomePoor');	
-					console.log('Your connection is poor');	
+					console.log('connectionDidBecomePoor');						
+					this.messages.push({text:"Your connection is poor"})
 				},
 				
 				/*
 				 * Called when the connection has been poor if meeting uses video so that the observer can prompt the user about turning off video.
 				 */
 				connectionDidSuggestStopVideo: () =>{
-					console.log('connectionDidSuggestStopVideo');	
-					console.log('Recommend turning off your video');
+					console.log('connectionDidSuggestStopVideo');						
+					this.messages.push({text:"It is recommended to turn off the video.", type:"alert-danger"})
 				},
 				
 				/*
@@ -287,7 +293,7 @@ export default {
 				 * @see https://aws.github.io/amazon-chime-sdk-js/classes/connectionhealthdata.html
 				 */
 				connectionHealthDidChange: connectionHealthData =>{
-					console.log('connectionHealthDidChange');	
+					//console.log('connectionHealthDidChange');	
 				},
 				
 				/*
@@ -297,7 +303,7 @@ export default {
 				 * @see https://aws.github.io/amazon-chime-sdk-js/enums/simulcastlayers.html
 				 */
 				encodingSimulcastLayersDidChange: simulcastLayers =>{
-					console.log('encodingSimulcastLayersDidChange');
+					//console.log('encodingSimulcastLayersDidChange');
 				},
 				
 				/*
@@ -307,7 +313,7 @@ export default {
 				 * @param {Number} requiredBandwidth
 				 */
 				estimatedDownlinkBandwidthLessThanRequired: ( estimatedBandwidth, requiredBandwidth ) =>{
-					console.log('estimatedDownlinkBandwidthLessThanRequired');	
+					//console.log('estimatedDownlinkBandwidthLessThanRequired');	
 				},
 				
 				/*
@@ -319,7 +325,7 @@ export default {
 				 * 
 				 */
 				eventDidReceive: (name, attributes) =>{
-					console.log(`eventDidReceive: ${name}`);
+					//console.log(`eventDidReceive: ${name}`);
 				},
 				
 				/*
@@ -328,18 +334,33 @@ export default {
 				 * @param clientMetricReport 
 				 * @see https://aws.github.io/amazon-chime-sdk-js/interfaces/clientmetricreport.html
 				 */
-				metricsDidReceive: clientMetricReport =>{
-					console.log('metricsDidReceive');
-					
+				metricsDidReceive: clientMetricReport =>{									
 					const metricReport = clientMetricReport.getObservableMetrics()
-					console.log( JSON.stringify( metricReport ) );
+					
+					if (typeof metricReport.availableSendBandwidth === 'number' 
+						&& !isNaN(metricReport.availableSendBandwidth)){
+							this.uplink = Math.floor(metricReport.availableSendBandwidth / 1000)
+				    	
+				    }else if(typeof metricReport.availableOutgoingBitrate === 'number' 
+				    	&& !isNaN(metricReport.availableOutgoingBitrate)){
+				    	this.uplink = Math.floor(metricReport.availableOutgoingBitrate / 1000)
+				    }
+				    
+				    if (typeof metricReport.availableReceiveBandwidth === 'number' 
+				    	&& !isNaN(metricReport.availableReceiveBandwidth)){
+							this.downlink = Math.floor(metricReport.availableReceiveBandwidth / 1000)
+				    	
+				    }else if(typeof metricReport.availableIncomingBitrate === 'number' 
+				    	&& !isNaN(metricReport.availableIncomingBitrate)){
+				    	this.downlink = Math.floor(metricReport.availableIncomingBitrate / 1000)
+				    }																					
 				},
 				
 				/*
 				 * Called when the remote video sending sources get changed.
 				 */
 				remoteVideoSourcesDidChange: videoSources => {
-					console.log('remoteVideoSourcesDidChange');
+					//console.log('remoteVideoSourcesDidChange');
 				},
 				
 				/*
@@ -364,23 +385,23 @@ export default {
 				 * Called when one or more remote video streams do not meet expected average bitrate.
 				 */
 				videoNotReceivingEnoughData: receivingDataMap => {
-					console.log('videoNotReceivingEnoughData');
+					//console.log('videoNotReceivingEnoughData');
 				},
 				
 				/*
 				 * Called when available video receiving bandwidth changed to trigger video subscription if needed.
 				 */
 				videoReceiveBandwidthDidChange: ( newBandwidthKbps, oldBandwidthKbps ) => {
-					console.log('videoReceiveBandwidthDidChange');
-					console.log(`Receiving bandwidth changed from ${oldBandwidthKbps} to ${newBandwidthKbps}`);
+					//console.log('videoReceiveBandwidthDidChange');
+					//console.log(`Receiving bandwidth changed from ${oldBandwidthKbps} to ${newBandwidthKbps}`);
 				},
 				
 				/*
 				 * Called when available video sending bandwidth changed.
 				 */
 				videoSendBandwidthDidChange: ( newBandwidthKbps, oldBandwidthKbps ) => {
-					console.log('videoSendBandwidthDidChange');
-					console.log(`Sending bandwidth changed from ${oldBandwidthKbps} to ${newBandwidthKbps}`);
+					//console.log('videoSendBandwidthDidChange');
+					//console.log(`Sending bandwidth changed from ${oldBandwidthKbps} to ${newBandwidthKbps}`);
 				},
 				
 				/*				
@@ -391,16 +412,16 @@ export default {
 				 * @see 'videoAvailabilityDidChange' to find out when it becomes available.
 				 */
 				videoSendDidBecomeUnavailable: () =>{
-					console.log('videoSendDidBecomeUnavailable');
-					console.log('You cannot share your video');
+					//console.log('videoSendDidBecomeUnavailable');
+					//console.log('You cannot share your video');
 				},
 				
 				/*
 				 * Called when metric of video outbound traffic is received.
 				 */
 				videoSendHealthDidChange: (bitrateKbps, packetsPerSecond) =>{
-					console.log('videoSendHealthDidChange');
-					console.log(`Sending bitrate in kilobits per second: ${bitrateKbps} and ${packetsPerSecond}`);
+					//console.log('videoSendHealthDidChange');
+					//console.log(`Sending bitrate in kilobits per second: ${bitrateKbps} and ${packetsPerSecond}`);
 				},
 											
 				/*
@@ -457,8 +478,12 @@ export default {
 		 * 
 		 * @see https://aws.github.io/amazon-chime-sdk-js/interfaces/audiovideofacade.html#realtimesubscribetoattendeeidpresence
 		 */
-		attendeePresenceChange(attendeeId, present, externalUserId, dropped, posInFrame){									
-			this.messages.push({text:`${this.getAttendeeName( externalUserId )} ${dropped ? 'left':'entered'} the session.`})
+		attendeePresenceChange(attendeeId, present, externalUserId, dropped, posInFrame){
+			if (present) {
+				this.attendeePresenceSet.add(attendeeId);
+			} else {
+				this.attendeePresenceSet.delete(attendeeId);
+			}																
 		},
 		
 		/*
@@ -466,7 +491,7 @@ export default {
 		 */
 		showVideoInputQualitySettings(){
 			let setting = this.meetingSession.audioVideo.getVideoInputQualitySettings()
-			return `VideoQuality: width: ${setting.videoWidth}, height: ${setting.videoHeight}, fps: ${setting.videoFrameRate}, , bandWidth: ${setting.videoMaxBandwidthKbps} Kbps`
+			return `VideoQuality: width: ${setting.videoWidth}, height: ${setting.videoHeight}, fps: ${setting.videoFrameRate}, bandWidth: ${setting.videoMaxBandwidthKbps} Kbps`
 		},
 		
 		/*
