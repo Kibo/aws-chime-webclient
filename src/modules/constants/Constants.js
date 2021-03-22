@@ -79,6 +79,14 @@ export const AUDIO_TEST_SOUND_URL = "https://www2.cs.uic.edu/~i101/SoundFiles/St
 export const ID_VIDEO_ELEMENT_FOR_PREVIEW = "cz-kibo-meeting-chime-client-video-preview";
 
 // ## session #######################################
+/**
+ * The Main nav element ID.
+ * 
+ * @constant
+ * @type {string}
+ */
+export const ID_MAIN_NAV = "cz-kibo-meeting-chime-client-main-nav";
+
 
 /**
  * Number of Video tiles

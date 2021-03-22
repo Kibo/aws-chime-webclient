@@ -1,33 +1,46 @@
 <template>
-	<div class="row my-2">
-		<div class="col text-center">
-			<div class="btn-group" role="group">
+	<nav class="navbar navbar-expand-md sticky-top navbar-dark bg-dark mb-2">
+		<a class="navbar-brand" href="#">
+			<img src="/docs/4.6/assets/brand/bootstrap-solid.svg" width="30" height="30" class="d-inline-block align-top" alt="Logo"> AWS Chime
+		</a>
+
+		<button class="navbar-toggler" type="button" data-toggle="collapse" v-bind:data-target="'#' + utils.getConstant('ID_MAIN_NAV')">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+
+		<div class="collapse navbar-collapse" v-bind:id="utils.getConstant('ID_MAIN_NAV')">
+			<ul class="navbar-nav mr-auto">
 				
-			  <button type="button" class="btn"
-			  	v-if="utils.getSetting('IS_AUDIO_INPUT_DEVICE', role)"
-			  	v-bind:class="isAudio ? 'btn-success' :'btn-secondary'"
-			  	v-on:click="toggleAudio"
-			  ><i class="fa fa-microphone" aria-hidden="true"></i> Voice</button>
-			  		
-			  <button type="button" class="btn btn-secondary"
-			  	v-if="utils.getSetting('IS_VIDEO_INPUT_DEVICE', role)" 
-			  	v-bind:class="isVideo ? 'btn-success' :'btn-secondary'"
-			  	v-on:click="toggleVideo"
-			   ><i class="fa fa-video-camera" aria-hidden="true"></i> Video</button>
-			   			   
-			  <button type="button" class="btn btn-secondary"
-			  	v-if="utils.getSetting('CAN_SHARE_CONTENT', role)"
-				v-bind:class="isShare ? 'btn-success' :'btn-secondary'"
-				v-on:click="toggleShare"
-			  ><i class="fa fa-share-alt" aria-hidden="true"></i> Share</button>
-			  
-			  <button type="button" class="btn btn-danger"
-			  	v-on:click="leaveMeeting"			  
-			  ><i class="fa fa-sign-out" aria-hidden="true"></i> Leave</button>
-			</div>	
-		</div>		
-	</div>
-	
+				<li class="nav-item"
+					v-if="utils.getSetting('IS_AUDIO_INPUT_DEVICE', role)">
+					<a class="nav-link" href="#"
+						v-bind:class="isAudio ? 'active text-success' :''" 
+						v-on:click.prevent="toggleAudio"><i class="fa fa-microphone"></i> Voice</a>
+				</li>
+				
+				<li class="nav-item"
+					v-if="utils.getSetting('IS_VIDEO_INPUT_DEVICE', role)" >
+					<a class="nav-link" href="#"
+						v-bind:class="isVideo ? 'active text-success' :''" 
+						v-on:click.prevent="toggleVideo"><i class="fa fa-video-camera"></i> Video</a>
+				</li>
+				
+				<li class="nav-item"
+					v-if="utils.getSetting('CAN_SHARE_CONTENT', role)">
+					<a class="nav-link" href="#"
+						v-bind:class="isShare ? 'active text-success' :''"
+						v-on:click.prevent="toggleShare"><i class="fa fa-share-alt"></i> Share</a>
+				</li>
+				
+				<li class="nav-item">
+					<a class="nav-link text-danger" href="#"						
+						v-on:click.prevent="leaveMeeting"><i class="fa fa-sign-out"></i> Leave</a>
+				</li>
+			</ul>
+
+		</div>
+	</nav>
+			
 	<div class="row">
 		<div class="col">
 			<div v-if="messages.length">
@@ -60,7 +73,7 @@ export default {
 			return {
 				role: this.$store.getters.role,
 				
-				isAudio:false,
+				isAudio: this.isLocalAudio(),
 				isVideo:false,
 				isShare:false,
 				messages : [],
@@ -74,8 +87,11 @@ export default {
 	
 	mounted() {				
 		this.meetingSession.audioVideo.addObserver( this.getSessionObserver() );
-		this.meetingSession.audioVideo.start()
-				
+		this.meetingSession.audioVideo.realtimeSubscribeToAttendeeIdPresence( this.attendeePresenceChange )
+									
+		this.meetingSession.audioVideo.start()							
+		this.muteLocalAudio()
+		
 		console.log( this.showVideoInputQualitySettings() )			
 	},
 	
@@ -84,13 +100,20 @@ export default {
 	},
 		
 	methods:{
-		
+							
 		/*
 		 * User click to Audio button
 		 */
 		toggleAudio(){
 			console.log('toggleAudio')
-			this.isAudio = this.isAudio ? false : true	
+								
+			if( this.isLocalAudio() ){
+				this.muteLocalAudio()
+				this.isAudio = false							
+			}else{
+				this.unmuteLocalAudio()
+				this.isAudio = true
+			}					
 		},
 		
 		/*
@@ -146,7 +169,8 @@ export default {
 		leaveMeeting(){
 			console.log('Leave meeting')
 			this.meetingSession.audioVideo.stop()
-			this.meetingSession.audioVideo.removeObserver( this.getSessionObserver() )
+			this.meetingSession.audioVideo.removeObserver( this.getSessionObserver() )			
+			this.meetingSession.audioVideo.realtimeUnsubscribeToAttendeeIdPresence( this.attendeePresenceChange )			
 		},
 		
 		dismissAlert(index){							
@@ -301,10 +325,14 @@ export default {
 				/*
 				 * Called when the media stats are available.
 				 * 
-				 * @param clientMetricReport - https://aws.github.io/amazon-chime-sdk-js/interfaces/clientmetricreport.html
+				 * @param clientMetricReport 
+				 * @see https://aws.github.io/amazon-chime-sdk-js/interfaces/clientmetricreport.html
 				 */
 				metricsDidReceive: clientMetricReport =>{
 					console.log('metricsDidReceive');
+					
+					const metricReport = clientMetricReport.getObservableMetrics()
+					console.log( JSON.stringify( metricReport ) );
 				},
 				
 				/*
@@ -418,10 +446,68 @@ export default {
 			return audioVideoObserver;
 		},
 		
+		/*
+		 * Attendee presence change - handler
+		 * 
+		 * @param {String} attendeeId
+		 * @param {Boolean} present
+		 * @param {String} externalUserId (optional)
+		 * @param {Boolean} dropped (optional)
+		 * @param {RealtimeAttendeePositionInFrame | Null} posInFrame (optional)
+		 * 
+		 * @see https://aws.github.io/amazon-chime-sdk-js/interfaces/audiovideofacade.html#realtimesubscribetoattendeeidpresence
+		 */
+		attendeePresenceChange(attendeeId, present, externalUserId, dropped, posInFrame){									
+			this.messages.push({text:`${this.getAttendeeName( externalUserId )} ${dropped ? 'left':'entered'} the session.`})
+		},
+		
+		/*
+		 * Show video quality setting - helper method
+		 */
 		showVideoInputQualitySettings(){
 			let setting = this.meetingSession.audioVideo.getVideoInputQualitySettings()
 			return `VideoQuality: width: ${setting.videoWidth}, height: ${setting.videoHeight}, fps: ${setting.videoFrameRate}, , bandWidth: ${setting.videoMaxBandwidthKbps} Kbps`
-		}								
+		},
+		
+		/*
+		 * Mute local audio - helper method
+		 */
+		muteLocalAudio(){
+			this.meetingSession.audioVideo.realtimeMuteLocalAudio()
+			this.isAudio = false
+		},
+		
+		/*
+		 * Unmmute local audio - helper method
+		 */
+		unmuteLocalAudio(){
+			this.meetingSession.audioVideo.realtimeUnmuteLocalAudio()
+			this.isAudio = true	
+		},
+		
+		/*
+		 * Is local audio - helper method
+		 * 
+		 * @returns {Boolean}
+		 */
+		isLocalAudio(){
+			return !this.meetingSession.audioVideo.realtimeIsLocalAudioMuted()
+		},
+		
+		/*
+		 * Get attendee name
+		 * 
+		 * @param {String} externalUserId
+		 * @returns {String}
+		 */
+		getAttendeeName( externalUserId ){
+			if( !externalUserId ){
+				return 'unknown'
+			}
+			
+			let parts = externalUserId.split('#')					
+			return parts[1] ? parts[1] : 'unknown' 			
+		}										
 	}	
 }
 </script>

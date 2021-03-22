@@ -6,7 +6,7 @@ state () {
 		videoInputDeviceId : null,
 		audioInputDeviceId : null,
 		audioOutputDeviceId : null,
-		credentials: null
+		credentials: {}
 	}
 }, mutations: {
 	credentials(state, credentials){

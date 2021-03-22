@@ -5,13 +5,14 @@ import DeviceConfigurator from '../configure/DeviceConfigurator.vue'
 import Session from '../meeting/Session.vue'
 
 const routes = [
-  { path: '/', component: LoginForm },
+  { path: '/', component: LoginForm},
   { path: '/setting', component: DeviceConfigurator },
   { path: '/session', component: Session },
 ]
 
 const Router = createRouter({  
-  routes
+	history: createWebHistory(),
+	routes
 })
 
 export default Router
