@@ -168,6 +168,7 @@ export default {
 				this.isAudioInputDevice = false		
 			}
 			
+			// TODO - change quality in main tile
 			if(Utils.getSetting('IS_VIDEO_INPUT_DEVICE', this.role)){
 				/*
 				 * Example:

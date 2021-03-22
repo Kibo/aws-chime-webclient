@@ -71,45 +71,27 @@ const Utils = {
 				this.getConstant('ID_VIDEO_ELEMENT_TILES_CONTAINER')
 		let parent = document.getElementById( parentId )
 		
-		let spaceWrapper = this.createSpaceWrapper(id, isPresenterTile)
-		let responsiveWrapper = this.createResponsiveWrapper()
+		
+		let responsiveWrapper = this.createResponsiveWrapper(id)
 		let videoElement = this.createVideoElement()
 		
-		responsiveWrapper.append( videoElement )
-		spaceWrapper.append( responsiveWrapper )
-		parent.append( spaceWrapper )
+		responsiveWrapper.append( videoElement )		
+		parent.append( responsiveWrapper )
 														
 		return videoElement			
 	},
-		
-	/*
-	 * Create a space wrapper for video element
-	 * 
-	 * @param {Strint} id - element ID
-	 * @param {Boolean} isPresenterTile
-	 * 
-	 * @returns {Node} - DOM element with ID
-	 */
-	createSpaceWrapper(id, isPresenterTile){
-		let wrapper = document.createElement("div")
-		wrapper.id = id;
-		
-		if( isPresenterTile ){
-			wrapper.classList.add("col");	
-		}else{
-			wrapper.classList.add("col-12", "col-sm-12","col-md-3");
-		}
-					
-		return wrapper							
-	},
-	
+			
 	/*
 	 * Create a responsive wrapper for video element
 	 * 
+	 * @param {Strint} id - element ID
 	 * @returns {Node} - DOM element
 	 */
-	createResponsiveWrapper(){
+	createResponsiveWrapper(id){
 		let wrapper = document.createElement("div")
+		if(id){
+			wrapper.id = id;	
+		}		
 		wrapper.classList.add("embed-responsive", "embed-responsive-16by9");						
 		return wrapper							
 	},
@@ -139,6 +121,21 @@ const Utils = {
 		}else{
 			return false
 		}		 		
+	},
+	
+	/*
+	 * Get attendee name
+	 * 
+	 * @param {String} externalUserId
+	 * @returns {String}
+	 */
+	getAttendeeName( externalUserId ){
+		if( !externalUserId ){
+			return 'Unknown'
+		}
+		
+		let parts = externalUserId.split('#')					
+		return parts[1] ? parts[1] : 'Unknown' 			
 	}		
 }
 

@@ -36,26 +36,10 @@ test('no value in Constant', async () => {
   	}		
 })
 
-test('Create space wrapper for video element', async () => {		
-	
-	let id = "testa-wrapper-id"
-	let isPresenterTile = false
-
-	let wrapper = Utils.createSpaceWrapper(id, isPresenterTile)
-	
-	expect( wrapper.id ).toBe( id )
-	expect( wrapper.classList.contains("col-md-3") ).toBe(true)
-	
-	
-	isPresenterTile = true
-	
-	wrapper = Utils.createSpaceWrapper(id, isPresenterTile)	
-	expect( wrapper.classList.contains("col") ).toBe(true)		
-})
-
 test('Create responsive wrapper for video element', async () => {			
-	let wrapper = Utils.createResponsiveWrapper()		
+	let wrapper = Utils.createResponsiveWrapper('1234')		
 	expect( wrapper.classList.contains("embed-responsive") ).toBe(true)	
+	expect( wrapper.id ).toBe('1234')
 })
 
 test('Create video element', async () => {		
@@ -64,4 +48,12 @@ test('Create video element', async () => {
 	expect( videoElement.nodeName ).toBe("VIDEO")
 	expect( videoElement.classList.contains("w-100") ).toBe(true)
 	expect( videoElement.classList.contains("h-100") ).toBe(true)			
+})
+
+test('Get Attendee name', async () => {	
+	expect( Utils.getAttendeeName( '1234#Tom' )).toBe("Tom")
+	expect( Utils.getAttendeeName() ).toBe("Unknown")
+	expect( Utils.getAttendeeName('1234')).toBe("Unknown")		
+	expect( Utils.getAttendeeName('1234#')).toBe("Unknown")
+	
 })

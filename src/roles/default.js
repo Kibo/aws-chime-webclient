@@ -37,7 +37,7 @@ const Setting = {
 	 * @constant
 	 * @type {Number}
 	 */
-	VIDEO_INPUT_QUALITY_WIDTH:960,
+	VIDEO_INPUT_QUALITY_WIDTH:640,
 	
 	/**
 	 * Default video height
@@ -47,7 +47,7 @@ const Setting = {
 	 * @constant
 	 * @type {Number}
 	 */
-	VIDEO_INPUT_QUALITY_HEIGHT:540,
+	VIDEO_INPUT_QUALITY_HEIGHT:360,
 	
 	/**
 	 * Default video framerate
@@ -67,7 +67,7 @@ const Setting = {
 	 * @constant
 	 * @type {Number}
 	 */
-	VIDEO_INPUT_QUALITY_BANDWIDTH:1400,
+	VIDEO_INPUT_QUALITY_BANDWIDTH:600,
 	
 	
 	// ## SESSION #####################################################

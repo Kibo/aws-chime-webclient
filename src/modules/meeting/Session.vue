@@ -41,21 +41,25 @@
 			</span>			
 		</div>		
 	</div>
-				
+	
 	<div class="row">
+		<div class="col-2">
+			<div v-bind:id="utils.getConstant('ID_VIDEO_ELEMENT_TILES_CONTAINER')"></div>	
+		</div>
+		
 		<div class="col">
+			<div v-bind:id="utils.getConstant('ID_VIDEO_ELEMENT_PRESENTERS_CONTAINER')"></div>
+			
 			<div v-if="messages.length">
 				<AlertMessage 
 					v-for="(message, index) in messages" 
 					v-bind:message="message" 
 					v-on:dismiss="dismissAlert(index)" />
-			</div>			
-		</div>		
+			</div>
+				
+		</div>
 	</div>
-	
-	<div class="row" v-bind:id="utils.getConstant('ID_VIDEO_ELEMENT_TILES_CONTAINER')"></div>
-	
-	<div class="row" v-bind:id="utils.getConstant('ID_VIDEO_ELEMENT_PRESENTERS_CONTAINER')"></div>		
+					
 </template>
 
 <script>
@@ -517,22 +521,7 @@ export default {
 		 */
 		isLocalAudio(){
 			return !this.meetingSession.audioVideo.realtimeIsLocalAudioMuted()
-		},
-		
-		/*
-		 * Get attendee name
-		 * 
-		 * @param {String} externalUserId
-		 * @returns {String}
-		 */
-		getAttendeeName( externalUserId ){
-			if( !externalUserId ){
-				return 'unknown'
-			}
-			
-			let parts = externalUserId.split('#')					
-			return parts[1] ? parts[1] : 'unknown' 			
-		}										
+		}												
 	}	
 }
 </script>
