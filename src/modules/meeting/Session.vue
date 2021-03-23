@@ -2,7 +2,7 @@
 		
 	<div class="row">
 		<div class="col-3 text-white text-left">
-			
+		AWS Chime	
 		</div>
 				
 		<div class="col text-center">
@@ -33,9 +33,9 @@
 						
 		</div>
 		
-		<div class="col-3 text-white text-right">
+		<div class="col-2 text-white text-right">
 			<span class="badge badge-secondary">				
-				<i class="fa fa-users" aria-hidden="true"></i> {{this.attendeePresenceSet.size}} | 
+				<i class="fa fa-users" aria-hidden="true"></i> {{this.attendeePresenceMap.size}} | 
 				<i class="fa fa-arrow-circle-o-up" aria-hidden="true"></i> {{uplink}} | 
 				<i class="fa fa-arrow-circle-o-down" aria-hidden="true"></i> {{downlink}}
 			</span>			
@@ -43,7 +43,7 @@
 	</div>
 	
 	<div class="row">
-		<div class="col-2">
+		<div class="col-3">
 			<div v-bind:id="utils.getConstant('ID_VIDEO_ELEMENT_TILES_CONTAINER')"></div>	
 		</div>
 		
@@ -57,6 +57,12 @@
 			
 			<div v-bind:id="utils.getConstant('ID_VIDEO_ELEMENT_PRESENTERS_CONTAINER')"></div>								
 		</div>
+		
+		<div class="col-2">
+			Moderator Pane<br>
+			Chat Pane<br>			
+		</div>
+		
 	</div>
 					
 </template>
@@ -66,6 +72,7 @@ import {
   MeetingSessionStatusCode
 } from 'amazon-chime-sdk-js';
 import AlertMessage from "../common/AlertMessage.vue"
+import Attendee from "../common/Attendee.js"
 import Utils from "../tools/Utils.js"
 
 export default {
@@ -77,6 +84,7 @@ export default {
 			return {
 				logger:this.$store.state.logger,
 				role: this.$store.getters.role,
+				localAttendeeId: this.$store.getters.attendeeId,
 				
 				isAudio: this.isLocalAudio(),
 				isVideo:false,
@@ -87,7 +95,6 @@ export default {
 				
 				isShare:false,
 				
-				
 				messages : [],
 				
 				utils:Utils,
@@ -97,9 +104,8 @@ export default {
 				
 				uplink:0,
 				downlink:0,
-				
-				// TODO - to Map, this allow add some properties to attendee, for example 'isPresenter=true'
-				attendeePresenceSet:new Set()
+											
+				attendeePresenceMap:new Map()
 			}
 	},
 	
@@ -178,7 +184,14 @@ export default {
 		 */
 		toggleShare(){			
 			this.logger.info('toggleShare - handler')
-			this.isShare = this.isShare ? false : true	
+			
+			if(!this.attendeePresenceMap.get(this.localAttendeeId).hasRole('presenter') ){
+				this.messages.push({text:"Sorry, you are not a presenter."})	
+				return
+			}
+			
+			//TODO							
+			this.isShare = this.isShare ? false : true					
 		},
 		
 		/*
@@ -350,10 +363,7 @@ export default {
 				 * @param clientMetricReport 
 				 * @see https://aws.github.io/amazon-chime-sdk-js/interfaces/clientmetricreport.html
 				 */
-				metricsDidReceive: clientMetricReport =>{
-					
-					this.logger.warn('audioVideoObserver: metricsDidReceive()')
-														
+				metricsDidReceive: clientMetricReport =>{																					
 					const metricReport = clientMetricReport.getObservableMetrics()
 					
 					if (typeof metricReport.availableSendBandwidth === 'number' 
@@ -494,10 +504,14 @@ export default {
 		 * @see https://aws.github.io/amazon-chime-sdk-js/interfaces/audiovideofacade.html#realtimesubscribetoattendeeidpresence
 		 */
 		attendeePresenceChange(attendeeId, present, externalUserId, dropped, posInFrame){
-			if (present) {
-				this.attendeePresenceSet.add(attendeeId);
+			if (present) {				
+				let attendee = new Attendee(attendeeId)
+				attendee.setExternalUserId = externalUserId
+				attendee.addRole( this.role )
+								 						
+				this.attendeePresenceMap.set(attendeeId, attendee);										
 			} else {
-				this.attendeePresenceSet.delete(attendeeId);
+				this.attendeePresenceMap.delete(attendeeId);
 			}																
 		},
 		
@@ -534,7 +548,7 @@ export default {
 		 */
 		isLocalAudio(){
 			return !this.meetingSession.audioVideo.realtimeIsLocalAudioMuted()
-		}												
+		}			
 	}	
 }
 </script>

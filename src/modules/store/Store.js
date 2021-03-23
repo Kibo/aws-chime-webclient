@@ -31,6 +31,10 @@ state () {
 getters: {
     role(state) {
       return state.credentials.role
+    },
+    
+    attendeeId(state) {
+      return state.credentials.attendee.AttendeeId
     }
   }
 })

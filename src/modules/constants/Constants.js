@@ -80,15 +80,6 @@ export const ID_VIDEO_ELEMENT_FOR_PREVIEW = "cz-kibo-meeting-chime-client-video-
 
 // ## session #######################################
 /**
- * The Main nav element ID.
- * 
- * @constant
- * @type {string}
- */
-export const ID_MAIN_NAV = "cz-kibo-meeting-chime-client-main-nav";
-
-
-/**
  * Number of Video tiles
  * 
  * min 1 

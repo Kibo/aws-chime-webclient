@@ -136,7 +136,8 @@ const Utils = {
 		
 		let parts = externalUserId.split('#')					
 		return parts[1] ? parts[1] : 'Unknown' 			
-	}		
+	},
+			
 }
 
 
