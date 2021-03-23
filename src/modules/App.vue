@@ -76,8 +76,6 @@ import DeviceConfigurator from "./configure/DeviceConfigurator.vue"
 import Session from "./meeting/Session.vue"
 import Utils from "./tools/Utils.js"
 
-const logger = new ConsoleLogger('MeetingLogs', LogLevel.WARN);
-
 export default {
   components: {
     LoginForm,
@@ -89,7 +87,8 @@ export default {
     return {
     	utils:Utils,
     	status:Utils.getConstant('APP_STATUS_LOGIN'),
-    	meetingSession:null
+    	meetingSession:null,
+    	logger:this.$store.state.logger
     }
   },
   methods: {  	   
@@ -101,9 +100,9 @@ export default {
     createMeetingSession( credentials){
     	this.$store.commit('credentials', credentials)    	    	    	    	    	
     	
-    	const deviceController = new DefaultDeviceController(logger, {enableWebAudio: true});
+    	const deviceController = new DefaultDeviceController(this.logger, {enableWebAudio: true});
     	const configuration = new MeetingSessionConfiguration(credentials.meeting, credentials.attendee);
-    	this.meetingSession = new DefaultMeetingSession(configuration, logger, deviceController); 
+    	this.meetingSession = new DefaultMeetingSession(configuration, this.logger, deviceController); 
     	
     	this.status = Utils.getConstant('APP_STATUS_CONFIGURE')   	    	   
     },
@@ -111,8 +110,7 @@ export default {
     /*
      * This handler is called after a user click to a button 'Start a session'
      */
-    startSession(){
-    	console.log(" Start a session")
+    startSession(){    	
     	this.status = Utils.getConstant('APP_STATUS_SESSION')
     },
              

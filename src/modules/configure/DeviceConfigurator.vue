@@ -51,6 +51,7 @@ export default {
 	props: ['meetingSession', 'meetingAudioElement'],
 	data() {
 			return {
+				logger:this.$store.state.logger,
 				role: this.$store.getters.role,
 				
 				isDeviceListReady:false,
@@ -91,8 +92,8 @@ export default {
 			this.$store.commit('audioInputId', deviceId )					
 			try {
 		      await this.meetingSession.audioVideo.chooseAudioInputDevice( deviceId );			      		      		      		    
-		    } catch (e) {
-		      console.error(e)
+		    } catch (e) {		      
+		      logger.error(e)
 		      return		      
 		    }		    				    							
 		},
@@ -107,7 +108,7 @@ export default {
 		      this.meetingSession.audioVideo.bindAudioElement( this.meetingAudioElement )	
 		      this.isBindAudioElement = true			      		      		      		            
 		    } catch (e) {
-		      console.error(e)
+		      logger.error(e)
 		      return		      
 		    }		    								
 		},
@@ -120,7 +121,7 @@ export default {
 			try {
 		      await this.meetingSession.audioVideo.chooseVideoInputDevice( deviceId );		      		      		      		      		 
 		    } catch (e) {
-		      console.error(e)
+		      logger.error(e)
 		      return		      
 		    }		    		
 		},

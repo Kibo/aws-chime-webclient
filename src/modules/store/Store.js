@@ -1,4 +1,6 @@
 import { createStore } from 'vuex'
+import {ConsoleLogger,LogLevel} from 'amazon-chime-sdk-js';
+const logger = new ConsoleLogger('MeetingLogs', LogLevel.WARN);
 
 const Store = createStore({
 state () {
@@ -6,7 +8,8 @@ state () {
 		videoInputDeviceId : null,
 		audioInputDeviceId : null,
 		audioOutputDeviceId : null,
-		credentials: {}
+		credentials: {},
+		logger:logger
 	}
 }, mutations: {
 	credentials(state, credentials){

@@ -48,15 +48,14 @@
 		</div>
 		
 		<div class="col">
-			<div v-bind:id="utils.getConstant('ID_VIDEO_ELEMENT_PRESENTERS_CONTAINER')"></div>
-			
 			<div v-if="messages.length">
 				<AlertMessage 
 					v-for="(message, index) in messages" 
 					v-bind:message="message" 
 					v-on:dismiss="dismissAlert(index)" />
 			</div>
-				
+			
+			<div v-bind:id="utils.getConstant('ID_VIDEO_ELEMENT_PRESENTERS_CONTAINER')"></div>								
 		</div>
 	</div>
 					
@@ -76,11 +75,19 @@ export default {
 	props: ['meetingSession'],
 	data() {
 			return {
+				logger:this.$store.state.logger,
 				role: this.$store.getters.role,
 				
 				isAudio: this.isLocalAudio(),
 				isVideo:false,
+				
+				// @see audioVideoObserver.videoAvailabilityDidChange() 
+				// @see audioVideoObserver.videoSendDidBecomeUnavailable()
+				isVideoAvailable:true,
+				
 				isShare:false,
+				
+				
 				messages : [],
 				
 				utils:Utils,
@@ -91,6 +98,7 @@ export default {
 				uplink:0,
 				downlink:0,
 				
+				// TODO - to Map, this allow add some properties to attendee, for example 'isPresenter=true'
 				attendeePresenceSet:new Set()
 			}
 	},
@@ -101,8 +109,8 @@ export default {
 									
 		this.meetingSession.audioVideo.start()							
 		this.muteLocalAudio()
-		
-		console.log( this.showVideoInputQualitySettings() )			
+							
+		this.logger.info( this.showVideoInputQualitySettings() )		
 	},
 	
 	beforeUnmount(){
@@ -114,8 +122,8 @@ export default {
 		/*
 		 * User click to Audio button
 		 */
-		toggleAudio(){
-			console.log('toggleAudio')
+		toggleAudio(){			
+			this.logger.info('toggleAudio - handler')
 								
 			if( this.isLocalAudio() ){
 				this.muteLocalAudio()
@@ -132,7 +140,7 @@ export default {
 		 * it starts and stops local video tile here
 		 */
 		async toggleVideo(){
-			console.log('toggleVideo')
+			this.logger.info('toggleVideo - handler')
 			this.isVideo = this.isVideo ? false : true
 			
 			if( this.isVideo ){
@@ -151,8 +159,8 @@ export default {
 				 		);	
 		      		}		      		
 		      			      		      		      		      		 
-		    	} catch (e) {
-		      		console.error(e)
+		    	} catch (e) {		      		
+		      		this.logger.error(e)
 		      		return
 		    	}
 																							
@@ -168,19 +176,21 @@ export default {
 		/*
 		 * User click to Share button
 		 */
-		toggleShare(){
-			console.log('toggleShare')
+		toggleShare(){			
+			this.logger.info('toggleShare - handler')
 			this.isShare = this.isShare ? false : true	
 		},
 		
 		/*
 		 * User click to Leave button
 		 */
-		leaveMeeting(){
-			console.log('Leave meeting')
+		leaveMeeting(){			
+			this.logger.info('Leave meeting - handler')
 			this.meetingSession.audioVideo.stop()
 			this.meetingSession.audioVideo.removeObserver( this.getSessionObserver() )			
-			this.meetingSession.audioVideo.realtimeUnsubscribeToAttendeeIdPresence( this.attendeePresenceChange )			
+			this.meetingSession.audioVideo.realtimeUnsubscribeToAttendeeIdPresence( this.attendeePresenceChange )
+			this.uplink = 0
+			this.downlink = 0			
 		},
 		
 		dismissAlert(index){							
@@ -210,7 +220,9 @@ export default {
 		      return Utils.getHTMLVideoElement( tileId )
 		    }
 		  }
-		  throw new Error('no video element is available');
+		  
+		  this.logger.error('No video element is available')
+		  throw new Error('No video element is available');
 		},
 		
 		releaseVideoElement( tileId ){
@@ -235,8 +247,8 @@ export default {
 				/*
 				 * Called when the session has started.
 				 */
-				audioVideoDidStart: () => {				
-					//console.log('audioVideoDidStart');	
+				audioVideoDidStart: () => {									
+					this.logger.info('audioVideoObserver: audioVideoDidStart()')
 				},
 				
 				/*
@@ -244,8 +256,8 @@ export default {
 				 */
 				audioVideoDidStartConnecting: reconnecting => {
 				    if (reconnecting) {
-				      // e.g. the WiFi connection is dropped.
-				      console.log('Attempting to reconnect');
+				      // e.g. the WiFi connection is dropped.				      				     
+				      this.logger.warn('audioVideoObserver: audioVideoDidStartConnecting()')				      
 				    }
 				},
 											
@@ -257,36 +269,36 @@ export default {
 				audioVideoDidStop: sessionStatus => {					
 					const sessionStatusCode = sessionStatus.statusCode();
 					if (sessionStatusCode === MeetingSessionStatusCode.Left) {
-					/*
-						- You called meetingSession.audioVideo.stop().
-						- When closing a browser window or page, Chime SDK attempts to leave the session.
-					*/
-						console.log('You left the session');
-					} else {
-						console.log('Stopped with a session status code: ', sessionStatusCode);
+						/*
+							- You called meetingSession.audioVideo.stop().
+							- When closing a browser window or page, Chime SDK attempts to leave the session.
+						*/						
+						this.logger.info('You left the session')
+					} else {						
+						this.logger.info('Stopped with a session status code: ', sessionStatusCode)	
 					}										
 				},
 											
 				/*
 				 * Called when connection has changed to good from poor.
 				 */
-				connectionDidBecomeGood: () =>{
-					//console.log('connectionDidBecomeGood');	
+				connectionDidBecomeGood: () =>{					
+					this.logger.info('audioVideoObserver: connectionDidBecomeGood()')	
 				},
 				
 				/*
 				 * Called when the connection has been poor for a while if meeting only uses audio.
 				 */
 				connectionDidBecomePoor: () =>{
-					console.log('connectionDidBecomePoor');						
-					this.messages.push({text:"Your connection is poor"})
+					this.logger.warn('audioVideoObserver: connectionDidBecomePoor()')					
+					this.messages.push({text:"Your connection is poor.", type:"alert-danger"})
 				},
 				
 				/*
 				 * Called when the connection has been poor if meeting uses video so that the observer can prompt the user about turning off video.
 				 */
-				connectionDidSuggestStopVideo: () =>{
-					console.log('connectionDidSuggestStopVideo');						
+				connectionDidSuggestStopVideo: () =>{					
+					this.logger.warn('audioVideoObserver: connectionDidSuggestStopVideo()')					
 					this.messages.push({text:"It is recommended to turn off the video.", type:"alert-danger"})
 				},
 				
@@ -296,8 +308,8 @@ export default {
 				 * @param connectionHealthData
 				 * @see https://aws.github.io/amazon-chime-sdk-js/classes/connectionhealthdata.html
 				 */
-				connectionHealthDidChange: connectionHealthData =>{
-					//console.log('connectionHealthDidChange');	
+				connectionHealthDidChange: connectionHealthData =>{					
+					this.logger.info('audioVideoObserver: connectionHealthDidChange()')
 				},
 				
 				/*
@@ -306,8 +318,8 @@ export default {
 				 * @param simulcastLayers
 				 * @see https://aws.github.io/amazon-chime-sdk-js/enums/simulcastlayers.html
 				 */
-				encodingSimulcastLayersDidChange: simulcastLayers =>{
-					//console.log('encodingSimulcastLayersDidChange');
+				encodingSimulcastLayersDidChange: simulcastLayers =>{					
+					this.logger.info('audioVideoObserver: encodingSimulcastLayersDidChange()')
 				},
 				
 				/*
@@ -316,8 +328,8 @@ export default {
 				 * @param {Number} estimatedBandwidth
 				 * @param {Number} requiredBandwidth
 				 */
-				estimatedDownlinkBandwidthLessThanRequired: ( estimatedBandwidth, requiredBandwidth ) =>{
-					//console.log('estimatedDownlinkBandwidthLessThanRequired');	
+				estimatedDownlinkBandwidthLessThanRequired: ( estimatedBandwidth, requiredBandwidth ) =>{					
+					this.logger.warn('audioVideoObserver: estimatedDownlinkBandwidthLessThanRequired()')
 				},
 				
 				/*
@@ -328,8 +340,8 @@ export default {
 				 * @param attributes - https://aws.github.io/amazon-chime-sdk-js/interfaces/eventattributes.html
 				 * 
 				 */
-				eventDidReceive: (name, attributes) =>{
-					//console.log(`eventDidReceive: ${name}`);
+				eventDidReceive: (name, attributes) =>{					
+					this.logger.info(`eventDidReceive: ${name}`)
 				},
 				
 				/*
@@ -338,33 +350,36 @@ export default {
 				 * @param clientMetricReport 
 				 * @see https://aws.github.io/amazon-chime-sdk-js/interfaces/clientmetricreport.html
 				 */
-				metricsDidReceive: clientMetricReport =>{									
+				metricsDidReceive: clientMetricReport =>{
+					
+					this.logger.warn('audioVideoObserver: metricsDidReceive()')
+														
 					const metricReport = clientMetricReport.getObservableMetrics()
 					
 					if (typeof metricReport.availableSendBandwidth === 'number' 
 						&& !isNaN(metricReport.availableSendBandwidth)){
-							this.uplink = Math.floor(metricReport.availableSendBandwidth / 1000)
+							this.uplink = Math.floor(metricReport.availableSendBandwidth / 1000)													
 				    	
 				    }else if(typeof metricReport.availableOutgoingBitrate === 'number' 
 				    	&& !isNaN(metricReport.availableOutgoingBitrate)){
-				    	this.uplink = Math.floor(metricReport.availableOutgoingBitrate / 1000)
+				    	this.uplink = Math.floor(metricReport.availableOutgoingBitrate / 1000)				    					    
 				    }
 				    
 				    if (typeof metricReport.availableReceiveBandwidth === 'number' 
 				    	&& !isNaN(metricReport.availableReceiveBandwidth)){
-							this.downlink = Math.floor(metricReport.availableReceiveBandwidth / 1000)
+							this.downlink = Math.floor(metricReport.availableReceiveBandwidth / 1000)													
 				    	
 				    }else if(typeof metricReport.availableIncomingBitrate === 'number' 
 				    	&& !isNaN(metricReport.availableIncomingBitrate)){
-				    	this.downlink = Math.floor(metricReport.availableIncomingBitrate / 1000)
+				    	this.downlink = Math.floor(metricReport.availableIncomingBitrate / 1000)				    					    
 				    }																					
 				},
 				
 				/*
 				 * Called when the remote video sending sources get changed.
 				 */
-				remoteVideoSourcesDidChange: videoSources => {
-					//console.log('remoteVideoSourcesDidChange');
+				remoteVideoSourcesDidChange: videoSources => {					
+					this.logger.info('audioVideoObserver: remoteVideoSourcesDidChange()')
 				},
 				
 				/*
@@ -374,38 +389,34 @@ export default {
 				 * 
 				 * @param availability - https://aws.github.io/amazon-chime-sdk-js/classes/meetingsessionvideoavailability.html
 				 */
-				videoAvailabilityDidChange: videoAvailability =>{
-					console.log('videoAvailabilityDidChange');	
-										
-					// TODO it depends on Constant.NUMBER_OF_VIDEO_TILES
-					if (videoAvailability.canStartLocalVideo) {
-						console.log('You can share your video');
-					} else {
-						console.log('You cannot share your video');
-					}
+				videoAvailabilityDidChange: videoAvailability =>{																	
+					if (videoAvailability.canStartLocalVideo) {						
+						if( !this.isVideoAvailable ){
+							this.isVideoAvailable = true
+							this.messages.push({text:"You can start your video now."})
+						}											
+					} 
 				},
 				
 				/*
 				 * Called when one or more remote video streams do not meet expected average bitrate.
 				 */
-				videoNotReceivingEnoughData: receivingDataMap => {
-					//console.log('videoNotReceivingEnoughData');
+				videoNotReceivingEnoughData: receivingDataMap => {					
+					this.logger.warn('audioVideoObserver: videoNotReceivingEnoughData()')
 				},
 				
 				/*
 				 * Called when available video receiving bandwidth changed to trigger video subscription if needed.
 				 */
-				videoReceiveBandwidthDidChange: ( newBandwidthKbps, oldBandwidthKbps ) => {
-					//console.log('videoReceiveBandwidthDidChange');
-					//console.log(`Receiving bandwidth changed from ${oldBandwidthKbps} to ${newBandwidthKbps}`);
+				videoReceiveBandwidthDidChange: ( newBandwidthKbps, oldBandwidthKbps ) => {					
+					this.logger.info(`Receiving bandwidth changed from ${oldBandwidthKbps} to ${newBandwidthKbps}`)
 				},
 				
 				/*
 				 * Called when available video sending bandwidth changed.
 				 */
-				videoSendBandwidthDidChange: ( newBandwidthKbps, oldBandwidthKbps ) => {
-					//console.log('videoSendBandwidthDidChange');
-					//console.log(`Sending bandwidth changed from ${oldBandwidthKbps} to ${newBandwidthKbps}`);
+				videoSendBandwidthDidChange: ( newBandwidthKbps, oldBandwidthKbps ) => {					
+					this.logger.info(`Sending bandwidth changed from ${oldBandwidthKbps} to ${newBandwidthKbps}`)
 				},
 				
 				/*				
@@ -415,17 +426,17 @@ export default {
 				 * 
 				 * @see 'videoAvailabilityDidChange' to find out when it becomes available.
 				 */
-				videoSendDidBecomeUnavailable: () =>{
-					//console.log('videoSendDidBecomeUnavailable');
-					//console.log('You cannot share your video');
+				videoSendDidBecomeUnavailable: () =>{			
+					this.isVideoAvailable = false
+					this.messages.push({text:"Sorry, You cannot start your video now."})						
+					this.logger.warn('You cannot start your video')					
 				},
 				
 				/*
 				 * Called when metric of video outbound traffic is received.
 				 */
-				videoSendHealthDidChange: (bitrateKbps, packetsPerSecond) =>{
-					//console.log('videoSendHealthDidChange');
-					//console.log(`Sending bitrate in kilobits per second: ${bitrateKbps} and ${packetsPerSecond}`);
+				videoSendHealthDidChange: (bitrateKbps, packetsPerSecond) =>{					
+					this.logger.info(`Sending bitrate in kilobits per second: ${bitrateKbps} and ${packetsPerSecond}`)
 				},
 											
 				/*
@@ -439,8 +450,8 @@ export default {
 				 	if (!tileState.boundAttendeeId || tileState.localTile || tileState.isContent) {
 						return;
 				 	}
-				 	
-				 	console.log('videoTileDidUpdate');
+				 					 	
+				 	this.logger.info('audioVideoObserver: videoTileDidUpdate()')
 				 					 				 					 						
 					this.meetingSession.audioVideo.bindVideoElement(
 						tileState.tileId,
@@ -451,8 +462,8 @@ export default {
 				/*
 				* Called whenever a tile has been removed.
 				*/
-				videoTileWasRemoved: tileId => {
-					console.log('videoTileWasRemoved');
+				videoTileWasRemoved: tileId => {					
+					this.logger.info('audioVideoObserver: videoTileWasRemoved()')
 					this.releaseVideoElement(tileId);
 			  }
 			}
@@ -463,8 +474,8 @@ export default {
 			Utils.getSetting('AUDIO_VIDEO_OBSERVER_CALLBACKS_FOR_REMOVE', this.role).forEach(function( functionName ){
 				
 				if( audioVideoObserver[functionName] && typeof audioVideoObserver[functionName] === 'function' ){
-					console.log( 'Callback ' + functionName + ' has been remove.')
-					delete audioVideoObserver[functionName]									
+					delete audioVideoObserver[functionName]
+					this.logger.info('Callback ' + functionName + ' has been remove.')									
 				}										
 			})
 			
@@ -504,6 +515,7 @@ export default {
 		muteLocalAudio(){
 			this.meetingSession.audioVideo.realtimeMuteLocalAudio()
 			this.isAudio = false
+			this.logger.info('Local audio muted.')
 		},
 		
 		/*
@@ -512,6 +524,7 @@ export default {
 		unmuteLocalAudio(){
 			this.meetingSession.audioVideo.realtimeUnmuteLocalAudio()
 			this.isAudio = true	
+			this.logger.info('Local audio unmuted.')
 		},
 		
 		/*

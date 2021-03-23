@@ -1,5 +1,4 @@
 import { createApp } from 'vue'
-import Router from './modules/router/Router.js'
 import App from './modules/App.vue'
 import Store from './modules/store/Store.js'
 import * as Constant from './modules/constants/Constants.js';
@@ -11,5 +10,4 @@ const LOCAL_SERVER_MEETING_ID = document.querySelector(`#${Constant.ID_APP}`).da
 
 const app = createApp(App, { meeting: LOCAL_SERVER_MEETING_ID });
 app.use(Store)
-//app.use(Router)
 const vm = app.mount(`#${Constant.ID_APP}`)
