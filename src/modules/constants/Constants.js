@@ -120,6 +120,14 @@ export const ID_VIDEO_ELEMENT_PRESENTERS_CONTAINER = "cz-kibo-meeting-chime-clie
  */
 export const ID_PREFIX_FOR_VIDEO_ELEMENT = "cz-kibo-meeting-chime-client-video-tile-";
 
+/**
+ * The presenter role name
+ * 
+ * @constant
+ * @type {string}
+ */
+export const PRESENTER_ROLE_NAME = "presenter";
+
 
 
 

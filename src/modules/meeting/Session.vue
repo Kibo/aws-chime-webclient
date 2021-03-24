@@ -79,7 +79,7 @@ import {
   MeetingSessionStatusCode
 } from 'amazon-chime-sdk-js';
 import AlertMessage from "../common/AlertMessage.vue"
-import Attendee from "../common/Attendee.js"
+import {Attendee, AttendeeList} from "../common/Attendee.js"
 import Utils from "../tools/Utils.js"
 
 export default {

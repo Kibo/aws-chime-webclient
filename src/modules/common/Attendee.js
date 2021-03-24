@@ -1,3 +1,6 @@
+import Utils from "../tools/Utils.js"
+
+
 /*
  * Creates a new Attendee.
  * @class
@@ -40,4 +43,67 @@ class Attendee {
 	}
 }
 
-export default Attendee
+/*
+ * Creates an Attendee map
+ */
+class AttendeeMap{
+	
+	constructor() {		
+		this._map = new Map()
+	}
+	
+	get size(){
+		return this._map.size
+	}
+	
+	clear(){
+		this._map.clear()
+	}
+	
+	delete( key ){
+		return this._map.delete(key)
+	}
+	
+	get( key ){		
+		return this._map.get(key)
+	}
+	
+	set( key, value ){
+		return this._map.set(key, value)
+	}
+	
+	has( key ){
+		return this._map.has(key)
+	}
+	
+	/*
+	 * Get the Presenter from map
+	 * 
+	 * @returns {Object | null}
+	 */
+	getPresenter(){		
+		for (let [key, value] of this._map.entries()) {
+  			if(value 
+  				&& (typeof value.hasRole === 'function') 
+  				&& value.hasRole( Utils.getConstant('PRESENTER_ROLE_NAME'))){
+  				return value
+  			}
+		}
+		
+		return null
+	}
+	
+	setPresenter( key ){				
+		let currentPresenter = this.getPresenter()
+		if( currentPresenter ){
+			currentPresenter.removeRole( Utils.getConstant('PRESENTER_ROLE_NAME') )
+		}
+		
+		let newPresenter = this._map.get(key)		
+		if( newPresenter ){		
+			newPresenter.addRole( Utils.getConstant('PRESENTER_ROLE_NAME') )
+		}				
+	}	
+}
+
+export { Attendee, AttendeeMap };
