@@ -1,64 +1,71 @@
 <template>
-		
-	<div class="row">
-		<div class="col-3 text-white text-left">
-		AWS Chime	
-		</div>
-				
-		<div class="col text-center">
-			
-			<div class="btn-group" role="group">				
-			  <button type="button" class="btn btn-sm text-uppercase"
-			  	v-if="utils.getSetting('IS_AUDIO_INPUT_DEVICE', role)"
-			  	v-bind:class="isAudio ? 'btn-success' :'btn-secondary'"
-			  	v-on:click.prevent="toggleAudio"
-			  ><i class="fa fa-microphone" aria-hidden="true"></i> Voice</button>
-			  		
-			  <button type="button" class="btn btn-sm text-uppercase"
-			  	v-if="utils.getSetting('IS_VIDEO_INPUT_DEVICE', role)"  
-			  	v-bind:class="isVideo ? 'btn-success' :'btn-secondary'"
-			  	v-on:click="toggleVideo"
-			   ><i class="fa fa-video-camera" aria-hidden="true"></i> Video</button>
-			   			   
-			  <button type="button" class="btn btn-sm text-uppercase"
-			  	v-if="utils.getSetting('CAN_SHARE_CONTENT', role)"
-				v-bind:class="isShare ? 'btn-success' :'btn-secondary'"
-				v-on:click="toggleShare"
-			  ><i class="fa fa-share-alt" aria-hidden="true"></i> Share</button>
-			  
-			  <button type="button" class="btn btn-sm btn-danger text-uppercase"
-			  	v-on:click="leaveMeeting"			  
-			  ><i class="fa fa-sign-out" aria-hidden="true"></i> Leave</button>
-			</div>
-						
-		</div>
-		
-		<div class="col-2 text-white text-right">
-			<span class="badge badge-secondary">				
-				<i class="fa fa-users" aria-hidden="true"></i> {{this.attendeePresenceMap.size}} | 
-				<i class="fa fa-arrow-circle-o-up" aria-hidden="true"></i> {{uplink}} | 
-				<i class="fa fa-arrow-circle-o-down" aria-hidden="true"></i> {{downlink}}
-			</span>			
-		</div>		
-	</div>
 	
+	<nav class="navbar sticky-top navbar-expand-sm navbar-light bg-light mb-2">
+		<span class="navbar-brand d-none d-sm-block" >AWS Chime</span>
+
+		<ul class="navbar-nav mr-auto">
+			
+			<li class="nav-item" 
+			v-if="utils.getSetting('IS_AUDIO_INPUT_DEVICE', role)">
+				<a class="nav-link" href="#" 
+				v-bind:class="isAudio ? 'active' :''" 
+				v-on:click.prevent="toggleAudio">
+					<i class="fa fa-microphone" aria-hidden="true"></i> Voice
+				</a>
+			</li>
+			
+			<li class="nav-item" 
+			v-if="utils.getSetting('IS_VIDEO_INPUT_DEVICE', role)">
+				<a class="nav-link" href="#" 
+				v-bind:class="isVideo ? 'active' :''" 
+				v-on:click.prevent="toggleVideo">
+					<i class="fa fa-video-camera" aria-hidden="true"></i> Video
+				</a>
+			</li>
+			
+			<li class="nav-item" 
+			v-if="utils.getSetting('CAN_SHARE_CONTENT', role)">
+				<a class="nav-link" href="#" 
+				v-bind:class="isShare ? 'active' :''" 
+				v-on:click.prevent="toggleShare">
+					<i class="fa fa-share-alt" aria-hidden="true"></i> Share
+				</a>
+			</li>
+			
+			<li class="nav-item">
+				<a class="nav-link" href="#" 
+				v-on:click.prevent="leaveMeeting">
+					<i class="fa fa-sign-out" aria-hidden="true"></i> Leave
+				</a>
+			</li>
+			
+		</ul>
+			
+		<span class="navbar-text">				
+			<i class="fa fa-users" aria-hidden="true"></i> {{this.attendeePresenceMap.size}} | 
+			<i class="fa fa-arrow-circle-o-up" aria-hidden="true"></i> {{uplink}} | 
+			<i class="fa fa-arrow-circle-o-down" aria-hidden="true"></i> {{downlink}}
+		</span>	
+				
+	</nav>
+			
 	<div class="row">
-		<div class="col-3">
+		<div class="col-12 col-sm-12 col-md-3">
 			<div v-bind:id="utils.getConstant('ID_VIDEO_ELEMENT_TILES_CONTAINER')"></div>	
 		</div>
 		
-		<div class="col">
+		<div class="col-12 col-sm-12 col-md-6">
 			<div v-if="messages.length">
 				<AlertMessage 
 					v-for="(message, index) in messages" 
 					v-bind:message="message" 
 					v-on:dismiss="dismissAlert(index)" />
-			</div>
+			</div>  
 			
 			<div v-bind:id="utils.getConstant('ID_VIDEO_ELEMENT_PRESENTERS_CONTAINER')"></div>								
 		</div>
 		
-		<div class="col-2">
+		<div class="col-12 col-sm-12 col-md-3">
 			Moderator Pane<br>
 			Chat Pane<br>			
 		</div>

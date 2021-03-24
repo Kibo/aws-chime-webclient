@@ -1,28 +1,26 @@
 <template>
-	<div class="container-fluid">
-		
-		<div v-if="status === utils.getConstant( 'APP_STATUS_LOGIN' )">
-			<LoginForm 
-				v-bind:meeting="meeting"
-				v-on:credentials="createMeetingSession" />
-		</div>
 			
-		<div v-if="status === utils.getConstant( 'APP_STATUS_CONFIGURE' )">
-			<DeviceConfigurator 
-				v-bind:meetingSession="meetingSession" 
-				v-bind:meetingAudioElement="getMeetingAudioElement()"
-				v-on:start-session="startSession()" /> 
-		</div>
-		
-		<div v-if="status === utils.getConstant( 'APP_STATUS_SESSION' )">
-			<Session 
-				v-bind:meetingSession="meetingSession" /> 
-		</div>
-			
-		<audio style="display:none" 
-			v-bind:id="utils.getConstant('ID_MEETING_AUDIO_ELEMENT')" ></audio>
-		
+	<div v-if="status === utils.getConstant( 'APP_STATUS_LOGIN' )">
+		<LoginForm 
+			v-bind:meeting="meeting"
+			v-on:credentials="createMeetingSession" />
 	</div>
+		
+	<div v-if="status === utils.getConstant( 'APP_STATUS_CONFIGURE' )">
+		<DeviceConfigurator 
+			v-bind:meetingSession="meetingSession" 
+			v-bind:meetingAudioElement="getMeetingAudioElement()"
+			v-on:start-session="startSession()" /> 
+	</div>
+	
+	<div v-if="status === utils.getConstant( 'APP_STATUS_SESSION' )">
+		<Session 
+			v-bind:meetingSession="meetingSession" /> 
+	</div>
+		
+	<audio style="display:none" 
+		v-bind:id="utils.getConstant('ID_MEETING_AUDIO_ELEMENT')" ></audio>
+			
 </template>
 
 <script>
