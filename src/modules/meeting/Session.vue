@@ -65,9 +65,9 @@
 			<div v-bind:id="utils.getConstant('ID_VIDEO_ELEMENT_PRESENTERS_CONTAINER')"></div>								
 		</div>
 		
-		<div class="col-12 col-sm-12 col-md-3">
-			Moderator Pane<br>
-			Chat Pane<br>			
+		<div class="col-12 col-sm-12 col-md-3">			
+				<ModeratorPanel v-bind:attendeePresenceMap="attendeePresenceMap" />							 					
+				Chat Pane			
 		</div>
 		
 	</div>
@@ -79,12 +79,14 @@ import {
   MeetingSessionStatusCode
 } from 'amazon-chime-sdk-js';
 import AlertMessage from "../common/AlertMessage.vue"
+import ModeratorPanel from "./ModeratorPanel.vue"
 import {Attendee, AttendeeMap} from "../common/Attendee.js"
 import Utils from "../tools/Utils.js"
 
 export default {
 	components: {
-		AlertMessage
+		AlertMessage,
+		ModeratorPanel
 	},
 	props: ['meetingSession'],
 	data() {
@@ -192,7 +194,7 @@ export default {
 		toggleShare(){			
 			this.logger.info('toggleShare - handler')
 			
-			if(!this.attendeePresenceMap.get(this.localAttendeeId).hasRole('presenter') ){
+			if(!this.attendeePresenceMap.get(this.localAttendeeId).hasRole(utils.getConstant('PRESENTER_ROLE_NAME'))){
 				this.messages.push({text:"Sorry, you are not a presenter."})	
 				return
 			}
@@ -513,9 +515,7 @@ export default {
 		attendeePresenceChange(attendeeId, present, externalUserId, dropped, posInFrame){
 			if (present) {				
 				let attendee = new Attendee(attendeeId)
-				attendee.setExternalUserId = externalUserId
-				attendee.addRole( this.role )
-								 						
+				attendee.externalUserId = externalUserId																 			
 				this.attendeePresenceMap.set(attendeeId, attendee);										
 			} else {
 				this.attendeePresenceMap.delete(attendeeId);

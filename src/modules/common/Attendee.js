@@ -19,13 +19,13 @@ class Attendee {
 	}
 	
 	get externalUserId() {
-		return this._externalUserId;
+		return Utils.getAttendeeName( this._externalUserId );
 	}
 	
 	set externalUserId(externalUserId) {
 		this._externalUserId = externalUserId
 	}
-
+	
 	addRole(role) {
 		this._roles.push(role)
 	}
@@ -76,6 +76,22 @@ class AttendeeMap{
 		return this._map.has(key)
 	}
 	
+	keys(){
+		return this._map.keys()	
+	}
+	
+	values(){
+		return this._map.values()	
+	}
+	
+	entries(){
+		return this._map.entries()
+	}
+	
+	forEach(fn){
+		return this._map.forEach(fn)
+	}
+		
 	/*
 	 * Get the Presenter from map
 	 * 
