@@ -14,7 +14,7 @@
 				</select>
 				
 				<div class="input-group-append">
-					<button v-on:click="startVideoPreview" v-bind:class="[videoInputTestEnabled ? 'btn-success' : 'btn-outline-secondary'  ]" class="btn" type="button" v-bind:disabled="!videoInputTestEnabled">Test</button>
+					<button v-on:click="startVideoPreview" v-bind:class="[videoInputTestEnabled ? 'btn-success' : 'btn-outline-secondary']" class="btn" type="button" v-bind:disabled="!videoInputTestEnabled">Test</button>
 				</div>
 			</div>					
 		</div>							
@@ -22,7 +22,8 @@
 		
 	<div class="row">			
 		<div class="col mt-2">
-			<div class="embed-responsive embed-responsive-16by9">
+			<div class="embed-responsive embed-responsive-16by9" 
+				v-bind:class="[showVideoPreview ? '' : 'd-none']">
 				<video v-bind:id="utils.getConstant('ID_VIDEO_ELEMENT_FOR_PREVIEW')" class="w-100 h-100" ></video>
 			</div>	
 		</div>					
@@ -39,7 +40,8 @@ export default {
 	data() {
 			return {
 				utils:Utils,
-				videoInputTestEnabled:false						
+				videoInputTestEnabled:false,
+				showVideoPreview:false						
 			}
 		},
 	
@@ -61,7 +63,8 @@ export default {
 		 */
 		startVideoPreview(){								
 			this.meetingSession.audioVideo.startVideoPreviewForVideoInput( this.getHTMLElementForVideoPreview() )
-			this.videoInputTestEnabled = false				
+			this.videoInputTestEnabled = false
+			this.showVideoPreview = true				
 		},
 		
 		stopVideoPreview(){
@@ -79,7 +82,8 @@ export default {
 			let deviceId = event.target.value == '' ? null : event.target.value
 			this.stopVideoPreview() 																						
 			this.$emit('videoInputSelected', deviceId )			
-			this.videoInputTestEnabled = deviceId ? true : false 																		
+			this.videoInputTestEnabled = deviceId ? true : false
+			this.showVideoPreview = false 																		
 		},
 				
 		getHTMLElementForVideoPreview(){
