@@ -75,10 +75,10 @@
 		<div class="col-12 col-sm-12 col-md-3">					
 				<ModeratorPanel 
 					v-if="role == utils.getConstant('ROLE_NAME_MODERATOR')"
-					v-bind:attendeePresenceMap="attendeePresenceMap" />							 					
-				Chat Pane			
+					v-bind:attendeePresenceMap="attendeePresenceMap" />
+					
+				<ChatPanel v-bind:attendeePresenceMap="attendeePresenceMap" />				
 		</div>
-		
 	</div>
 					
 </template>
@@ -89,14 +89,17 @@ import {
 } from 'amazon-chime-sdk-js';
 import AlertMessage from "../common/AlertMessage.vue"
 import ModeratorPanel from "./ModeratorPanel.vue"
+import ChatPanel from "./ChatPanel.vue"
 import {Attendee, AttendeeMap} from "../common/Attendee.js"
 import Utils from "../tools/Utils.js"
 
 export default {
 	components: {
 		AlertMessage,
-		ModeratorPanel
+		ModeratorPanel,
+		ChatPanel
 	},
+	emits: ['configureDevices'],
 	props: ['meetingSession'],
 	data() {
 			return {
@@ -235,7 +238,8 @@ export default {
 		 * User click to Devices button
 		 */
 		plugDevices(){
-			console.log('Devices setting')
+			this.logger.info('a Attendee click to Configure Devices button.')
+			this.$emit("configureDevices")
 		},
 		
 		dismissAlert(index){							

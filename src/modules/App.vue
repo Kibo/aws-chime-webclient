@@ -15,7 +15,8 @@
 	
 	<div v-if="status === utils.getConstant( 'APP_STATUS_SESSION' )">
 		<Session 
-			v-bind:meetingSession="meetingSession" /> 
+			v-bind:meetingSession="meetingSession"
+			v-on:configure-devices="configureDevices()" /> 
 	</div>
 		
 	<audio style="display:none" 
@@ -63,6 +64,13 @@ export default {
     	this.meetingSession = new DefaultMeetingSession(configuration, this.logger, deviceController); 
     	
     	this.status = Utils.getConstant('APP_STATUS_CONFIGURE')   	    	   
+    },
+    
+    /*
+     * This handler is called after a user click to a button 'Configure Devices' in running session
+     */
+    configureDevices(){    	    
+    	this.status = Utils.getConstant('APP_STATUS_CONFIGURE') 
     },
     
     /*
