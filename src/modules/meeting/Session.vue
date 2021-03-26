@@ -34,6 +34,13 @@
 			
 			<li class="nav-item">
 				<a class="nav-link" href="#" 
+				v-on:click.prevent="plugDevices">
+					<i class="fa fa-plug" aria-hidden="true"></i> Devices
+				</a>
+			</li>
+			
+			<li class="nav-item">
+				<a class="nav-link" href="#" 
 				v-on:click.prevent="leaveMeeting">
 					<i class="fa fa-sign-out" aria-hidden="true"></i> Leave
 				</a>
@@ -65,8 +72,10 @@
 			<div v-bind:id="utils.getConstant('ID_VIDEO_ELEMENT_PRESENTERS_CONTAINER')"></div>								
 		</div>
 		
-		<div class="col-12 col-sm-12 col-md-3">			
-				<ModeratorPanel v-bind:attendeePresenceMap="attendeePresenceMap" />							 					
+		<div class="col-12 col-sm-12 col-md-3">					
+				<ModeratorPanel 
+					v-if="role == utils.getConstant('ROLE_NAME_MODERATOR')"
+					v-bind:attendeePresenceMap="attendeePresenceMap" />							 					
 				Chat Pane			
 		</div>
 		
@@ -194,13 +203,20 @@ export default {
 		toggleShare(){			
 			this.logger.info('toggleShare - handler')
 			
-			if(!this.attendeePresenceMap.get(this.localAttendeeId).hasRole(utils.getConstant('PRESENTER_ROLE_NAME'))){
-				this.messages.push({text:"Sorry, you are not a presenter."})	
+			/*
+			 * The attendee is added to the list if he has set a microphone.
+			 *  
+			 * @see this.attendeePresenceChange 
+			 */
+			let localAttendee = this.attendeePresenceMap.get(this.localAttendeeId)
+								
+			if( localAttendee && localAttendee.hasRole(this.utils.getConstant('ROLE_NAME_PRESENTER'))){
+				//TODO							
+				this.isShare = this.isShare ? false : true							
 				return
 			}
 			
-			//TODO							
-			this.isShare = this.isShare ? false : true					
+			this.messages.push({text:"Sorry, you are not a presenter."})
 		},
 		
 		/*
@@ -213,6 +229,13 @@ export default {
 			this.meetingSession.audioVideo.realtimeUnsubscribeToAttendeeIdPresence( this.attendeePresenceChange )
 			this.uplink = 0
 			this.downlink = 0			
+		},
+		
+		/*
+		 * User click to Devices button
+		 */
+		plugDevices(){
+			console.log('Devices setting')
 		},
 		
 		dismissAlert(index){							
@@ -513,7 +536,9 @@ export default {
 		 * @see https://aws.github.io/amazon-chime-sdk-js/interfaces/audiovideofacade.html#realtimesubscribetoattendeeidpresence
 		 */
 		attendeePresenceChange(attendeeId, present, externalUserId, dropped, posInFrame){
-			if (present) {				
+			
+			// The attendee is added to the map if he has set a microphone.							
+			if (present) {												
 				let attendee = new Attendee(attendeeId)
 				attendee.externalUserId = externalUserId																 			
 				this.attendeePresenceMap.set(attendeeId, attendee);										
@@ -555,7 +580,7 @@ export default {
 		 */
 		isLocalAudio(){
 			return !this.meetingSession.audioVideo.realtimeIsLocalAudioMuted()
-		}			
+		},				
 	}	
 }
 </script>

@@ -20,7 +20,7 @@ test('Attendee IDs', async () => {
 	let tom = new Attendee('tom')		
 	expect( tom.attendeeId ).toBe( 'tom' )
 	
-	tom.externalUserId = 'petr'	
+	tom.externalUserId = '123#petr'	
 	expect( tom.externalUserId).toBe( 'petr' )	
 })
 

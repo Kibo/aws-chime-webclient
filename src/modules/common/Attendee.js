@@ -101,7 +101,7 @@ class AttendeeMap{
 		for (let [key, value] of this._map.entries()) {
   			if(value 
   				&& (typeof value.hasRole === 'function') 
-  				&& value.hasRole( Utils.getConstant('PRESENTER_ROLE_NAME'))){
+  				&& value.hasRole( Utils.getConstant('ROLE_NAME_PRESENTER'))){
   				return value
   			}
 		}
@@ -112,12 +112,12 @@ class AttendeeMap{
 	setPresenter( key ){				
 		let currentPresenter = this.getPresenter()
 		if( currentPresenter ){
-			currentPresenter.removeRole( Utils.getConstant('PRESENTER_ROLE_NAME') )
+			currentPresenter.removeRole( Utils.getConstant('ROLE_NAME_PRESENTER') )
 		}
 		
 		let newPresenter = this._map.get(key)		
 		if( newPresenter ){		
-			newPresenter.addRole( Utils.getConstant('PRESENTER_ROLE_NAME') )
+			newPresenter.addRole( Utils.getConstant('ROLE_NAME_PRESENTER') )
 		}				
 	}	
 }

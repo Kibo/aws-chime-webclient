@@ -18,6 +18,24 @@ export const CRENDTIALS_TO_MEETING_URL = "http://localhost:3000/meeting/";
  */
 export const ID_APP = "cz-kibo-meeting-chime-client";
 
+// ## ROLES #######################################
+/**
+ * The presenter role name
+ * 
+ * @constant
+ * @type {string}
+ */
+export const ROLE_NAME_PRESENTER = "presenter";
+
+/**
+ * The moderator role name
+ * 
+ * @constant
+ * @type {string}
+ */
+export const ROLE_NAME_MODERATOR = "moderator";
+
+
 // ## MAIN STATUSES #######################################
 
 /**
@@ -120,13 +138,6 @@ export const ID_VIDEO_ELEMENT_PRESENTERS_CONTAINER = "cz-kibo-meeting-chime-clie
  */
 export const ID_PREFIX_FOR_VIDEO_ELEMENT = "cz-kibo-meeting-chime-client-video-tile-";
 
-/**
- * The presenter role name
- * 
- * @constant
- * @type {string}
- */
-export const PRESENTER_ROLE_NAME = "presenter";
 
 
 

@@ -1,15 +1,22 @@
 <template>	
-	<table class="table table-borderless table-sm table-striped">
-		<tbody>			
-			<tr v-for="attendee in attendeePresenceMap.values()" v-bind:key="attendee.attendeeId">
-				<th>
-					<a href="#" v-on:click.prevent="setPresenter( attendee.attendeeId )">
-						<i class="fa" v-bind:class="attendee.hasRole(utils.getConstant('PRESENTER_ROLE_NAME')) ? 'fa-user-secret' :'fa-user'"></i> <small>{{attendee.externalUserId}}</small>						
-					</a>
-				</th>				
-			</tr>
-		</tbody>
-	</table>	
+	<div class="card">
+		<div class="card-header">
+			Moderator panel
+		</div>
+		<div class="card-body p-0">
+			<table class="table table-borderless table-sm table-striped m-0">
+				<tbody>			
+					<tr v-for="attendee in attendeePresenceMap.values()" v-bind:key="attendee.attendeeId">
+						<th>
+							<a href="#" v-on:click.prevent="setPresenter( attendee.attendeeId )">
+								<i class="fa" v-bind:class="attendee.hasRole(utils.getConstant('ROLE_NAME_PRESENTER')) ? 'fa-user-secret' :'fa-user'"></i> <small>{{attendee.externalUserId}}</small>						
+							</a>
+						</th>				
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
 </template>
 
 <script>
