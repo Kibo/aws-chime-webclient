@@ -53,7 +53,8 @@ const Utils = {
 		if( videoWrapper ){
 			return videoWrapper.querySelector('video')
 		}
-						
+		
+		console.log("BUILD NEW VideoELEMENT")				
 		return this.buildVideoElement( id, isPresenterTile )		
 	},
 	
@@ -115,8 +116,12 @@ const Utils = {
 	 */
 	removeElementById( id ){
 		let element = document.getElementById(id)
-		if(element){			
-			element.outerHTML = "";			
+		if(element){								
+			while (element.firstChild) {
+    			element.firstChild.remove()
+			}
+			element.remove()
+									
 			return true			
 		}else{
 			return false

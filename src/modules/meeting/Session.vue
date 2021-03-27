@@ -178,8 +178,8 @@ export default {
 				try {
 					// TODO					
 		      		await this.meetingSession.audioVideo.chooseVideoInputDevice( this.$store.state.videoInputDeviceId );
-		      		
-		      		this.meetingSession.audioVideo.startLocalVideoTile();	
+		      				      		
+		      		this.meetingSession.audioVideo.startLocalVideoTile();
 		      		
 		      		let localTile = this.meetingSession.audioVideo.getLocalVideoTile()
 		      		if( localTile ){
@@ -187,8 +187,8 @@ export default {
 							localTile.id(),
 							this.acquireVideoElement( localTile.id() )
 				 		);	
-		      		}		      		
-		      			      		      		      		      		 
+		      		}
+		      				      				      	
 		    	} catch (e) {		      		
 		      		this.logger.error(e)
 		      		return
@@ -276,13 +276,11 @@ export default {
 			
 			//TODO
 			// max tile 16 + content tile
-							
-			if( typeof this.indexMap[tileId] === 'number'){				
-				return Utils.getHTMLVideoElement( tileId )
-			}
-			
+												
 			this.indexMap[tileId] = tileId;		      
-			return Utils.getHTMLVideoElement( tileId, isPresenterTile )			
+			return Utils.getHTMLVideoElement( tileId, isPresenterTile )
+			
+			this.logger.warn('Create video element with ID:#' + Utils.getConstant('ID_PREFIX_FOR_VIDEO_ELEMENT') + tileId)			
 		},
 		
 		releaseVideoElement( tileId ){					
@@ -499,40 +497,30 @@ export default {
 				* States:
 				* @see https://aws.github.io/amazon-chime-sdk-js/classes/videotilestate.html
 				*/				
-				videoTileDidUpdate: tileState => {																
+				videoTileDidUpdate: tileState => {
+																													
 					// Ignore a tile without attendee ID
 				 	if (!tileState.boundAttendeeId) {
 						return;
 				 	}
 				 	
-				 	this.logger.info('audioVideoObserver: videoTileDidUpdate()')
-				 	
-				 	// is a local tile (camera)
-				 	if( tileState.localTile){
-				 		this.meetingSession.audioVideo.bindVideoElement(
-							tileState.tileId,
-							this.acquireVideoElement(tileState.tileId)
-				 		);					 		
-				 		return
+				 	//@see this.toggleVideo()
+				 	if (tileState.localTile) {
+						return;
 				 	}
+				 					 					 					 									 					
+				 	let isPresenterTile = tileState.isContent ? true : false
 				 	
-				 	// is a content share
-				 	if( tileState.isContent){
-				 		let isPresenterTile = true
-				 						 						 
-				 		this.meetingSession.audioVideo.bindVideoElement(
-							tileState.tileId,							
-							this.acquireVideoElement(tileState.tileId, isPresenterTile)
-				 		);
-				 						 						 
-				 		return
-				 	}
+				 	this.meetingSession.audioVideo.bindVideoElement(
+						tileState.tileId,
+						this.acquireVideoElement(tileState.tileId, isPresenterTile)
+				 	);				 					 
 				},
 				
 				/*
 				* Called whenever a tile has been removed.
 				*/
-				videoTileWasRemoved: tileId => {					
+				videoTileWasRemoved: tileId => {
 					this.logger.info('audioVideoObserver: videoTileWasRemoved()')
 					this.releaseVideoElement(tileId);
 			  }
@@ -592,7 +580,8 @@ export default {
 		 */
 		attendeePresenceChange(attendeeId, present, externalUserId, dropped, posInFrame){
 			
-			console.log( attendeeId + " WWWWWWWWWWWW")
+			// TODO attendeeId#content
+			console.log( attendeeId + "CONTENT")
 			
 			// The attendee is added to the map if he has set a microphone.							
 			if (present) {												
