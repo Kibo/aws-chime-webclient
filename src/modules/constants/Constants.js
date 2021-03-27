@@ -27,15 +27,6 @@ export const ID_APP = "cz-kibo-meeting-chime-client";
  */
 export const ROLE_NAME_PRESENTER = "presenter";
 
-/**
- * The moderator role name
- * 
- * @constant
- * @type {string}
- */
-export const ROLE_NAME_MODERATOR = "moderator";
-
-
 // ## MAIN STATUSES #######################################
 
 /**
@@ -97,17 +88,6 @@ export const AUDIO_TEST_SOUND_URL = "https://www2.cs.uic.edu/~i101/SoundFiles/St
 export const ID_VIDEO_ELEMENT_FOR_PREVIEW = "cz-kibo-meeting-chime-client-video-preview";
 
 // ## session #######################################
-/**
- * Number of Video tiles
- * 
- * min 1 
- * max 16
- * 
- * @constant
- * @type {Number}
- */
-export const NUMBER_OF_VIDEO_TILES=16
-
 /**
  * The ID for the wrapper where are video elements.
  * * 

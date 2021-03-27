@@ -74,10 +74,12 @@
 		
 		<div class="col-12 col-sm-12 col-md-3">					
 				<ModeratorPanel 
-					v-if="role == utils.getConstant('ROLE_NAME_MODERATOR')"
+					v-if="utils.getSetting('SHOW_MODERATOR_PANEL', role)"
 					v-bind:attendeePresenceMap="attendeePresenceMap" />
-					
-				<ChatPanel v-bind:attendeePresenceMap="attendeePresenceMap" />				
+																		
+				<ChatPanel 
+					v-if="utils.getSetting('SHOW_CHAT_PANEL', role)" 
+					v-bind:attendeePresenceMap="attendeePresenceMap" />			
 		</div>
 	</div>
 					
@@ -131,7 +133,8 @@ export default {
 	},
 	
 	mounted() {				
-		this.meetingSession.audioVideo.addObserver( this.getSessionObserver() );
+		this.meetingSession.audioVideo.addObserver( this.getSessionObserver() );		
+		this.meetingSession.audioVideo.addContentShareObserver( this.getContentShareObserver() )
 		this.meetingSession.audioVideo.realtimeSubscribeToAttendeeIdPresence( this.attendeePresenceChange )
 									
 		this.meetingSession.audioVideo.start()							
@@ -203,7 +206,7 @@ export default {
 		/*
 		 * User click to Share button
 		 */
-		toggleShare(){			
+		async toggleShare(){			
 			this.logger.info('toggleShare - handler')
 			
 			/*
@@ -212,14 +215,27 @@ export default {
 			 * @see this.attendeePresenceChange 
 			 */
 			let localAttendee = this.attendeePresenceMap.get(this.localAttendeeId)
-								
-			if( localAttendee && localAttendee.hasRole(this.utils.getConstant('ROLE_NAME_PRESENTER'))){
-				//TODO							
-				this.isShare = this.isShare ? false : true							
+			
+			if(!localAttendee ){
+				this.messages.push({text:"Set your microphone and camera first."})
 				return
 			}
+						
+			if(localAttendee 
+				&& (!localAttendee.hasRole(this.utils.getConstant('ROLE_NAME_PRESENTER')))){
+				this.messages.push({text:"Sorry, you are not a presenter."})
+				return
+			}
+															
+			this.isShare = this.isShare ? false : true
 			
-			this.messages.push({text:"Sorry, you are not a presenter."})
+			if( this.isShare ){
+				await this.meetingSession.audioVideo.startContentShareFromScreenCapture();	
+			}else{
+				this.stopContentShare()
+			}
+														
+			return						
 		},
 		
 		/*
@@ -227,8 +243,10 @@ export default {
 		 */
 		leaveMeeting(){			
 			this.logger.info('Leave meeting - handler')
+			this.stopContentShare()
 			this.meetingSession.audioVideo.stop()
-			this.meetingSession.audioVideo.removeObserver( this.getSessionObserver() )			
+			this.meetingSession.audioVideo.removeObserver( this.getSessionObserver() )						
+			this.meetingSession.audioVideo.removeContentShareObserver( this.getContentShareObserver() )							
 			this.meetingSession.audioVideo.realtimeUnsubscribeToAttendeeIdPresence( this.attendeePresenceChange )
 			this.uplink = 0
 			this.downlink = 0			
@@ -250,39 +268,29 @@ export default {
 		 * Acquire HTML video element for tile binding
 		 * 
 		 * @param {Number} tileId
-		 * @param {Boolean} isMainTile 
+		 * @param {Boolean} isPresenterTile
 		 * 
 		 * @returns {Object} - HTMLVideoElement
 		 */
-		acquireVideoElement( tileId ){		  		  		
-		  // Return the same video element if already bound.
-		  for (let i = 0; i < Utils.getConstant('NUMBER_OF_VIDEO_TILES'); i += 1) {
-		    if (this.indexMap[i] === tileId) {
-		      return Utils.getHTMLVideoElement( tileId )
-		    }
-		  }
-		  
-		  // Return the next available video element.
-		  for (let i = 0; i < Utils.getConstant('NUMBER_OF_VIDEO_TILES'); i += 1) {		  			  			  			  		
-		    if (!this.indexMap.hasOwnProperty(i)) {
-		      this.indexMap[i] = tileId;		      
-		      return Utils.getHTMLVideoElement( tileId )
-		    }
-		  }
-		  
-		  this.logger.error('No video element is available')
-		  throw new Error('No video element is available');
+		acquireVideoElement( tileId, isPresenterTile ){		  	
+			
+			//TODO
+			// max tile 16 + content tile
+							
+			if( typeof this.indexMap[tileId] === 'number'){				
+				return Utils.getHTMLVideoElement( tileId )
+			}
+			
+			this.indexMap[tileId] = tileId;		      
+			return Utils.getHTMLVideoElement( tileId, isPresenterTile )			
 		},
 		
-		releaseVideoElement( tileId ){
-		  for (let i = 0; i < Utils.getConstant('NUMBER_OF_VIDEO_TILES'); i += 1) {
-		    if (this.indexMap[i] === tileId) {
-		      this.meetingSession.audioVideo.unbindVideoElement(tileId)		      		     		      		      		      		      		      		      		      		
-		      delete this.indexMap[i];
-		      Utils.removeElementById( Utils.getConstant('ID_PREFIX_FOR_VIDEO_ELEMENT') + tileId )		      
-		      return;
-		    }
-		  }
+		releaseVideoElement( tileId ){					
+			this.meetingSession.audioVideo.unbindVideoElement(tileId)
+			delete this.indexMap[tileId];
+			Utils.removeElementById( Utils.getConstant('ID_PREFIX_FOR_VIDEO_ELEMENT') + tileId )
+			
+			this.logger.warn('Release video element with ID:#' + Utils.getConstant('ID_PREFIX_FOR_VIDEO_ELEMENT') + tileId)
 		},
 					
 		/*
@@ -492,17 +500,33 @@ export default {
 				* @see https://aws.github.io/amazon-chime-sdk-js/classes/videotilestate.html
 				*/				
 				videoTileDidUpdate: tileState => {																
-					// Ignore a tile without attendee ID, a local tile (your video), and a content share.
-				 	if (!tileState.boundAttendeeId || tileState.localTile || tileState.isContent) {
+					// Ignore a tile without attendee ID
+				 	if (!tileState.boundAttendeeId) {
 						return;
 				 	}
-				 					 	
+				 	
 				 	this.logger.info('audioVideoObserver: videoTileDidUpdate()')
-				 					 				 					 						
-					this.meetingSession.audioVideo.bindVideoElement(
-						tileState.tileId,
-						this.acquireVideoElement(tileState.tileId)
-				 	);
+				 	
+				 	// is a local tile (camera)
+				 	if( tileState.localTile){
+				 		this.meetingSession.audioVideo.bindVideoElement(
+							tileState.tileId,
+							this.acquireVideoElement(tileState.tileId)
+				 		);					 		
+				 		return
+				 	}
+				 	
+				 	// is a content share
+				 	if( tileState.isContent){
+				 		let isPresenterTile = true
+				 						 						 
+				 		this.meetingSession.audioVideo.bindVideoElement(
+							tileState.tileId,							
+							this.acquireVideoElement(tileState.tileId, isPresenterTile)
+				 		);
+				 						 						 
+				 		return
+				 	}
 				},
 				
 				/*
@@ -529,6 +553,33 @@ export default {
 		},
 		
 		/*
+		 * Content share observer
+		 * 
+		 * @see https://aws.github.io/amazon-chime-sdk-js/interfaces/contentshareobserver.html
+		 */
+		getContentShareObserver(){
+			let contentShareObserver = {
+				
+				/*
+				 * Called when a content share session is started.
+				 */
+				contentShareDidStart: () =>{
+					//TODO
+					this.logger.warn("Content share session is started")	
+				},
+				
+				/*
+				 * Called when a content share session is stopped.
+				 */
+				contentShareDidStop:()=>{
+					this.logger.warn("Content share session is stopped")
+				}
+			}
+			
+			return contentShareObserver
+		},			
+		
+		/*
 		 * Attendee presence change - handler
 		 * 
 		 * @param {String} attendeeId
@@ -540,6 +591,8 @@ export default {
 		 * @see https://aws.github.io/amazon-chime-sdk-js/interfaces/audiovideofacade.html#realtimesubscribetoattendeeidpresence
 		 */
 		attendeePresenceChange(attendeeId, present, externalUserId, dropped, posInFrame){
+			
+			console.log( attendeeId + " WWWWWWWWWWWW")
 			
 			// The attendee is added to the map if he has set a microphone.							
 			if (present) {												
@@ -584,7 +637,15 @@ export default {
 		 */
 		isLocalAudio(){
 			return !this.meetingSession.audioVideo.realtimeIsLocalAudioMuted()
-		},				
+		},
+		
+		/*
+		 * Stop content share - helper mepthod
+		 */
+		async stopContentShare(){			
+			await this.meetingSession.audioVideo.stopContentShare();
+			this.isShare = false	
+		}				
 	}	
 }
 </script>

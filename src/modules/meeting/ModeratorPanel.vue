@@ -1,5 +1,5 @@
 <template>	
-	<div class="card">
+	<div class="card mb-2">
 		<div class="card-header">
 			Moderator panel
 		</div>

@@ -116,7 +116,7 @@ const Utils = {
 	removeElementById( id ){
 		let element = document.getElementById(id)
 		if(element){			
-			element.outerHTML = "";
+			element.outerHTML = "";			
 			return true			
 		}else{
 			return false

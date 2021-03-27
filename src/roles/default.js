@@ -93,6 +93,27 @@ const Setting = {
 	 */
 	CAN_SHARE_CONTENT:false,
 	
+	/**
+	 * Show moderator panel
+	 * 
+	 * Moderator can add and change the presenter role
+	 *  
+	 * @constant
+	 * @type {Boolean}
+	 */
+	SHOW_MODERATOR_PANEL:false,	
+	
+	
+	/**
+	 * Show chat panel
+	 * 
+	 * an attendee can send and view chat messages
+	 *  
+	 * @constant
+	 * @type {Boolean}
+	 */
+	SHOW_CHAT_PANEL:false
+	
 }
 
 export default Setting

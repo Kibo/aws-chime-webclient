@@ -23,6 +23,17 @@ const Setting = {
 	 * @type {Boolean}
 	 */
 	IS_VIDEO_INPUT_DEVICE:true,
+	
+	
+	/**
+	 * Show chat panel
+	 * 
+	 * an attendee can send and view chat messages
+	 *  
+	 * @constant
+	 * @type {Boolean}
+	 */
+	SHOW_CHAT_PANEL:false
 }
 
 export default Setting
