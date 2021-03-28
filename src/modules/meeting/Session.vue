@@ -57,11 +57,11 @@
 	</nav>
 			
 	<div class="row">
-		<div class="col-12 col-sm-12 col-md-3">
+		<div class="col-12 col-sm-12 col-md-2">
 			<div v-bind:id="utils.getConstant('ID_VIDEO_ELEMENT_TILES_CONTAINER')"></div>	
-		</div>
-		
-		<div class="col-12 col-sm-12 col-md-6">
+		</div>	
+					
+		<div class="col-12 col-sm-12 col-md-8">
 			<div v-if="messages.length">
 				<AlertMessage 
 					v-for="(message, index) in messages" 
@@ -72,7 +72,7 @@
 			<div v-bind:id="utils.getConstant('ID_VIDEO_ELEMENT_PRESENTERS_CONTAINER')"></div>								
 		</div>
 		
-		<div class="col-12 col-sm-12 col-md-3">					
+		<div class="col-12 col-sm-12 col-md-2">					
 				<ModeratorPanel 
 					v-if="utils.getSetting('SHOW_MODERATOR_PANEL', role)"
 					v-bind:attendeePresenceMap="attendeePresenceMap" />
@@ -82,7 +82,7 @@
 					v-bind:attendeePresenceMap="attendeePresenceMap" />			
 		</div>
 	</div>
-					
+		
 </template>
 
 <script>
