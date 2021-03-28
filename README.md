@@ -34,6 +34,11 @@ $ npm run build
 $ npm run start
 ```
 Open http://localhost:3000 in your browser.
+Passwords (see [server.js](https://github.com/Kibo/aws-chime-webclient/blob/master/server.js)):
+- lektor
+- moderator
+- listener
+- broadcaster
 
 ### Test
 ```
