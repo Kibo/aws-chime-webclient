@@ -16,8 +16,8 @@ AWS Chime webclient using Vue.js.
 - [Webpack](https://webpack.js.org/) - The JavaScript module bundler.
 
 ### Before Build
-- pls, see [Constants.js](https://github.com/Kibo/aws-chime-webclient/blob/master/src/modules/constants/Constants.js)
-- pls, see [Setting templates](https://github.com/Kibo/aws-chime-webclient/blob/master/src/roles).
+- see [Constants.js](https://github.com/Kibo/aws-chime-webclient/blob/master/src/modules/constants/Constants.js)
+- see [Setting templates](https://github.com/Kibo/aws-chime-webclient/blob/master/src/roles).
 
 ### Build
 ```
@@ -36,10 +36,10 @@ $ npm run start
 Open http://localhost:3000 in your browser.
 
 Passwords (see [server.js](https://github.com/Kibo/aws-chime-webclient/blob/master/server.js)):
-- lektor
-- moderator
-- listener
-- broadcaster
+- "lektor"
+- "moderator"
+- "listener""
+- "broadcaster"
 
 ### Test
 ```
