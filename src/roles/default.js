@@ -92,6 +92,36 @@ const Setting = {
 	 * @type {Boolean}
 	 */
 	CAN_SHARE_CONTENT:false,
+		
+	/**
+	 * Show left panel
+	 * 
+	 * the left panel contains an video tiles of attendees
+	 *  
+	 * @constant
+	 * @type {Boolean}
+	 */
+	SHOW_LEFT_PANEL:true,
+	
+	/**
+	 * Attach attendee video tiles
+	 * 
+	 *  
+	 * @constant
+	 * @type {Boolean}
+	 */
+	ATTACH_ATTENDEE_VIDEO_TILES:true,
+	
+	
+	/**
+	 * Show left panel
+	 * 
+	 * the right panel contains an moderator panel and chat panel 
+	 * 
+	 * @constant
+	 * @type {Boolean}
+	 */
+	SHOW_RIGHT_PANEL:true,
 	
 	/**
 	 * Show moderator panel
@@ -103,7 +133,6 @@ const Setting = {
 	 */
 	SHOW_MODERATOR_PANEL:false,	
 	
-	
 	/**
 	 * Show chat panel
 	 * 
@@ -112,7 +141,8 @@ const Setting = {
 	 * @constant
 	 * @type {Boolean}
 	 */
-	SHOW_CHAT_PANEL:false
+	SHOW_CHAT_PANEL:false,
+	
 	
 }
 

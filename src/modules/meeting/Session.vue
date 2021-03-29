@@ -57,11 +57,13 @@
 	</nav>
 			
 	<div class="row">
-		<div class="col-12 col-sm-12 col-md-2">
+		
+		<div class="col-12 col-sm-12 col-md-2" 
+			v-bind:class="utils.getSetting('SHOW_LEFT_PANEL', role) ? '':'d-none'">
 			<div v-bind:id="utils.getConstant('ID_VIDEO_ELEMENT_TILES_CONTAINER')"></div>	
 		</div>	
 					
-		<div class="col-12 col-sm-12 col-md-8">
+		<div class="col">
 			<div v-if="messages.length">
 				<AlertMessage 
 					v-for="(message, index) in messages" 
@@ -72,10 +74,12 @@
 			<div v-bind:id="utils.getConstant('ID_VIDEO_ELEMENT_PRESENTERS_CONTAINER')"></div>								
 		</div>
 		
-		<div class="col-12 col-sm-12 col-md-2">					
+		<div class="col-12 col-sm-12 col-md-2"					
+			v-bind:class="utils.getSetting('SHOW_RIGHT_PANEL', role) ? '':'d-none'">					
 				<ModeratorPanel 
 					v-if="utils.getSetting('SHOW_MODERATOR_PANEL', role)"
-					v-bind:attendeePresenceMap="attendeePresenceMap" />
+					v-bind:attendeePresenceMap="attendeePresenceMap"
+					v-on:presenterChanged="presenterChanged" />
 																		
 				<ChatPanel 
 					v-if="utils.getSetting('SHOW_CHAT_PANEL', role)" 
@@ -508,8 +512,15 @@ export default {
 				 	if (tileState.localTile) {
 						return;
 				 	}
-				 					 					 					 									 					
+				 	
 				 	let isPresenterTile = tileState.isContent ? true : false
+				 	
+				 	if(!isPresenterTile){				 		
+				 		// broadcaster is not interested in attendee video tiles 
+				 		if( !this.utils.getSetting('ATTACH_ATTENDEE_VIDEO_TILES', this.role) ){
+				 			return
+				 		}	
+				 	} 
 				 	
 				 	this.meetingSession.audioVideo.bindVideoElement(
 						tileState.tileId,
@@ -552,7 +563,7 @@ export default {
 				 * Called when a content share session is started.
 				 */
 				contentShareDidStart: () =>{
-					//TODO
+					//TODO remove warn
 					this.logger.warn("Content share session is started")	
 				},
 				
@@ -560,6 +571,13 @@ export default {
 				 * Called when a content share session is stopped.
 				 */
 				contentShareDidStop:()=>{
+					
+					if( this.isLocalAttendeePrezenter() ){
+						this.stopContentShare()
+						this.logger.warn("Local share session is stopped")
+					}
+					
+					//TODO remove warn
 					this.logger.warn("Content share session is stopped")
 				}
 			}
@@ -579,15 +597,14 @@ export default {
 		 * @see https://aws.github.io/amazon-chime-sdk-js/interfaces/audiovideofacade.html#realtimesubscribetoattendeeidpresence
 		 */
 		attendeePresenceChange(attendeeId, present, externalUserId, dropped, posInFrame){
-			
-			// TODO attendeeId#content
-			console.log( attendeeId + "CONTENT")
-			
+																			
 			// The attendee is added to the map if he has set a microphone.							
 			if (present) {												
-				let attendee = new Attendee(attendeeId)
-				attendee.externalUserId = externalUserId																 			
-				this.attendeePresenceMap.set(attendeeId, attendee);										
+				let attendee = new Attendee(attendeeId)								
+				attendee.externalUserId = externalUserId
+				if( !attendee.isContent()){																								 		
+					this.attendeePresenceMap.set(attendeeId, attendee);
+				}										
 			} else {
 				this.attendeePresenceMap.delete(attendeeId);
 			}																
@@ -634,6 +651,36 @@ export default {
 		async stopContentShare(){			
 			await this.meetingSession.audioVideo.stopContentShare();
 			this.isShare = false	
+		},
+		
+		/*
+		 * Is the local attendee a presenter
+		 */
+		isLocalAttendeePrezenter(){
+			let localAttendee = this.attendeePresenceMap.get( this.localAttendeeId )
+			if( !localAttendee ){
+				return false
+			}	
+			
+			return localAttendee.hasRole(Utils.getConstant('ROLE_NAME_PRESENTER'))			
+		},
+		
+		/*
+		 * The presenter role changed - handler
+		 * 
+		 * the presenter role has been added or removed
+		 * 
+		 * @see ModeratorPanel.togglePresenter( attendeeId ) 
+		 */
+		presenterChanged( attendeeId ){
+			let isLocalUser = this.localAttendeeId == attendeeId ? true : false 
+			if( isLocalUser){
+				
+				// stop content share if attendee is not a presenter
+				if( !this.isLocalAttendeePrezenter() ){
+					this.stopContentShare()
+				}				
+			}			
 		}				
 	}	
 }

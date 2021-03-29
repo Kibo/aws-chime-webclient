@@ -24,6 +24,17 @@ test('Attendee IDs', async () => {
 	expect( tom.externalUserId).toBe( 'petr' )	
 })
 
+test('Attendee isContent', async () => {
+	let tom = new Attendee('tom')		
+	expect( tom.isContent() ).toBe( false )
+	
+	tom = new Attendee('tom#123')		
+	expect( tom.isContent() ).toBe( false )
+	
+	tom = new Attendee('tom#content')		
+	expect( tom.isContent() ).toBe( true )
+})
+
 test('AttendeeMap JSMap basic operation', async () => {
 	
 	let tom = new Attendee('1')

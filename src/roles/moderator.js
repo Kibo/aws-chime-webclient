@@ -41,7 +41,7 @@ const Setting = {
 	 * @constant
 	 * @type {Boolean}
 	 */
-	SHOW_CHAT_PANEL:true
+	SHOW_CHAT_PANEL:true,
 }
 
 export default Setting

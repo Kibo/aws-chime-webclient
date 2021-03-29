@@ -33,10 +33,14 @@ class Attendee {
 	hasRole(role) {
 		return this._roles.includes(role)
 	}
+	
+	isContent(){
+		let tokens = this._attendeeId.split("#")		
+		return (tokens[1] && tokens[1] == 'content') ? true : false
+	}
 
 	removeRole(role) {
-		let
-		index = this._roles.indexOf(role);
+		let index = this._roles.indexOf(role);
 		if (index !== -1) {
 			this._roles.splice(index, 1);
 		}
