@@ -17,7 +17,7 @@ AWS Chime webclient using Vue.js.
 
 ### Before Build
 - see [Constants.js](https://github.com/Kibo/aws-chime-webclient/blob/master/src/modules/constants/Constants.js)
-- see [Role settings](https://github.com/Kibo/aws-chime-webclient/blob/master/src/roles/default.js).
+- see [Role settings](https://github.com/Kibo/aws-chime-webclient/blob/master/src/roles).
 
 ### Build
 ```

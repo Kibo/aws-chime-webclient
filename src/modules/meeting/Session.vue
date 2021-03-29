@@ -71,7 +71,7 @@
 					v-on:dismiss="dismissAlert(index)" />
 			</div>  
 			
-			<div v-bind:id="utils.getConstant('ID_VIDEO_ELEMENT_PRESENTERS_CONTAINER')"></div>								
+			<div v-bind:id="utils.getConstant('ID_VIDEO_ELEMENT_PRESENTERS_CONTAINER')" style="position:relative;"></div>								
 		</div>
 		
 		<div class="col-12 col-sm-12 col-md-2"					
@@ -189,7 +189,7 @@ export default {
 		      		if( localTile ){
 		      			this.meetingSession.audioVideo.bindVideoElement(
 							localTile.id(),
-							this.acquireVideoElement( localTile.id() )
+							this.acquireVideoElement( localTile.id(), this.isLocalAttendeePrezenter())
 				 		);	
 		      		}
 		      				      				      	
@@ -199,11 +199,7 @@ export default {
 		    	}
 																							
 			}else{
-				let localTile = this.meetingSession.audioVideo.getLocalVideoTile()
-				if( localTile ){
-					this.meetingSession.audioVideo.stopLocalVideoTile();
-					this.releaseVideoElement( localTile.id() )	
-				}														
+				this.stopLocalVideoTile()
 			}			
 		},
 		
@@ -276,15 +272,15 @@ export default {
 		 * 
 		 * @returns {Object} - HTMLVideoElement
 		 */
-		acquireVideoElement( tileId, isPresenterTile ){		  	
+		acquireVideoElement( tileId, isPresenterTile=false){		  	
 			
 			//TODO
 			// max tile 16 + content tile
-												
+																		
 			this.indexMap[tileId] = tileId;		      
-			return Utils.getHTMLVideoElement( tileId, isPresenterTile )
+			return Utils.getHTMLVideoElement( tileId, isPresenterTile, this.isLocalVideoTile( tileId ) )
 			
-			this.logger.warn('Create video element with ID:#' + Utils.getConstant('ID_PREFIX_FOR_VIDEO_ELEMENT') + tileId)			
+			this.logger.info('Create video element with ID:#' + Utils.getConstant('ID_PREFIX_FOR_VIDEO_ELEMENT') + tileId)			
 		},
 		
 		releaseVideoElement( tileId ){					
@@ -292,7 +288,7 @@ export default {
 			delete this.indexMap[tileId];
 			Utils.removeElementById( Utils.getConstant('ID_PREFIX_FOR_VIDEO_ELEMENT') + tileId )
 			
-			this.logger.warn('Release video element with ID:#' + Utils.getConstant('ID_PREFIX_FOR_VIDEO_ELEMENT') + tileId)
+			this.logger.info('Release video element with ID:#' + Utils.getConstant('ID_PREFIX_FOR_VIDEO_ELEMENT') + tileId)
 		},
 					
 		/*
@@ -646,6 +642,28 @@ export default {
 		},
 		
 		/*
+		 * Is a local tile
+		 * 
+		 * @returns {Boolean}
+		 */
+		isLocalVideoTile( tileId ){
+			let localTile = this.meetingSession.audioVideo.getLocalVideoTile()												
+			return localTile && localTile.id() == tileId   
+		},
+		
+		/*
+		 * Stop local video tile - helper mepthod
+		 */
+		stopLocalVideoTile(){			
+			let localTile = this.meetingSession.audioVideo.getLocalVideoTile()
+			if( localTile ){
+				this.meetingSession.audioVideo.stopLocalVideoTile();
+				this.releaseVideoElement( localTile.id() )	
+			}
+			this.isVideo = false		
+		},
+		
+		/*
 		 * Stop content share - helper mepthod
 		 */
 		async stopContentShare(){			
@@ -673,14 +691,18 @@ export default {
 		 * @see ModeratorPanel.togglePresenter( attendeeId ) 
 		 */
 		presenterChanged( attendeeId ){
-			let isLocalUser = this.localAttendeeId == attendeeId ? true : false 
-			if( isLocalUser){
-				
-				// stop content share if attendee is not a presenter
-				if( !this.isLocalAttendeePrezenter() ){
-					this.stopContentShare()
-				}				
-			}			
+			let isLocalUser = this.localAttendeeId == attendeeId ? true : false
+			
+			if(!isLocalUser){
+				return
+			}
+			
+			if( this.isLocalAttendeePrezenter() ){
+				this.messages.push({text:"You are a presenter now. Start your camera and share content."})					
+			}
+			
+			this.stopLocalVideoTile()
+			this.stopContentShare()								
 		}				
 	}	
 }

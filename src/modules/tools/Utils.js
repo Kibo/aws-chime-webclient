@@ -47,7 +47,7 @@ const Utils = {
 	 * @param {Boolean} isPresenterTile
 	 * @return {HTMLVideoElement}
 	 */
-	getHTMLVideoElement( tileId, isPresenterTile=false ){
+	getHTMLVideoElement( tileId, isPresenterTile=false, isLocalVideoTile=false ){
 		let id = this.getConstant('ID_PREFIX_FOR_VIDEO_ELEMENT') + tileId
 		let videoWrapper = document.getElementById(id)
 		if( videoWrapper ){
@@ -55,7 +55,7 @@ const Utils = {
 		}
 		
 		console.log("BUILD NEW VideoELEMENT")				
-		return this.buildVideoElement( id, isPresenterTile )		
+		return this.buildVideoElement( id, isPresenterTile, isLocalVideoTile )		
 	},
 	
 	/*
@@ -63,17 +63,18 @@ const Utils = {
 	 * 
 	 * @param {String} id - element wrapper ID
 	 * @param {Boolean} isPresenterTile
+	 * @param {Boolean} isLocalVideoTile
 	 * 
 	 * @returns {HTMLVideoElement}
 	 */
-	buildVideoElement( id, isPresenterTile ){		
+	buildVideoElement( id, isPresenterTile=false, isLocalVideoTile){		
 		let parentId = isPresenterTile ? 
 				this.getConstant('ID_VIDEO_ELEMENT_PRESENTERS_CONTAINER') : 
 				this.getConstant('ID_VIDEO_ELEMENT_TILES_CONTAINER')
 		let parent = document.getElementById( parentId )
 		
 		
-		let responsiveWrapper = this.createResponsiveWrapper(id)
+		let responsiveWrapper = this.createResponsiveWrapper(id, isPresenterTile, isLocalVideoTile)
 		let videoElement = this.createVideoElement()
 		
 		responsiveWrapper.append( videoElement )		
@@ -86,14 +87,26 @@ const Utils = {
 	 * Create a responsive wrapper for video element
 	 * 
 	 * @param {Strint} id - element ID
+	 * @param {Boolean} isPresenterTile
+	 * @param {Boolean} isLocalVideoTile
+	 * 
 	 * @returns {Node} - DOM element
 	 */
-	createResponsiveWrapper(id){
+	createResponsiveWrapper(id, isPresenterTile, isLocalVideoTile){
 		let wrapper = document.createElement("div")
 		if(id){
 			wrapper.id = id;	
 		}		
-		wrapper.classList.add("embed-responsive", "embed-responsive-16by9");						
+		wrapper.classList.add("embed-responsive", "embed-responsive-16by9");
+				
+		if(isLocalVideoTile && isPresenterTile){						
+			wrapper.style.setProperty('position', 'absolute');
+			wrapper.style.setProperty('top', '0');
+			wrapper.style.setProperty('right', '0');
+			wrapper.style.setProperty('width', '25%');
+			wrapper.style.setProperty('z-index', '999');							
+		}
+								
 		return wrapper							
 	},
 	
