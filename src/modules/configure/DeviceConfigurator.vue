@@ -93,7 +93,7 @@ export default {
 			try {
 		      await this.meetingSession.audioVideo.chooseAudioInputDevice( deviceId );			      		      		      		    
 		    } catch (e) {		      
-		      logger.error(e)
+		      this.logger.error(e)
 		      return		      
 		    }		    				    							
 		},
@@ -108,7 +108,7 @@ export default {
 		      this.meetingSession.audioVideo.bindAudioElement( this.meetingAudioElement )	
 		      this.isBindAudioElement = true			      		      		      		            
 		    } catch (e) {
-		      logger.error(e)
+		      this.logger.error(e)
 		      return		      
 		    }		    								
 		},

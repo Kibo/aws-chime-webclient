@@ -63,18 +63,17 @@ const Utils = {
 	 * 
 	 * @param {String} id - element wrapper ID
 	 * @param {Boolean} isPresenterTile
-	 * @param {Boolean} isLocalVideoTile
 	 * 
 	 * @returns {HTMLVideoElement}
 	 */
-	buildVideoElement( id, isPresenterTile=false, isLocalVideoTile){		
+	buildVideoElement( id, isPresenterTile=false){		
 		let parentId = isPresenterTile ? 
 				this.getConstant('ID_VIDEO_ELEMENT_PRESENTERS_CONTAINER') : 
 				this.getConstant('ID_VIDEO_ELEMENT_TILES_CONTAINER')
 		let parent = document.getElementById( parentId )
 		
 		
-		let responsiveWrapper = this.createResponsiveWrapper(id, isPresenterTile, isLocalVideoTile)
+		let responsiveWrapper = this.createResponsiveWrapper(id, isPresenterTile)
 		let videoElement = this.createVideoElement()
 		
 		responsiveWrapper.append( videoElement )		
@@ -88,25 +87,16 @@ const Utils = {
 	 * 
 	 * @param {Strint} id - element ID
 	 * @param {Boolean} isPresenterTile
-	 * @param {Boolean} isLocalVideoTile
 	 * 
 	 * @returns {Node} - DOM element
 	 */
-	createResponsiveWrapper(id, isPresenterTile, isLocalVideoTile){
+	createResponsiveWrapper(id, isPresenterTile){
 		let wrapper = document.createElement("div")
 		if(id){
 			wrapper.id = id;	
 		}		
 		wrapper.classList.add("embed-responsive", "embed-responsive-16by9");
-				
-		if(isLocalVideoTile && isPresenterTile){						
-			wrapper.style.setProperty('position', 'absolute');
-			wrapper.style.setProperty('top', '0');
-			wrapper.style.setProperty('right', '0');
-			wrapper.style.setProperty('width', '25%');
-			wrapper.style.setProperty('z-index', '999');							
-		}
-								
+														
 		return wrapper							
 	},
 	

@@ -189,7 +189,7 @@ export default {
 		      		if( localTile ){
 		      			this.meetingSession.audioVideo.bindVideoElement(
 							localTile.id(),
-							this.acquireVideoElement( localTile.id(), this.isLocalAttendeePrezenter())
+							this.acquireVideoElement( localTile.id(), true) //TODO
 				 		);	
 		      		}
 		      				      				      	
@@ -278,7 +278,7 @@ export default {
 			// max tile 16 + content tile
 																		
 			this.indexMap[tileId] = tileId;		      
-			return Utils.getHTMLVideoElement( tileId, isPresenterTile, this.isLocalVideoTile( tileId ) )
+			return Utils.getHTMLVideoElement( tileId, isPresenterTile )
 			
 			this.logger.info('Create video element with ID:#' + Utils.getConstant('ID_PREFIX_FOR_VIDEO_ELEMENT') + tileId)			
 		},
@@ -568,7 +568,7 @@ export default {
 				 */
 				contentShareDidStop:()=>{
 					
-					if( this.isLocalAttendeePrezenter() ){
+					if( this.isAttendeePrezenter( this.localAttendeeId ) ){
 						this.stopContentShare()
 						this.logger.warn("Local share session is stopped")
 					}
@@ -640,17 +640,7 @@ export default {
 		isLocalAudio(){
 			return !this.meetingSession.audioVideo.realtimeIsLocalAudioMuted()
 		},
-		
-		/*
-		 * Is a local tile
-		 * 
-		 * @returns {Boolean}
-		 */
-		isLocalVideoTile( tileId ){
-			let localTile = this.meetingSession.audioVideo.getLocalVideoTile()												
-			return localTile && localTile.id() == tileId   
-		},
-		
+					
 		/*
 		 * Stop local video tile - helper mepthod
 		 */
@@ -658,9 +648,9 @@ export default {
 			let localTile = this.meetingSession.audioVideo.getLocalVideoTile()
 			if( localTile ){
 				this.meetingSession.audioVideo.stopLocalVideoTile();
-				this.releaseVideoElement( localTile.id() )	
-			}
-			this.isVideo = false		
+				this.releaseVideoElement( localTile.id() )
+				this.isVideo = false	
+			}					
 		},
 		
 		/*
@@ -672,15 +662,16 @@ export default {
 		},
 		
 		/*
-		 * Is the local attendee a presenter
+		 * Is the attendee a presenter
 		 */
-		isLocalAttendeePrezenter(){
-			let localAttendee = this.attendeePresenceMap.get( this.localAttendeeId )
-			if( !localAttendee ){
-				return false
+		isAttendeePrezenter( attendeeId ){
+			let attendee = this.attendeePresenceMap.get( attendeeId )
+			if( !attendee ){
+				this.logger.error('Attedee is not in attendeePresenceMap. ID ' + attendeeId )
+				return false	
 			}	
 			
-			return localAttendee.hasRole(Utils.getConstant('ROLE_NAME_PRESENTER'))			
+			return attendee.hasRole(Utils.getConstant('ROLE_NAME_PRESENTER'))			
 		},
 		
 		/*
@@ -697,10 +688,11 @@ export default {
 				return
 			}
 			
-			if( this.isLocalAttendeePrezenter() ){
+			if( this.isAttendeePrezenter( this.localAttendeeId ) ){
 				this.messages.push({text:"You are a presenter now. Start your camera and share content."})					
 			}
 			
+			//that is for local attendee
 			this.stopLocalVideoTile()
 			this.stopContentShare()								
 		}				
