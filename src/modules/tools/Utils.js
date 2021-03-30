@@ -47,15 +47,14 @@ const Utils = {
 	 * @param {Boolean} isPresenterTile
 	 * @return {HTMLVideoElement}
 	 */
-	getHTMLVideoElement( tileId, isPresenterTile=false, isLocalVideoTile=false ){
+	getHTMLVideoElement( tileId, isPresenterTile=false){
 		let id = this.getConstant('ID_PREFIX_FOR_VIDEO_ELEMENT') + tileId
 		let videoWrapper = document.getElementById(id)
 		if( videoWrapper ){
 			return videoWrapper.querySelector('video')
 		}
-		
-		console.log("BUILD NEW VideoELEMENT")				
-		return this.buildVideoElement( id, isPresenterTile, isLocalVideoTile )		
+						
+		return this.buildVideoElement( id, isPresenterTile)		
 	},
 	
 	/*
