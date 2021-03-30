@@ -64,11 +64,11 @@
 		</div>	
 					
 		<div class="col">
-			<div v-if="messages.length">
+			<div v-if="alerts.length">
 				<AlertMessage 
-					v-for="(message, index) in messages" 
-					v-bind:message="message" 
-					v-on:dismiss="dismissAlert(index)" />
+					v-for="(alert, index) in alerts" 
+					v-bind:alert="alert"
+					v-bind:alerts="alerts" /> 
 			</div>  
 			
 			<div v-bind:id="utils.getConstant('ID_VIDEO_ELEMENT_PRESENTERS_CONTAINER')" style="position:relative;"></div>								
@@ -122,7 +122,7 @@ export default {
 				
 				isShare:false,
 				
-				messages : [],
+				alerts : [],
 				
 				utils:Utils,
 											
@@ -217,13 +217,13 @@ export default {
 			let localAttendee = this.attendeePresenceMap.get(this.localAttendeeId)
 			
 			if(!localAttendee ){
-				this.messages.push({text:"Set your microphone and camera first."})
+				this.alerts.push({text:"Set your microphone and camera first."})
 				return
 			}
 						
 			if(localAttendee 
 				&& (!localAttendee.hasRole(this.utils.getConstant('ROLE_NAME_PRESENTER')))){
-				this.messages.push({text:"Sorry, you are not a presenter."})
+				this.alerts.push({text:"Sorry, you are not a presenter."})
 				return
 			}
 															
@@ -259,11 +259,7 @@ export default {
 			this.logger.info('a Attendee click to Configure Devices button.')
 			this.$emit("configureDevices")
 		},
-		
-		dismissAlert(index){							
-			this.messages.splice(index, 1);				
-		},
-		
+					
 		/*
 		 * Acquire HTML video element for tile binding
 		 * 
@@ -346,7 +342,7 @@ export default {
 				 */
 				connectionDidBecomePoor: () =>{
 					this.logger.warn('audioVideoObserver: connectionDidBecomePoor()')					
-					this.messages.push({text:"Your connection is poor.", type:"alert-danger"})
+					this.alerts.push({text:"Your connection is poor.", type:"alert-danger"})
 				},
 				
 				/*
@@ -354,7 +350,7 @@ export default {
 				 */
 				connectionDidSuggestStopVideo: () =>{					
 					this.logger.warn('audioVideoObserver: connectionDidSuggestStopVideo()')					
-					this.messages.push({text:"It is recommended to turn off the video.", type:"alert-danger"})
+					this.alerts.push({text:"It is recommended to turn off the video.", type:"alert-danger"})
 				},
 				
 				/*
@@ -445,7 +441,7 @@ export default {
 					if (videoAvailability.canStartLocalVideo) {						
 						if( !this.isVideoAvailable ){
 							this.isVideoAvailable = true
-							this.messages.push({text:"You can start your video now."})
+							this.alerts.push({text:"You can start your video now."})
 						}											
 					} 
 				},
@@ -480,7 +476,7 @@ export default {
 				 */
 				videoSendDidBecomeUnavailable: () =>{			
 					this.isVideoAvailable = false
-					this.messages.push({text:"Sorry, You cannot start your video now."})						
+					this.alerts.push({text:"Sorry, You cannot start your video now."})						
 					this.logger.warn('You cannot start your video')					
 				},
 				
@@ -689,12 +685,12 @@ export default {
 			}
 			
 			if( this.isAttendeePrezenter( this.localAttendeeId ) ){
-				this.messages.push({text:"You are a presenter now. Start your camera and share content."})					
+				this.alerts.push({text:"You are a presenter now. Start your camera and share content."})					
 			}
 			
 			//that is for local attendee
 			this.stopLocalVideoTile()
-			this.stopContentShare()								
+			this.stopContentShare()
 		}				
 	}	
 }

@@ -5,6 +5,7 @@ import * as Constant from '../src/modules/constants/Constants.js';
 test('Display login form', () => {
 	const wrapper = mount( LoginForm )
 	
+	
 	const inputName = wrapper.get('input[name="name"]')
 	expect(inputName.exists()).toBe(true)
 	

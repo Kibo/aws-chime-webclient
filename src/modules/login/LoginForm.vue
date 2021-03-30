@@ -12,11 +12,11 @@
 					<div v-else>
 						<form @submit.prevent="getCredentials">
 												
-							<div v-if="form.errors.length">						    						    													
+							<div v-if="alerts.length">						    						    													
 								<AlertMessage 
-									v-for="(error, index) in form.errors" 
-									v-bind:message="error" 
-									v-on:dismiss="dismissAlert(index)" />																										  
+									v-for="(alert, index) in alerts" 
+									v-bind:alert="alert"
+									v-bind:alerts="alerts" />																										  
 							</div>
 																									
 							<div class="form-group">						
@@ -60,10 +60,10 @@
 		props: ['meeting'],		
 		emits: ['credentials'],									
 		data() {
-			return {
-				isWorking: false,								
-				form:{
-					errors : [],
+			return {				
+				isWorking: false,
+				alerts:[],								
+				form:{					
 					name : null,
 					pin : null,
 					meeting:this.meeting
@@ -71,18 +71,15 @@
 			}
 		}, 
 		methods: {
-			dismissAlert(index){							
-				this.form.errors.splice(index, 1);				
-			},
-			
+					
 			/* 
 			 * This handler is called after a user fill a login form and click to 'Login' button.
 			 */					
 			getCredentials(e) {		
-				this.form.errors = []
+				
 												
 				if (!this.form.name) {
-					this.form.errors.push({
+					this.alerts.push({
 						text : 'Name required.',
 						type:"alert-danger"
 					});
@@ -90,7 +87,7 @@
 				}
 
 				if (!this.form.pin) {
-					this.form.errors.push({
+					this.alerts.push({
 						text : 'PIN required.',
 						type:"alert-danger"
 					});
@@ -122,7 +119,7 @@
 				this.isWorking = false;
 											
 				if( response.status != 200 ){
-					this.form.errors.push({
+					this.alerts.push({
 						text : `Status: ${response.status}. ${response.statusText}`,
 						type:"alert-danger"
 					});

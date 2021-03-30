@@ -9,7 +9,7 @@ state () {
 		audioInputDeviceId : null,
 		audioOutputDeviceId : null,
 		credentials: {},
-		logger:logger
+		logger:logger,		
 	}
 }, mutations: {
 	credentials(state, credentials){

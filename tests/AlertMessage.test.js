@@ -4,7 +4,7 @@ import AlertMessage from "../src/modules/common/AlertMessage.vue"
 test('Display default message', async () => {
 	const wrapper = mount( AlertMessage, {
 		props: {
-      		message: {text:'abcd'}
+      		alert: {text:'abcd'}
     	}	
 	})
 	
@@ -15,7 +15,7 @@ test('Display default message', async () => {
 test('Display danger message', async () => {
 	const wrapper = mount( AlertMessage, {
 		props: {
-      		message: {text:'abcd', type:'alert-danger'}
+      		alert: {text:'abcd', type:'alert-danger'}
     	}
 		
 	} )
@@ -26,7 +26,7 @@ test('Display danger message', async () => {
 test('Display empty message', async () => {
 	const wrapper = mount( AlertMessage, {
 		props: {
-      		message: {}
+      		alert: {}
     	}
 		
 	} )
@@ -37,7 +37,7 @@ test('Display empty message', async () => {
 test('Display null message', async () => {
 	const wrapper = mount( AlertMessage, {
 		props: {
-      		message: null
+      		alert: null
     	}
 		
 	} )
