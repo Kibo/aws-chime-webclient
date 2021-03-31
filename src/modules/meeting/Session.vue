@@ -58,8 +58,7 @@
 			
 	<div class="row">
 		
-		<div class="col-12 col-sm-12 col-md-2" 
-			v-bind:class="utils.getSetting('SHOW_LEFT_PANEL', role) ? '':'d-none'">
+		<div class="col-12 col-sm-12 col-md-2">
 			<div v-bind:id="utils.getConstant('ID_VIDEO_ELEMENT_TILES_CONTAINER')"></div>	
 		</div>	
 					
@@ -74,8 +73,7 @@
 			<div v-bind:id="utils.getConstant('ID_VIDEO_ELEMENT_PRESENTERS_CONTAINER')" style="position:relative;"></div>								
 		</div>
 		
-		<div class="col-12 col-sm-12 col-md-2"					
-			v-bind:class="utils.getSetting('SHOW_RIGHT_PANEL', role) ? '':'d-none'">					
+		<div class="col-12 col-sm-12 col-md-2">					
 				<ModeratorPanel 
 					v-if="utils.getSetting('SHOW_MODERATOR_PANEL', role)"
 					v-bind:attendeePresenceMap="attendeePresenceMap"
@@ -86,7 +84,6 @@
 					v-bind:attendeePresenceMap="attendeePresenceMap" />			
 		</div>
 	</div>
-	
 	
 	<AudioVideoObserver 
 		v-bind:meetingSession="meetingSession"
@@ -191,19 +188,7 @@ export default {
 				try {
 					// TODO					
 		      		await this.meetingSession.audioVideo.chooseVideoInputDevice( this.$store.state.videoInputDeviceId );
-		      				      		
 		      		this.meetingSession.audioVideo.startLocalVideoTile();
-		      		
-		      		/*
-		      		let localTile = this.meetingSession.audioVideo.getLocalVideoTile()
-		      		if( localTile ){
-		      			this.meetingSession.audioVideo.bindVideoElement(
-							localTile.id(),
-							this.acquireVideoElement( localTile.id(), true) //TODO
-				 		);	
-		      		}
-		      		*/
-		      				      				      	
 		    	} catch (e) {		      		
 		      		this.logger.error(e)
 		      		return
@@ -212,6 +197,18 @@ export default {
 			}else{
 				this.stopLocalVideoTile()
 			}			
+		},
+		
+		/*
+		 * Stop local video tile - helper mepthod
+		 */
+		stopLocalVideoTile(){			
+			let localTile = this.meetingSession.audioVideo.getLocalVideoTile()
+			if( localTile ){
+				this.meetingSession.audioVideo.stopLocalVideoTile();
+				//this.releaseVideoElement( localTile.id() )
+				this.isVideo = false	
+			}					
 		},
 		
 		/*
@@ -231,13 +228,7 @@ export default {
 				this.alerts.push({text:"Set your microphone and camera first."})
 				return
 			}
-						
-			if(localAttendee 
-				&& (!localAttendee.hasRole(this.utils.getConstant('ROLE_NAME_PRESENTER')))){
-				this.alerts.push({text:"Sorry, you are not a presenter."})
-				return
-			}
-															
+																								
 			this.isShare = this.isShare ? false : true
 			
 			if( this.isShare ){
@@ -258,6 +249,14 @@ export default {
 			this.meetingSession.audioVideo.stop()																			
 			this.uplink = 0
 			this.downlink = 0			
+		},
+		
+		/*
+		 * Stop content share - helper mepthod
+		 */
+		async stopContentShare(){			
+			await this.meetingSession.audioVideo.stopContentShare();
+			this.isShare = false	
 		},
 		
 		/*
@@ -293,13 +292,7 @@ export default {
 			}
 		},
 		
-		/*
-		 * Stop content share - helper mepthod
-		 */
-		async stopContentShare(){			
-			await this.meetingSession.audioVideo.stopContentShare();
-			this.isShare = false	
-		},
+		
 		
 					
 		/*
@@ -336,20 +329,7 @@ export default {
 		isLocalAudio(){
 			return !this.meetingSession.audioVideo.realtimeIsLocalAudioMuted()
 		},
-					
-		/*
-		 * Stop local video tile - helper mepthod
-		 */
-		stopLocalVideoTile(){			
-			let localTile = this.meetingSession.audioVideo.getLocalVideoTile()
-			if( localTile ){
-				this.meetingSession.audioVideo.stopLocalVideoTile();
-				//this.releaseVideoElement( localTile.id() )
-				this.isVideo = false	
-			}					
-		},
-		
-		
+											
 		/*
 		 * Is the attendee a presenter
 		 */

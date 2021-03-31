@@ -254,7 +254,7 @@ export default {
 				 	
 				 	if(!isPresenterTile){				 		
 				 		// broadcaster is not interested in attendee video tiles 
-				 		if( !Utils.getSetting('ATTACH_ATTENDEE_VIDEO_TILES', this.role) ){
+				 		if( !Utils.getSetting('SHOW_VIDEO_TILES_CONTAINER', this.role) ){
 				 			return
 				 		}	
 				 	} 
