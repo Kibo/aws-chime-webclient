@@ -43,37 +43,36 @@ const Utils = {
 	/*
 	 * Get HTMLVideoElement from DOM
 	 * 
-	 * @param {Number} tileId
+	 * @param {Object} tileState
 	 * @param {Boolean} isPresenterTile
 	 * @return {HTMLVideoElement}
 	 */
-	getHTMLVideoElement( tileId, isPresenterTile=false){
-		let id = this.getConstant('ID_PREFIX_FOR_VIDEO_ELEMENT') + tileId
+	getHTMLVideoElement( tileState, isPresenterTile=false){
+		let id = this.getConstant('ID_PREFIX_FOR_VIDEO_ELEMENT') + tileState.tileId
 		let videoWrapper = document.getElementById(id)
 		if( videoWrapper ){
 			return videoWrapper.querySelector('video')
 		}
 						
-		return this.buildVideoElement( id, isPresenterTile)		
+		return this.buildVideoElement( tileState, isPresenterTile)		
 	},
 	
 	/*
 	 * Create DOM for VideoElement
 	 * 
-	 * @param {String} id - element wrapper ID
+	 * @param {Object} tileState
 	 * @param {Boolean} isPresenterTile
 	 * 
 	 * @returns {HTMLVideoElement}
 	 */
-	buildVideoElement( id, isPresenterTile=false){		
+	buildVideoElement( tileState, isPresenterTile=false){		
 		let parentId = isPresenterTile ? 
 				this.getConstant('ID_VIDEO_ELEMENT_PRESENTERS_CONTAINER') : 
 				this.getConstant('ID_VIDEO_ELEMENT_TILES_CONTAINER')
 		let parent = document.getElementById( parentId )
 		
-		
-		let responsiveWrapper = this.createResponsiveWrapper(id, isPresenterTile)
-		let videoElement = this.createVideoElement()
+		let responsiveWrapper = this.createResponsiveWrapper(tileState, isPresenterTile)
+		let videoElement = this.createVideoElement( tileState, isPresenterTile )
 		
 		responsiveWrapper.append( videoElement )		
 		parent.append( responsiveWrapper )
@@ -84,17 +83,15 @@ const Utils = {
 	/*
 	 * Create a responsive wrapper for video element
 	 * 
-	 * @param {Strint} id - element ID
+	 * @param {Object} tileState
 	 * @param {Boolean} isPresenterTile
 	 * 
 	 * @returns {Node} - DOM element
 	 */
-	createResponsiveWrapper(id, isPresenterTile){
-		let wrapper = document.createElement("div")
-		if(id){
-			wrapper.id = id;	
-		}		
-		wrapper.classList.add("embed-responsive", "embed-responsive-16by9");
+	createResponsiveWrapper(tileState, isPresenterTile){
+		let wrapper = document.createElement("div")			
+		wrapper.id = this.getConstant('ID_PREFIX_FOR_VIDEO_ELEMENT') + tileState.tileId
+		wrapper.classList.add("img-thumbnail", "p-0", "mb-1", "bg-dark");
 														
 		return wrapper							
 	},
@@ -102,9 +99,11 @@ const Utils = {
 	/*
 	 * Create a DOM HTML Video element
 	 * 
+	 * @param {Object} tileState
+	 * @param {Boolean} isPresenterTile
 	 * @returns {HTMLVideoElement}
 	 */
-	createVideoElement(){		
+	createVideoElement( tileState, isPresenterTile ){		
 		let videoElement = document.createElement("video")
 		videoElement.classList.add("w-100", "h-100");
 		return videoElement			

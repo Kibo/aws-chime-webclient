@@ -1,6 +1,6 @@
 <template>
 	
-	<nav class="navbar sticky-top navbar-expand-sm navbar-light bg-light mb-2">
+	<nav class="navbar sticky-top navbar-expand-sm navbar-light bg-light mb-1">
 		<span class="navbar-brand d-none d-sm-block" >AWS Chime</span>
 
 		<ul class="navbar-nav mr-auto">
@@ -89,11 +89,7 @@
 		v-bind:meetingSession="meetingSession"
 		v-bind:alerts="alerts"
 		v-on:metricsDidReceive="metricsDidReceive" />
-	
-	<ContentShareObserver 
-		v-bind:meetingSession="meetingSession"
-		v-on:contentShareDidStop="contentShareDidStop" />
-		
+				
 	<AttendeePresenceObserver 
 		v-bind:meetingSession="meetingSession"
 		v-bind:attendeePresenceMap="attendeePresenceMap" />
@@ -134,15 +130,12 @@ export default {
 				alerts : [],
 				
 				utils:Utils,
-											
-				
-				
 				
 				uplink:0,
 				downlink:0,
 				
 				//@see AttendeePresenceObserver							
-				attendeePresenceMap:new AttendeeMap()
+				attendeePresenceMap:new AttendeeMap()											
 			}
 	},
 	
@@ -195,70 +188,38 @@ export default {
 		    	}
 																							
 			}else{
-				this.stopLocalVideoTile()
+				this.meetingSession.audioVideo.stopLocalVideoTile();
+				this.meetingSession.audioVideo.removeLocalVideoTile();
+				this.isVideo = false
 			}			
 		},
-		
-		/*
-		 * Stop local video tile - helper mepthod
-		 */
-		stopLocalVideoTile(){			
-			let localTile = this.meetingSession.audioVideo.getLocalVideoTile()
-			if( localTile ){
-				this.meetingSession.audioVideo.stopLocalVideoTile();
-				//this.releaseVideoElement( localTile.id() )
-				this.isVideo = false	
-			}					
-		},
-		
+						
 		/*
 		 * User click to Share button
 		 */
 		async toggleShare(){			
 			this.logger.info('toggleShare - handler')
-			
-			/*
-			 * The attendee is added to the list if he has set a microphone.
-			 *  
-			 * @see this.attendeePresenceChange 
-			 */
-			let localAttendee = this.attendeePresenceMap.get(this.localAttendeeId)
-			
-			if(!localAttendee ){
-				this.alerts.push({text:"Set your microphone and camera first."})
-				return
-			}
-																								
+																																		
 			this.isShare = this.isShare ? false : true
 			
 			if( this.isShare ){
 				await this.meetingSession.audioVideo.startContentShareFromScreenCapture();	
 			}else{
-				this.stopContentShare()
+				await this.meetingSession.audioVideo.stopContentShare();
+				this.isShare = false
 			}
-														
+																
 			return						
 		},
-		
+
 		/*
 		 * User click to Leave button
 		 */
 		leaveMeeting(){			
-			this.logger.info('Leave meeting - handler')
-			this.stopContentShare()
-			this.meetingSession.audioVideo.stop()																			
-			this.uplink = 0
-			this.downlink = 0			
+			this.logger.info('Leave meeting - handler')										
+			this.meetingSession.audioVideo.stop()
 		},
-		
-		/*
-		 * Stop content share - helper mepthod
-		 */
-		async stopContentShare(){			
-			await this.meetingSession.audioVideo.stopContentShare();
-			this.isShare = false	
-		},
-		
+					
 		/*
 		 * User click to Devices button
 		 */
@@ -279,22 +240,7 @@ export default {
 			this.downlink = report.down
 			this.uplink = report.up
 		},
-						
-		/*
-		* Called when a content share session is stopped.
-		* 
-		* @see component: ContentShareObserver in this project
-		*/
-		contentShareDidStop(){
-			if( this.isAttendeePrezenter( this.localAttendeeId ) ){
-				this.stopContentShare()
-				this.logger.warn("Local share session is stopped")
-			}
-		},
 		
-		
-		
-					
 		/*
 		 * Show video quality setting - helper method
 		 */
@@ -364,7 +310,7 @@ export default {
 			//that is for local attendee
 			this.stopLocalVideoTile()
 			this.stopContentShare()
-		}				
+		}								
 	}	
 }
 </script>

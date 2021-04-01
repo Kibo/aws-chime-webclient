@@ -14,12 +14,12 @@ export default {
 			logger:this.$store.state.logger,
 			role: this.$store.getters.role,
 			
-			// index-tileId pairs
-			indexMap:{},
-				
-			// @see audioVideoObserver.videoAvailabilityDidChange() 
-			// @see audioVideoObserver.videoSendDidBecomeUnavailable()
-			isVideoAvailable:true,				
+			// tileId-tileState pairs
+			tileMap:{},
+			
+			//@see AudioVideoObserver.videoAvailabilityDidChange
+			//@see AudioVideoObserver.videoSendDidBecomeUnavailable
+			isVideoAvailable:true
 		}
 	}, 
 	mounted() {				
@@ -187,10 +187,7 @@ export default {
 				 */
 				videoAvailabilityDidChange: videoAvailability =>{																	
 					if (videoAvailability.canStartLocalVideo) {						
-						if( !this.isVideoAvailable ){
-							this.isVideoAvailable = true
-							this.alerts.push({text:"You can start your video now."})
-						}											
+						this.isVideoAvailable = true
 					} 
 				},
 				
@@ -202,9 +199,7 @@ export default {
 				 * @see 'videoAvailabilityDidChange' to find out when it becomes available.
 				 */
 				videoSendDidBecomeUnavailable: () =>{			
-					this.isVideoAvailable = false
-					this.alerts.push({text:"Sorry, You cannot start your video now."})						
-					this.logger.warn('You cannot start your video')					
+					this.isVideoAvailable = false				
 				},
 				
 				/*
@@ -227,9 +222,7 @@ export default {
 				videoSendBandwidthDidChange: ( newBandwidthKbps, oldBandwidthKbps ) => {					
 					this.logger.info(`Sending bandwidth changed from ${oldBandwidthKbps} to ${newBandwidthKbps}`)
 				},
-				
-				
-				
+											
 				/*
 				 * Called when metric of video outbound traffic is received.
 				 */
@@ -243,34 +236,35 @@ export default {
 				* States:
 				* @see https://aws.github.io/amazon-chime-sdk-js/classes/videotilestate.html
 				*/				
-				videoTileDidUpdate: tileState => {
-																													
+				videoTileDidUpdate: tileState => {																									
 					// Ignore a tile without attendee ID
 				 	if (!tileState.boundAttendeeId) {
 						return;
 				 	}
-				 					 					 					
-				 	let isPresenterTile = tileState.isContent ? true : false
 				 	
-				 	if(!isPresenterTile){				 		
+				 	//TODO -isPresenter
+				 	let isPresenterTile = false
+				 	
+				 	if(!isPresenterTile){ 				 		
 				 		// broadcaster is not interested in attendee video tiles 
 				 		if( !Utils.getSetting('SHOW_VIDEO_TILES_CONTAINER', this.role) ){
 				 			return
 				 		}	
-				 	} 
-				 	
-				 	this.meetingSession.audioVideo.bindVideoElement(
+				 	} 				 					 	
+					this.meetingSession.audioVideo.bindVideoElement(
 						tileState.tileId,
-						this.acquireVideoElement(tileState.tileId, isPresenterTile)
-				 	);				 					 
+						this.acquireVideoElement(tileState, isPresenterTile)
+					);			 					 
 				},
 				
 				/*
 				* Called whenever a tile has been removed.
 				*/
-				videoTileWasRemoved: tileId => {
-					this.logger.info('audioVideoObserver: videoTileWasRemoved()')
-					this.releaseVideoElement(tileId);
+				videoTileWasRemoved: tileId => {									
+					this.meetingSession.audioVideo.unbindVideoElement(tileId)
+					delete this.tileMap[tileId];
+					Utils.removeElementById( Utils.getConstant('ID_PREFIX_FOR_VIDEO_ELEMENT') + tileId )
+					this.logger.warn('Release video element with ID:#' + Utils.getConstant('ID_PREFIX_FOR_VIDEO_ELEMENT') + tileId)
 			  }
 			}
 			
@@ -291,29 +285,23 @@ export default {
 		/*
 		 * Acquire HTML video element for tile binding
 		 * 
-		 * @param {Number} tileId
+		 * @param {Object} tileState
 		 * @param {Boolean} isPresenterTile
 		 * 
 		 * @returns {Object} - HTMLVideoElement
 		 */
-		acquireVideoElement( tileId, isPresenterTile=false){		  	
+		acquireVideoElement( tileState, isPresenterTile=false){		  	
 												
 			// max tile 16 + content tile
 			if( !this.isVideoAvailable ){
+				this.alerts.push({text:"Sorry, you cannot start video now. All video slots are full."})	
 				return
 			}
 			
-			this.logger.warn('Create video element with ID:#' + Utils.getConstant('ID_PREFIX_FOR_VIDEO_ELEMENT') + tileId)
-			this.indexMap[tileId] = tileId;		      
-			return Utils.getHTMLVideoElement( tileId, isPresenterTile )								
-		},
-		
-		releaseVideoElement( tileId ){					
-			this.meetingSession.audioVideo.unbindVideoElement(tileId)
-			delete this.indexMap[tileId];
-			Utils.removeElementById( Utils.getConstant('ID_PREFIX_FOR_VIDEO_ELEMENT') + tileId )
-			this.logger.warn('Release video element with ID:#' + Utils.getConstant('ID_PREFIX_FOR_VIDEO_ELEMENT') + tileId)
-		}			
+			this.logger.warn('Create video element with ID:#' + Utils.getConstant('ID_PREFIX_FOR_VIDEO_ELEMENT') + tileState.tileId)
+			this.tileMap[tileState.tileId] = tileState.tileId;		      
+			return Utils.getHTMLVideoElement( tileState, isPresenterTile )								
+		},					
 	}
 }
 </script>

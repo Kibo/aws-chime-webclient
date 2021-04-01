@@ -1,5 +1,5 @@
 <template>	
-	<div class="card">
+	<div class="card mb-1">
 		<div class="card-header">
 			Chat panel
 		</div>

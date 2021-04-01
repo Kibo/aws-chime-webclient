@@ -36,10 +36,13 @@ test('no value in Constant', async () => {
   	}		
 })
 
-test('Create responsive wrapper for video element', async () => {			
-	let wrapper = Utils.createResponsiveWrapper('1234')		
-	expect( wrapper.classList.contains("embed-responsive") ).toBe(true)	
-	expect( wrapper.id ).toBe('1234')
+test('Create responsive wrapper for video element', async () => {
+	let tileState = {tileId:"1234"}
+	
+				
+	let wrapper = Utils.createResponsiveWrapper(tileState)		
+	expect( wrapper.classList.contains("img-thumbnail") ).toBe(true)	
+	expect( wrapper.id ).toBe( Utils.getConstant('ID_PREFIX_FOR_VIDEO_ELEMENT') + tileState.tileId )
 })
 
 test('Create video element', async () => {		
