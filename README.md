@@ -5,7 +5,7 @@
 AWS Chime webclient using Vue.js.
 
 ## Version
-- 0.3.0 ( coding )
+- 0.4.0 ( coding )
 
 ### Dependencies
 - [amazon-chime-sdk-js](https://github.com/aws/amazon-chime-sdk-js)
@@ -40,6 +40,14 @@ Passwords (see [server.js](https://github.com/Kibo/aws-chime-webclient/blob/mast
 - "moderator"
 - "listener"
 - "broadcaster"
+
+### Roles
+- moderator:can set presenter
+- lektor:can share audio, video and content, can chat
+- listener:can listen, can chat
+- broadcaster:can listen
+
+You can change that permision in [Role settings](https://github.com/Kibo/aws-chime-webclient/blob/master/src/roles). Or create your own roles.
 
 ### Test
 ```
