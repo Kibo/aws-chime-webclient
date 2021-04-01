@@ -42,10 +42,10 @@ Passwords (see PINS in [server.js](https://github.com/Kibo/aws-chime-webclient/b
 - "broadcaster"
 
 ### Roles
-- moderator:can set presenter
-- lektor:can share audio, video and content, can chat
-- listener:can listen, can chat
-- broadcaster:can listen
+- moderator: can set presenter
+- lektor: can share audio, video and content, can chat
+- listener: can listen, can chat
+- broadcaster: can listen
 
 You can change that permision in [Role settings](https://github.com/Kibo/aws-chime-webclient/blob/master/src/roles). Or create your own roles.
 
