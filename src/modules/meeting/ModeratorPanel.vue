@@ -7,13 +7,13 @@
 			<table class="table table-borderless table-sm table-striped m-0">
 				<tbody>			
 					<tr v-for="attendee in attendeePresenceMap.values()" v-bind:key="attendee.attendeeId">
-						<th>
+						<td v-if="!attendee.isContent()">							
 							<a href="#" v-on:click.prevent="togglePresenter( attendee.attendeeId )">
 								<i class="fa" 
 									v-bind:class="attendee.hasRole(utils.getConstant('ROLE_NAME_PRESENTER')) ? 'fa-user-secret' :'fa-user'">
 								</i> <small>{{attendee.externalUserId}}</small>						
 							</a>
-						</th>				
+						</td>				
 					</tr>
 				</tbody>
 			</table>
@@ -40,7 +40,7 @@ export default {
 		togglePresenter( attendeeId ){
 			let attedee = this.attendeePresenceMap.get( attendeeId )
 			if( !attedee ){
-				this.logger.error( 'There is not attendee with ID ' + attendeeId )
+				this.logger.warn( 'There is not attendee with ID ' + attendeeId )
 				return
 			}
 			
@@ -48,7 +48,7 @@ export default {
 				attedee.removeRole( Utils.getConstant('ROLE_NAME_PRESENTER'))								
 			}else{
 				this.attendeePresenceMap.setPresenter( attendeeId )
-				this.logger.info("Presenter se to: " + attendeeId)	
+				this.logger.info("Presenter set to: " + attendeeId)	
 			}
 			
 			this.$emit('presenterChanged', attendeeId )	

@@ -26,7 +26,7 @@ $ cd aws-chime-client
 $ npm install 
 $ npm run build
 ```
-### Running the browser demos with a local server
+### Running the browser demo with a local server
 * Ensure you have AWS credentials configured in your ~/.aws folder for a role with a policy allowing chime:CreateMeeting, chime:DeleteMeeting, and chime:CreateAttendee.
 * [Amazon Chime SDK Pricing](https://aws.amazon.com/chime/pricing/#Chime_SDK_)
 

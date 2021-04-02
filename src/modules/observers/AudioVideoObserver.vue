@@ -243,7 +243,7 @@ export default {
 				 	}
 				 	
 				 	//TODO -isPresenter
-				 	let isPresenterTile = false
+				 	let isPresenterTile = tileState.isContent
 				 	
 				 	if(!isPresenterTile){ 				 		
 				 		// broadcaster is not interested in attendee video tiles 

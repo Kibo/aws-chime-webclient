@@ -58,10 +58,11 @@
 			
 	<div class="row">
 		
-		<div class="col-12 col-sm-12 col-md-2">
+		<div class="col-12 col-sm-12 col-md-2" 
+			v-bind:class="{ 'd-none': !isLeftPanel()}">
 			<div v-bind:id="utils.getConstant('ID_VIDEO_ELEMENT_TILES_CONTAINER')"></div>	
-		</div>	
-					
+		</div>
+										
 		<div class="col">
 			<div v-if="alerts.length">
 				<AlertMessage 
@@ -73,7 +74,8 @@
 			<div v-bind:id="utils.getConstant('ID_VIDEO_ELEMENT_PRESENTERS_CONTAINER')" style="position:relative;"></div>								
 		</div>
 		
-		<div class="col-12 col-sm-12 col-md-2">					
+		<div class="col-12 col-sm-12 col-md-2"
+			v-bind:class="{'d-none':!isRightPanel()}" >					
 				<ModeratorPanel 
 					v-if="utils.getSetting('SHOW_MODERATOR_PANEL', role)"
 					v-bind:attendeePresenceMap="attendeePresenceMap"
@@ -297,6 +299,10 @@ export default {
 		 * @see ModeratorPanel.togglePresenter( attendeeId ) 
 		 */
 		presenterChanged( attendeeId ){
+			
+			console.log("Presenter change")
+			
+			/*
 			let isLocalUser = this.localAttendeeId == attendeeId ? true : false
 			
 			if(!isLocalUser){
@@ -310,6 +316,25 @@ export default {
 			//that is for local attendee
 			this.stopLocalVideoTile()
 			this.stopContentShare()
+			*/
+		},
+		
+		/*
+		 * Helper method for view template
+		 * 
+		 * @returns{Boolean}
+		 */
+		isLeftPanel(){
+			return Utils.getSetting('SHOW_VIDEO_TILES_CONTAINER', this.role)
+		},
+		
+		/*
+		 * Helper method for view template
+		 * 
+		 * @returns{Boolean}
+		 */
+		isRightPanel(){
+			return Utils.getSetting('SHOW_MODERATOR_PANEL', this.role) || Utils.getSetting('SHOW_CHAT_PANEL', this.role)
 		}								
 	}	
 }

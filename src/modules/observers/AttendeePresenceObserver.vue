@@ -37,10 +37,8 @@ export default {
 			// The attendee is added to the map if he has set a microphone.							
 			if (present) {												
 				let attendee = new Attendee(attendeeId)								
-				attendee.externalUserId = externalUserId
-				if( !attendee.isContent()){																								 		
-					this.attendeePresenceMap.set(attendeeId, attendee);
-				}										
+				attendee.externalUserId = externalUserId																											 	
+				this.attendeePresenceMap.set(attendeeId, attendee);
 			} else {
 				this.attendeePresenceMap.delete(attendeeId);
 			}																
