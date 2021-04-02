@@ -143,7 +143,16 @@ const Utils = {
 		let parts = externalUserId.split('#')					
 		return parts[1] ? parts[1] : 'Unknown' 			
 	},
-			
+	
+	/*
+	 * Decode uint8array data to String
+	 * @see https://developer.mozilla.org/en-US/docs/Web/API/TextDecoder
+	 * 
+	 * @param {int8array} - array
+	 */
+	encodeUint8array( array ){
+		return new TextDecoder().decode( array )
+	}	
 }
 
 

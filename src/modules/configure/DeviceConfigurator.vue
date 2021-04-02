@@ -121,7 +121,7 @@ export default {
 			try {
 		      await this.meetingSession.audioVideo.chooseVideoInputDevice( deviceId );		      		      		      		      		 
 		    } catch (e) {
-		      logger.error(e)
+		      this.logger.error(e)
 		      return		      
 		    }		    		
 		},

@@ -118,8 +118,25 @@ export const ID_VIDEO_ELEMENT_PRESENTERS_CONTAINER = "cz-kibo-meeting-chime-clie
  */
 export const ID_PREFIX_FOR_VIDEO_ELEMENT = "cz-kibo-meeting-chime-client-video-tile-";
 
+// ## MESSAGING #######################################
 
+/**
+ * System topic name
+ * @see https://aws.github.io/amazon-chime-sdk-js/interfaces/audiovideofacade.html#realtimesubscribetoreceivedatamessage 
+ * 
+ * @constant
+ * @type {string}
+ */
+export const MESSAGE_SYSTEM_TOPIC_NAME = "system"
 
+/**
+ * Chat topic name
+ * @see https://aws.github.io/amazon-chime-sdk-js/interfaces/audiovideofacade.html#realtimesubscribetoreceivedatamessage 
+ * 
+ * @constant
+ * @type {string}
+ */
+export const MESSAGE_CHAT_TOPIC_NAME = "chat"
 
 
 

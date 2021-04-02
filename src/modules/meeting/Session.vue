@@ -95,6 +95,9 @@
 	<AttendeePresenceObserver 
 		v-bind:meetingSession="meetingSession"
 		v-bind:attendeePresenceMap="attendeePresenceMap" />
+		
+	<MessagingObserver 
+		v-bind:meetingSession="meetingSession" />
 						
 </template>
 
@@ -105,6 +108,8 @@ import ChatPanel from "./ChatPanel.vue"
 import ContentShareObserver from "../observers/ContentShareObserver.vue"
 import AttendeePresenceObserver from "../observers/AttendeePresenceObserver.vue"
 import AudioVideoObserver from "../observers/AudioVideoObserver.vue"
+import MessagingObserver from "../observers/MessagingObserver.vue"
+
 import {AttendeeMap} from "../common/Attendee.js"
 import Utils from "../tools/Utils.js"
 
@@ -115,7 +120,8 @@ export default {
 		ChatPanel,
 		ContentShareObserver,
 		AttendeePresenceObserver,
-		AudioVideoObserver
+		AudioVideoObserver,
+		MessagingObserver
 	},
 	emits: ['configureDevices'],
 	props: ['meetingSession'],
@@ -145,7 +151,7 @@ export default {
 		this.meetingSession.audioVideo.start()							
 		this.muteLocalAudio()
 							
-		this.logger.info( this.showVideoInputQualitySettings() )		
+		this.logger.info( this.showVideoInputQualitySettings() )				
 	},
 	
 	beforeUnmount(){
@@ -277,6 +283,41 @@ export default {
 		isLocalAudio(){
 			return !this.meetingSession.audioVideo.realtimeIsLocalAudioMuted()
 		},
+		
+		/*
+		 * Send chat message
+		 * @param {String} - message
+		 */
+		sendChatMessage(message){
+			let liveTime = 60*1000
+			this.sendMessage(Utils.getConstant('MESSAGE_CHAT_TOPIC_NAME'), message, liveTime)	
+		},
+		
+		/*
+		 * Send system message
+		 * @param {String} - message
+		 */
+		sendSystemMessage(message){
+			let liveTime = 10*1000
+			this.sendMessage(Utils.getConstant('MESSAGE_SYSTEM_TOPIC_NAME'), message, liveTime)	
+		},
+		
+		/*
+		 * Send realtime message
+		 * @param {String} topic
+		 * @param {String} message
+		 * @param {Number} livetime in ms
+		 * 
+		 * @see https://aws.github.io/amazon-chime-sdk-js/interfaces/audiovideofacade.html#realtimesenddatamessage 
+		 */
+		sendMessage(topic, message, livetime){
+			try{
+				this.meetingSession.audioVideo.realtimeSendDataMessage(topic, message, livetime)	
+			}catch(e){
+				this.logger.error(e)
+			}			
+		},
+		
 											
 		/*
 		 * Is the attendee a presenter
@@ -298,9 +339,9 @@ export default {
 		 * 
 		 * @see ModeratorPanel.togglePresenter( attendeeId ) 
 		 */
-		presenterChanged( attendeeId ){
+		presenterChanged( attendeeId ){							
+			this.sendSystemMessage("Presenter change")
 			
-			console.log("Presenter change")
 			
 			/*
 			let isLocalUser = this.localAttendeeId == attendeeId ? true : false
