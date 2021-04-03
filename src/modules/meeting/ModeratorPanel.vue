@@ -8,7 +8,7 @@
 				<tbody>
 					<tr v-for="attendee in attendeePresenceMap.values()" v-bind:key="attendee.attendeeId">
 						<td v-if="!attendee.isContent()">
-							<a href="#" v-on:click.prevent="togglePresenter( attendee.attendeeId )">
+							<a href="#" v-on:click.prevent="presenterChanged(attendee.attendeeId)">
 								<i class="fa"
 									v-bind:class="attendee.hasRole(utils.getConstant('ROLE_NAME_PRESENTER')) ? 'fa-user-secret' :'fa-user'">
 								</i> <small>{{attendee.externalUserId}}</small>
@@ -25,7 +25,7 @@
 import Utils from "../tools/Utils.js"
 
 export default {
-	emits: ['presenterChanged'],
+	emits: ['systemMessage'],
 	props: ['attendeePresenceMap'],
 	data() {
 			return {
@@ -36,22 +36,23 @@ export default {
 	mounted() {},
 	beforeUnmount(){},
 	methods:{
-		togglePresenter( attendeeId ){
-			let attedee = this.attendeePresenceMap.get( attendeeId )
-			if( !attedee ){
-				this.logger.warn( 'There is not attendee with ID ' + attendeeId )
-				return
-			}
+			/*
+			* Presenter changed - handler
+			*
+			* @param {Number} attendeeId
+			*/
+			presenterChanged( attendeeId ){
+				let attendee = this.attendeePresenceMap.get(attendeeId)
+				let isPresenter = attendee.hasRole( Utils.getConstant('ROLE_NAME_PRESENTER'))
 
-			if( attedee.hasRole( Utils.getConstant('ROLE_NAME_PRESENTER'))){
-				attedee.removeRole( Utils.getConstant('ROLE_NAME_PRESENTER'))
-			}else{
-				this.attendeePresenceMap.setPresenter( attendeeId )
-				this.logger.info("Presenter set to: " + attendeeId)
+				if(isPresenter){
+					this.attendeePresenceMap.unsetPresenter( attendeeId )
+					this.$emit('systemMessage', Utils.getConstant('SYSTEM_COMMAND_UNSET_PRESENTER') + '#' + attendeeId )
+				}else{
+					this.attendeePresenceMap.setPresenter( attendeeId )
+					this.$emit('systemMessage', Utils.getConstant('SYSTEM_COMMAND_SET_PRESENTER') + '#' + attendeeId )
+				}
 			}
-
-			this.$emit('presenterChanged', attendeeId )
-		}
 	}
 }
 </script>

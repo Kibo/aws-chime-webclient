@@ -148,3 +148,15 @@ export const MESSAGE_CHAT_TOPIC_NAME = "chat"
  * @type {string}
  */
 export const SYSTEM_COMMAND_SET_PRESENTER = "setPresenter"
+
+
+/**
+ * System command - unsetPresenter
+ *
+ * usage:
+ * unsetPresenter#AttendeeId
+ *
+ * @constant
+ * @type {string}
+ */
+export const SYSTEM_COMMAND_UNSET_PRESENTER = "unsetPresenter"

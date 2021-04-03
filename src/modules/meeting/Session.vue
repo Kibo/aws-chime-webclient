@@ -79,7 +79,7 @@
 				<ModeratorPanel
 					v-if="utils.getSetting('SHOW_MODERATOR_PANEL', role)"
 					v-bind:attendeePresenceMap="attendeePresenceMap"
-					v-on:presenterChanged="presenterChanged" />
+					v-on:systemMessage="sendSystemMessage" />
 
 				<ChatPanel
 					v-if="utils.getSetting('SHOW_CHAT_PANEL', role)"
@@ -97,7 +97,8 @@
 		v-bind:attendeePresenceMap="attendeePresenceMap" />
 
 	<MessagingObserver
-		v-bind:meetingSession="meetingSession" />
+		v-bind:meetingSession="meetingSession"
+		v-bind:attendeePresenceMap="attendeePresenceMap" />
 
 </template>
 
@@ -298,6 +299,7 @@ export default {
 		 * @param {String} - message
 		 */
 		sendSystemMessage(message){
+			console.log('System message send')
 			let liveTime = 60*1000
 			this.sendMessage(Utils.getConstant('MESSAGE_SYSTEM_TOPIC_NAME'), message, liveTime)
 		},
@@ -317,49 +319,6 @@ export default {
 				this.logger.error(e)
 			}
 		},
-
-
-		/*
-		 * Is the attendee a presenter
-		 */
-		isAttendeePrezenter( attendeeId ){
-			let attendee = this.attendeePresenceMap.get( attendeeId )
-			if( !attendee ){
-				this.logger.warn('Attedee is not in attendeePresenceMap. ID ' + attendeeId )
-				return false
-			}
-
-			return attendee.hasRole(Utils.getConstant('ROLE_NAME_PRESENTER'))
-		},
-
-		/*
-		 * The presenter role changed - handler
-		 *
-		 * the presenter role has been added or removed
-		 *
-		 * @see ModeratorPanel.togglePresenter( attendeeId )
-		 */
-		presenterChanged( attendeeId ){
-			this.sendSystemMessage("Presenter change")
-
-
-			/*
-			let isLocalUser = this.localAttendeeId == attendeeId ? true : false
-
-			if(!isLocalUser){
-				return
-			}
-
-			if( this.isAttendeePrezenter( this.localAttendeeId ) ){
-				this.alerts.push({text:"You are a presenter now. Start your camera and share content."})
-			}
-
-			//that is for local attendee
-			this.stopLocalVideoTile()
-			this.stopContentShare()
-			*/
-		},
-
 		/*
 		 * Helper method for view template
 		 *
