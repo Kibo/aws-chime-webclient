@@ -90,6 +90,7 @@
 	<AudioVideoObserver
 		v-bind:meetingSession="meetingSession"
 		v-bind:alerts="alerts"
+		v-bind:attendeePresenceMap="attendeePresenceMap"
 		v-on:metricsDidReceive="metricsDidReceive" />
 
 	<AttendeePresenceObserver
@@ -299,7 +300,6 @@ export default {
 		 * @param {String} - message
 		 */
 		sendSystemMessage(message){
-			console.log('System message send')
 			let liveTime = 60*1000
 			this.sendMessage(Utils.getConstant('MESSAGE_SYSTEM_TOPIC_NAME'), message, liveTime)
 		},
