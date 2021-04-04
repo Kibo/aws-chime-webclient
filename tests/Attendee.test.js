@@ -21,7 +21,7 @@ test('Attendee IDs', async () => {
 	expect( tom.attendeeId ).toBe( 'tom' )
 
 	tom.externalUserId = '123#petr'
-	expect( tom.externalUserId).toBe( 'petr' )
+	expect( tom.externalUserId).toBe( '123#petr' )
 })
 
 test('Attendee isContent', async () => {

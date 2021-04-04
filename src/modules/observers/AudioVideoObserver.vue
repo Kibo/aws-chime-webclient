@@ -7,15 +7,12 @@ import {MeetingSessionStatusCode} from 'amazon-chime-sdk-js';
 import Utils from "../tools/Utils.js"
 
 export default {
-	emits: ['metricsDidReceive'],
-	props: ['meetingSession', 'alerts', 'attendeePresenceMap'],
+	emits: ['metricsDidReceive', 'videoTileDidUpdate', 'videoTileWasRemoved'],
+	props: ['meetingSession', 'alerts'],
 	data() {
 		return {
 			logger:this.$store.state.logger,
 			role: this.$store.getters.role,
-
-			// tileId-tileState pairs
-			tileMap:{},
 
 			//@see AudioVideoObserver.videoAvailabilityDidChange
 			//@see AudioVideoObserver.videoSendDidBecomeUnavailable
@@ -242,28 +239,16 @@ export default {
 						return;
 				 	}
 
-				 	let isPresenterTile = this.isPresenterTile( tileState )
-
-				 	if(!isPresenterTile){
-				 		// broadcaster is not interested in attendee video tiles
-				 		if( !Utils.getSetting('SHOW_VIDEO_TILES_CONTAINER', this.role) ){
-				 			return
-				 		}
-				 	}
-					this.meetingSession.audioVideo.bindVideoElement(
-						tileState.tileId,
-						this.acquireVideoElement(tileState, isPresenterTile)
-					);
+					this.$emit('videoTileDidUpdate', tileState)
+					return
 				},
 
 				/*
 				* Called whenever a tile has been removed.
 				*/
 				videoTileWasRemoved: tileId => {
-					this.meetingSession.audioVideo.unbindVideoElement(tileId)
-					delete this.tileMap[tileId];
-					Utils.removeElementById( Utils.getConstant('ID_PREFIX_FOR_VIDEO_ELEMENT') + tileId )
-					this.logger.warn('Release video element with ID:#' + Utils.getConstant('ID_PREFIX_FOR_VIDEO_ELEMENT') + tileId)
+					this.$emit('videoTileWasRemoved', tileId)
+					return
 			  }
 			}
 
@@ -279,50 +264,6 @@ export default {
 			})
 
 			return audioVideoObserver;
-		},
-
-		/*
-		 * Acquire HTML video element for tile binding
-		 *
-		 * @param {Object} tileState
-		 * @param {Boolean} isPresenterTile
-		 *
-		 * @returns {Object} - HTMLVideoElement
-		 */
-		acquireVideoElement( tileState, isPresenterTile=false){
-
-			// max tile 16 + content tile
-			if( !this.isVideoAvailable ){
-				this.alerts.push({text:"Sorry, you cannot start video now. All video slots are full."})
-				return
-			}
-
-			this.logger.warn('Create video element with ID:#' + Utils.getConstant('ID_PREFIX_FOR_VIDEO_ELEMENT') + tileState.tileId)
-			this.tileMap[tileState.tileId] = tileState.tileId;
-			return Utils.getHTMLVideoElement( tileState, isPresenterTile )
-		},
-
-		/*
-		* Is presenter tile
-		*
-		* @param {Object} tileState
-		* @returns {Boolean}
-		*/
-		isPresenterTile( tileState ){
-			if( tileState.isContent ){
-				return true
-			}
-			
-			let attendee = this.attendeePresenceMap.get(tileState.boundAttendeeId)
-			if(!attendee){
-				return false
-			}
-			// When a content share is started, another attendee with the attendee ID <attendee-id>#content joins the meeting.
-			let isAttendeePresentContent = this.attendeePresenceMap.get(tileState.boundAttendeeId + '#content') ? true : false
-			return isAttendeePresentContent
-
-			// TODO check presenter role
-			//attendee.hasRole(Utils.getConstant('ROLE_NAME_PRESENTER'))
 		}
 	}
 }

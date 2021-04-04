@@ -19,7 +19,7 @@ class Attendee {
 	}
 
 	get externalUserId() {
-		return Utils.getAttendeeName( this._externalUserId );
+		return this._externalUserId;
 	}
 
 	set externalUserId(externalUserId) {

@@ -11,7 +11,7 @@
 							<a href="#" v-on:click.prevent="presenterChanged(attendee.attendeeId)">
 								<i class="fa"
 									v-bind:class="attendee.hasRole(utils.getConstant('ROLE_NAME_PRESENTER')) ? 'fa-user-secret' :'fa-user'">
-								</i> <small>{{attendee.externalUserId}}</small>
+								</i> <small>{{utils.getAttendeeName(attendee.externalUserId)}}</small>
 							</a>
 						</td>
 					</tr>

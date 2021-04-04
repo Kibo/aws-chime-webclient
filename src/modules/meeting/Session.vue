@@ -57,12 +57,6 @@
 	</nav>
 
 	<div class="row">
-
-		<div class="col-12 col-sm-12 col-md-2"
-			v-bind:class="{ 'd-none': !isLeftPanel()}">
-			<div v-bind:id="utils.getConstant('ID_VIDEO_ELEMENT_TILES_CONTAINER')"></div>
-		</div>
-
 		<div class="col">
 			<div v-if="alerts.length">
 				<AlertMessage
@@ -70,8 +64,15 @@
 					v-bind:alert="alert"
 					v-bind:alerts="alerts" />
 			</div>
+		</div>
+	</div>
 
-			<div v-bind:id="utils.getConstant('ID_VIDEO_ELEMENT_PRESENTERS_CONTAINER')" style="position:relative;"></div>
+	<div class="row">
+		<div class="col">
+			<VideoTileContainer
+				v-bind:meetingSession="meetingSession"
+				v-bind:attendeePresenceMap="attendeePresenceMap"
+				v-bind:tileMap="tileMap" />
 		</div>
 
 		<div class="col-12 col-sm-12 col-md-2"
@@ -90,8 +91,9 @@
 	<AudioVideoObserver
 		v-bind:meetingSession="meetingSession"
 		v-bind:alerts="alerts"
-		v-bind:attendeePresenceMap="attendeePresenceMap"
-		v-on:metricsDidReceive="metricsDidReceive" />
+		v-on:metricsDidReceive="metricsDidReceive"
+		v-on:videoTileDidUpdate="videoTileDidUpdate"
+	  v-on:videoTileWasRemoved="videoTileWasRemoved" />
 
 	<AttendeePresenceObserver
 		v-bind:meetingSession="meetingSession"
@@ -107,6 +109,7 @@
 import AlertMessage from "../common/AlertMessage.vue"
 import ModeratorPanel from "./ModeratorPanel.vue"
 import ChatPanel from "./ChatPanel.vue"
+import VideoTileContainer from "./VideoTileContainer.vue"
 import ContentShareObserver from "../observers/ContentShareObserver.vue"
 import AttendeePresenceObserver from "../observers/AttendeePresenceObserver.vue"
 import AudioVideoObserver from "../observers/AudioVideoObserver.vue"
@@ -117,6 +120,7 @@ import Utils from "../tools/Utils.js"
 
 export default {
 	components: {
+		VideoTileContainer,
 		AlertMessage,
 		ModeratorPanel,
 		ChatPanel,
@@ -145,7 +149,10 @@ export default {
 				downlink:0,
 
 				//@see AttendeePresenceObserver
-				attendeePresenceMap:new AttendeeMap()
+				attendeePresenceMap:new AttendeeMap(),
+
+				// tileId-tileState pairs
+  			tileMap:new Map(),
 			}
 	},
 
@@ -239,19 +246,6 @@ export default {
 		},
 
 		/*
-		 * @param {Object} - report
-		 * @see AudioVideoObserver
-		 */
-		metricsDidReceive( report ){
-			if(!report){
-				return
-			}
-
-			this.downlink = report.down
-			this.uplink = report.up
-		},
-
-		/*
 		 * Show video quality setting - helper method
 		 */
 		showVideoInputQualitySettings(){
@@ -335,6 +329,46 @@ export default {
 		 */
 		isRightPanel(){
 			return Utils.getSetting('SHOW_MODERATOR_PANEL', this.role) || Utils.getSetting('SHOW_CHAT_PANEL', this.role)
+		},
+
+		// ###################################
+		// ## Handlers from audioVideoObserver
+		// ###################################
+
+		/*
+		 * @param {Object} - report
+		 * @see AudioVideoObserver
+		 */
+		metricsDidReceive( report ){
+			if(!report){
+				return
+			}
+
+			this.downlink = report.down
+			this.uplink = report.up
+		},
+
+		/*
+		* Called whenever a tile has been created or updated.
+		*
+		* @param {Object} - tileState
+		* @see AudioVideoObserver
+		* @see https://aws.github.io/amazon-chime-sdk-js/classes/videotilestate.html
+		*/
+		videoTileDidUpdate( tileState ){
+
+			//TODO AudioVideoObserver @see isVideoAvailable
+
+			this.tileMap.set(tileState.tileId, tileState);
+		},
+
+		/*
+		* Called whenever a tile has been removed.
+		*
+		* @see AudioVideoObserver
+		*/
+		videoTileWasRemoved( tileId ){
+			this.tileMap.delete( tileId );
 		}
 	}
 }

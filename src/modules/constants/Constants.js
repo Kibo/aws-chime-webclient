@@ -88,21 +88,6 @@ export const AUDIO_TEST_SOUND_URL = "https://www2.cs.uic.edu/~i101/SoundFiles/St
 export const ID_VIDEO_ELEMENT_FOR_PREVIEW = "cz-kibo-meeting-chime-client-video-preview";
 
 // ## session #######################################
-/**
- * The ID for the wrapper where are video elements.
- * *
- * @constant
- * @type {string}
- */
-export const ID_VIDEO_ELEMENT_TILES_CONTAINER = "cz-kibo-meeting-chime-client-video-tiles-container";
-
-/**
- * The ID for the wrapper where is place share content.
- *
- * @constant
- * @type {string}
- */
-export const ID_VIDEO_ELEMENT_PRESENTERS_CONTAINER = "cz-kibo-meeting-chime-client-video-presenter-container"
 
 /**
  * The Prefix ID of the HTMLVideoElement for video tile.
