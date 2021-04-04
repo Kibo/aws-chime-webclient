@@ -74,19 +74,25 @@
 				v-bind:attendeePresenceMap="attendeePresenceMap"
 				v-bind:tileMap="tileMap" />
 		</div>
+	</div>
 
-		<div class="col-12 col-sm-12 col-md-2"
-			v-bind:class="{'d-none':!isRightPanel()}" >
-				<ModeratorPanel
-					v-if="utils.getSetting('SHOW_MODERATOR_PANEL', role)"
-					v-bind:attendeePresenceMap="attendeePresenceMap"
-					v-on:systemMessage="sendSystemMessage" />
-
-				<ChatPanel
-					v-if="utils.getSetting('SHOW_CHAT_PANEL', role)"
-					v-bind:attendeePresenceMap="attendeePresenceMap" />
+	<div class="row">
+		<div class="col">
+			<ChatPanel
+				v-if="utils.getSetting('SHOW_CHAT_PANEL', role)"
+				v-bind:attendeePresenceMap="attendeePresenceMap" />
 		</div>
 	</div>
+
+	<div class="row">
+		<div class="col">
+			<ModeratorPanel
+				v-if="utils.getSetting('SHOW_MODERATOR_PANEL', role)"
+				v-bind:attendeePresenceMap="attendeePresenceMap"
+				v-on:systemMessage="sendSystemMessage" />
+		</div>
+	</div>
+
 
 	<AudioVideoObserver
 		v-bind:meetingSession="meetingSession"
@@ -313,24 +319,7 @@ export default {
 				this.logger.error(e)
 			}
 		},
-		/*
-		 * Helper method for view template
-		 *
-		 * @returns{Boolean}
-		 */
-		isLeftPanel(){
-			return Utils.getSetting('SHOW_VIDEO_TILES_CONTAINER', this.role)
-		},
-
-		/*
-		 * Helper method for view template
-		 *
-		 * @returns{Boolean}
-		 */
-		isRightPanel(){
-			return Utils.getSetting('SHOW_MODERATOR_PANEL', this.role) || Utils.getSetting('SHOW_CHAT_PANEL', this.role)
-		},
-
+		
 		// ###################################
 		// ## Handlers from audioVideoObserver
 		// ###################################

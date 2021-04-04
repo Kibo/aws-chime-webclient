@@ -103,6 +103,14 @@ export const ID_VIDEO_ELEMENT_FOR_PREVIEW = "cz-kibo-meeting-chime-client-video-
  */
 export const ID_PREFIX_FOR_VIDEO_ELEMENT = "cz-kibo-meeting-chime-client-video-tile-";
 
+/**
+ * The DOM ID element for canvas
+ *
+ * @constant
+ * @type {string}
+ */
+export const ID_ELEMENT_FOR_PREZENTATION_CANVAS = "cz-kibo-meeting-chime-client-prezentation-canvas";
+
 // ## MESSAGING #######################################
 
 /**
@@ -122,6 +130,9 @@ export const MESSAGE_SYSTEM_TOPIC_NAME = "system"
  * @type {string}
  */
 export const MESSAGE_CHAT_TOPIC_NAME = "chat"
+
+
+// ## COMMANDS #######################################
 
 /**
  * System command - setPresenter
