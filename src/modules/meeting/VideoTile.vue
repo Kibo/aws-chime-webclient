@@ -17,21 +17,12 @@ export default {
 
 	},
 	emits: [],
-	props: ['meetingSession', 'tileState'],
+	props: ['meetingSession', 'tileState', 'framesMap'],
 	data() {
 			return {
 				utils:Utils,
 			  logger:this.$store.state.logger,
-        isHidden:false,
-        requestID:null,
-
-        canvas:null,
-        ctx:null,
-        video:null,
-
-        secondsPassed:0,
-				oldTimeStamp:0,
-				fps:0,
+        isHidden:false
 			}
 	},
 	mounted() {
@@ -46,44 +37,22 @@ export default {
     this.logger.warn('Create video element with ID:#' + this.getElementId())
   },
 	beforeUnmount(){
+    this.framesMap.delete(this.tileState.tileId)
     this.meetingSession.audioVideo.unbindVideoElement(this.tileState.tileId)
     this.logger.warn('Release video element with ID:#' + this.getElementId())
-
-    if( this.requestID ){
-      this.getCancelAnimationFrame()( this.requestID );
-    }
   },
 	methods:{
 
     bindTileToCanvas(){
-      this.canvas = document.getElementById( Utils.getConstant('ID_ELEMENT_FOR_PREZENTATION_CANVAS') );
-      this.ctx = this.canvas.getContext("2d");
-      this.video = document.getElementById( this.getElementId() );
-
-      console.log(this.canvas.width)
-      console.log(this.canvas.height)
-
-      this.requestID = this.getRequestAnimationFrame()( this.animationLoop.bind( this ) );
-
+      this.framesMap.set(this.tileState.tileId, {
+        video:document.getElementById( this.getElementId()),
+        dx:0,
+        dy:0,
+        dWidth:Utils.getSetting('VIDEO_INPUT_QUALITY_WIDTH'),
+        dHeight:Utils.getSetting('VIDEO_INPUT_QUALITY_HEIGHT')
+      })
       // hide this tile
       this.isHidden = true
-    },
-
-    animationLoop( timeStamp ){
-			// Calculate the number of seconds passed since the last frame
-    	this.secondsPassed = ( timeStamp - this.oldTimeStamp) / 1000;
-    	this.oldTimeStamp = timeStamp;
-
-    	// Calculate fps
-    	this.fps = Math.round(1 / this.secondsPassed);
-
-			this.draw()
-
-			this.requestID = this.getRequestAnimationFrame()( this.animationLoop.bind( this ) );
-		},
-
-    draw(){
-      this.ctx.drawImage(this.video, 0, 0, this.canvas.width, this.canvas.height)
     },
 
     /*
@@ -108,15 +77,7 @@ export default {
       }
 
       return attendeeName
-    },
-
-    getRequestAnimationFrame(){
-			return window.requestAnimationFrame
-		},
-
-		getCancelAnimationFrame(){
-			return window.cancelAnimationFrame
-		}
+    }
 	}
 }
 </script>
