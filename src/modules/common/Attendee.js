@@ -1,6 +1,5 @@
 import Utils from "../tools/Utils.js"
 
-
 /*
  * Creates a new Attendee.
  * @class

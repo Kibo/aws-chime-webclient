@@ -73,8 +73,10 @@ export default {
 		},
 
     update(){
+      let isContent = false
       this.tileMap.forEach( tileState =>{
         if( tileState.isContent && tileState.boundVideoElement){
+          isContent = true
           this.frames.push({
             video:tileState.boundVideoElement,
             dx:0,
@@ -87,12 +89,20 @@ export default {
 
       this.tileMap.forEach( tileState =>{
         if( tileState.isPresenter && tileState.boundVideoElement){
+          let dWidth = isContent
+            ? Utils.getSetting('VIDEO_INPUT_QUALITY_WIDTH')/4
+            : Utils.getSetting('VIDEO_INPUT_QUALITY_WIDTH')
+
+          let dHeight = isContent
+              ? Utils.getSetting('VIDEO_INPUT_QUALITY_HEIGHT')/4
+              : Utils.getSetting('VIDEO_INPUT_QUALITY_HEIGHT')
+
           this.frames.push({
             video:tileState.boundVideoElement,
             dx:0,
             dy:0,
-            dWidth:Utils.getSetting('VIDEO_INPUT_QUALITY_WIDTH')/4,
-            dHeight:Utils.getSetting('VIDEO_INPUT_QUALITY_HEIGHT')/4,
+            dWidth: dWidth,
+            dHeight: dHeight
           })
         }
       })

@@ -300,7 +300,7 @@ export default {
 		 * @param {String} - message
 		 */
 		sendSystemMessage(message){
-			let liveTime = 60*1000
+			let liveTime = 5*60*1000
 			this.sendMessage(Utils.getConstant('MESSAGE_SYSTEM_TOPIC_NAME'), message, liveTime)
 		},
 
@@ -348,10 +348,32 @@ export default {
 		setPresenter( attendeeId ){
 			this.unsetPresenter( attendeeId )
 			this.attendeePresenceMap.setPresenter( attendeeId )
+
+			this.tileMap.forEach(  tileState => {
+				if(tileState.boundAttendeeId == attendeeId){
+						this.setIsPresenter( tileState )
+						this.toggleHiddeClass( tileState )
+				}
+			})
 		},
 
 		unsetPresenter( attendeeId ){
 			this.attendeePresenceMap.unsetPresenter()
+
+			this.tileMap.forEach(  tileState => {
+				if( tileState.isPresenter ){
+					tileState.isPresenter = false
+					this.toggleHiddeClass( tileState )
+				}
+			})
+		},
+
+		/*
+		* Toogle css hidde class in videotile
+		*/
+		toggleHiddeClass( tileState ){
+			let id = Utils.getConstant('ID_PREFIX_FOR_VIDEO_ELEMENT') + tileState.tileId
+			document.getElementById(id).classList.toggle("hiddeVideoTile")
 		},
 
 		// ###################################
@@ -382,12 +404,20 @@ export default {
 
 			//TODO AudioVideoObserver @see isVideoAvailable
 
+			this.setIsPresenter( tileState )
+			this.tileMap.set(tileState.tileId, tileState);
+		},
+
+		/*
+		* Set tilestate.isPresenter flag for attendee and his content
+		*/
+		setIsPresenter( tileState ){
 			let attendee = this.attendeePresenceMap.get( tileState.boundAttendeeId )
 			if( attendee && attendee.hasRole( Utils.getConstant('ROLE_NAME_PRESENTER'))){
 				tileState.isPresenter = true
+			}else{
+				tileState.isPresenter = false
 			}
-
-			this.tileMap.set(tileState.tileId, tileState);
 		},
 
 		/*
