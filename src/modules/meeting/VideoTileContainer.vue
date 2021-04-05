@@ -4,8 +4,7 @@
         v-for="tileState in tileMap.values()"
         v-bind:key="tileState.tileId"
         v-bind:tileState="tileState"
-        v-bind:meetingSession="meetingSession"
-        v-bind:framesMap="framesMap" />
+        v-bind:meetingSession="meetingSession" />
   </div>
 
   <div class="row">
@@ -28,12 +27,11 @@ export default {
 		VideoTile
 	},
 	emits: [],
-	props: ['meetingSession', 'attendeePresenceMap', 'tileMap'],
+	props: ['meetingSession', 'tileMap'],
 	data() {
 			return {
 				utils:Utils,
 			  logger:this.$store.state.logger,
-        framesMap:new Map(),
 
         requestID:null,
 
@@ -43,6 +41,8 @@ export default {
         secondsPassed:0,
 				oldTimeStamp:0,
 				fps:0,
+
+        frames:[]
 			}
 	},
 	mounted() {
@@ -65,15 +65,47 @@ export default {
     	// Calculate fps
     	this.fps = Math.round(1 / this.secondsPassed);
 
+      this.update()
 			this.draw()
+      this.clear()
 
 			this.requestID = this.getRequestAnimationFrame()( this.animationLoop.bind( this ) );
 		},
 
-    draw(){
-      this.framesMap.forEach( frame => {
-          this.ctx.drawImage(frame.video, frame.dx, frame.dy, frame.dWidth, frame.dHeight)
+    update(){
+      this.tileMap.forEach( tileState =>{
+        if( tileState.isContent && tileState.boundVideoElement){
+          this.frames.push({
+            video:tileState.boundVideoElement,
+            dx:0,
+            dy:0,
+            dWidth:Utils.getSetting('VIDEO_INPUT_QUALITY_WIDTH'),
+            dHeight:Utils.getSetting('VIDEO_INPUT_QUALITY_HEIGHT'),
+          })
+        }
       })
+
+      this.tileMap.forEach( tileState =>{
+        if( tileState.isPresenter && tileState.boundVideoElement){
+          this.frames.push({
+            video:tileState.boundVideoElement,
+            dx:0,
+            dy:0,
+            dWidth:Utils.getSetting('VIDEO_INPUT_QUALITY_WIDTH')/4,
+            dHeight:Utils.getSetting('VIDEO_INPUT_QUALITY_HEIGHT')/4,
+          })
+        }
+      })
+    },
+
+    draw(){
+        this.frames.forEach( frame => {
+          this.ctx.drawImage( frame.video, frame.dx, frame.dy, frame.dWidth, frame.dHeight )
+        })
+    },
+
+    clear(){
+      this.frames = []
     },
 
     getRequestAnimationFrame(){

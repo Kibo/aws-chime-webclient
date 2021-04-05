@@ -41,6 +41,20 @@ const Utils = {
 	},
 
 	/*
+	* Get HTML Video element
+	*
+	* @param {String}
+	* @returns {HTML Video element | null}
+	*/
+	getVideoElement(tileId){
+		if( !tileId ){
+			return
+		}
+		let id = this.getConstant('ID_PREFIX_FOR_VIDEO_ELEMENT') + tileId
+		return document.querySelector(`#${id} video`)
+	},
+
+	/*
 	 * Get attendee name
 	 *
 	 * @param {String} externalUserId
@@ -65,6 +79,5 @@ const Utils = {
 		return new TextDecoder().decode( array )
 	}
 }
-
 
 export default Utils

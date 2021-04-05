@@ -1,7 +1,9 @@
 <template>
-  <div class="col mb-1" v-bind:class="{'hiddeVideoTile':isHidden}">
+  <div class="col mb-1"
+    v-bind:class="{'hiddeVideoTile':isHidden}"
+    v-bind:id="getElementId()">
     <div class="card h-100 text-center">
-    	  <video v-bind:id="getElementId()" class="card-img-top" />
+    	  <video class="card-img-top" />
     	<div class="card-body">
         <p class="card-text">{{getAttendeeName()}}</p>
     	</div>
@@ -17,7 +19,7 @@ export default {
 
 	},
 	emits: [],
-	props: ['meetingSession', 'tileState', 'framesMap'],
+	props: ['meetingSession', 'tileState'],
 	data() {
 			return {
 				utils:Utils,
@@ -28,33 +30,23 @@ export default {
 	mounted() {
     this.meetingSession.audioVideo.bindVideoElement(
 						this.tileState.tileId,
-						document.getElementById( this.getElementId()))
+            Utils.getVideoElement( this.tileState.tileId ))
 
     if( this.tileState.isContent ){
-        this.bindTileToCanvas()
+      this.isHidden = true
+    }
+
+    if(this.tileState.isPresenter){
+      this.isHidden = true
     }
 
     this.logger.warn('Create video element with ID:#' + this.getElementId())
   },
 	beforeUnmount(){
-    this.framesMap.delete(this.tileState.tileId)
     this.meetingSession.audioVideo.unbindVideoElement(this.tileState.tileId)
     this.logger.warn('Release video element with ID:#' + this.getElementId())
   },
 	methods:{
-
-    bindTileToCanvas(){
-      this.framesMap.set(this.tileState.tileId, {
-        video:document.getElementById( this.getElementId()),
-        dx:0,
-        dy:0,
-        dWidth:Utils.getSetting('VIDEO_INPUT_QUALITY_WIDTH'),
-        dHeight:Utils.getSetting('VIDEO_INPUT_QUALITY_HEIGHT')
-      })
-      // hide this tile
-      this.isHidden = true
-    },
-
     /*
     * Get DOM ID of this video element
     *
@@ -82,7 +74,6 @@ export default {
 }
 </script>
 <style lang="stylus">
-
 .hiddeVideoTile {
 	position:fixed;
   top:0;
