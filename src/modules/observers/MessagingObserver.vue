@@ -6,7 +6,7 @@
 import Utils from "../tools/Utils.js"
 
 export default {
-	emits: [],
+	emits: ['setPresenter', 'unsetPresenter'],
 	props: ['meetingSession','attendeePresenceMap'],
 	data() {
 		return {
@@ -45,12 +45,11 @@ export default {
 
 				switch (command) {
 					case Utils.getConstant('SYSTEM_COMMAND_SET_PRESENTER'):
-						this.setPresenter( text )
+						this.$emit('setPresenter', text)
 						break;
 					case Utils.getConstant('SYSTEM_COMMAND_UNSET_PRESENTER'):
-						this.unsetPresenter( text )
+						this.$emit('unsetPresenter', text)
 						break;
-
 					default:
 						this.logger.warn( 'Unknown command ' +  command)
 				}
@@ -64,14 +63,6 @@ export default {
 		 */
 		chatMessageReceived( dataMessage ){
 			console.log("CHAT" + Utils.encodeUint8array( dataMessage.data ))
-		},
-
-		setPresenter( attendeeId ){
-				this.attendeePresenceMap.setPresenter( attendeeId )
-		},
-
-		unsetPresenter(attendeeId){
-				this.attendeePresenceMap.unsetPresenter()
 		}
 	}
 }</script>

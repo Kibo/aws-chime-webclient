@@ -145,7 +145,6 @@ export const MESSAGE_CHAT_TOPIC_NAME = "chat"
  */
 export const SYSTEM_COMMAND_SET_PRESENTER = "setPresenter"
 
-
 /**
  * System command - unsetPresenter
  *

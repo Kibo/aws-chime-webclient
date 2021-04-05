@@ -105,7 +105,9 @@
 
 	<MessagingObserver
 		v-bind:meetingSession="meetingSession"
-		v-bind:attendeePresenceMap="attendeePresenceMap" />
+		v-bind:attendeePresenceMap="attendeePresenceMap"
+		v-on:setPresenter="setPresenter"
+		v-on:unsetPresenter="unsetPresenter" />
 
 </template>
 
@@ -327,20 +329,29 @@ export default {
 		 * @params {String} - attendeeId
 		 */
 		presenterChanged( attendeeId ){
-			let attendee = this.attendeePresenceMap.get(attendeeId)
-			if( !attendee ){
-				return
-			}
+				let attendee = this.attendeePresenceMap.get( attendeeId )
+				if( !attendee ){
+					return
+				}
 
-			let isPresenter = attendee.hasRole( Utils.getConstant('ROLE_NAME_PRESENTER'))
+				let isPresenter = attendee.hasRole( Utils.getConstant('ROLE_NAME_PRESENTER'))
 
-			if(isPresenter){
-				this.attendeePresenceMap.unsetPresenter( attendeeId )
-				this.systemMessage( Utils.getConstant('SYSTEM_COMMAND_UNSET_PRESENTER') + '#' + attendeeId )
-			}else{
-				this.attendeePresenceMap.setPresenter( attendeeId )
-				this.systemMessage( Utils.getConstant('SYSTEM_COMMAND_SET_PRESENTER') + '#' + attendeeId )
-			}
+				if(isPresenter){
+					this.sendSystemMessage( Utils.getConstant('SYSTEM_COMMAND_UNSET_PRESENTER') + '#' + attendeeId )
+					this.unsetPresenter( attendeeId )
+				}else{
+					this.setPresenter( attendeeId )
+					this.sendSystemMessage( Utils.getConstant('SYSTEM_COMMAND_SET_PRESENTER') + '#' + attendeeId )
+				}
+		},
+
+		setPresenter( attendeeId ){
+			this.unsetPresenter( attendeeId )
+			this.attendeePresenceMap.setPresenter( attendeeId )
+		},
+
+		unsetPresenter( attendeeId ){
+			this.attendeePresenceMap.unsetPresenter()
 		},
 
 		// ###################################
