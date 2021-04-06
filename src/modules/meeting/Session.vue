@@ -71,7 +71,7 @@
 		<div class="col">
 			<VideoTileContainer
 				v-bind:meetingSession="meetingSession"
-				v-bind:tileMap="tileMap" />
+				v-bind:attendeeManager="attendeeManager" />
 		</div>
 	</div>
 
@@ -156,9 +156,6 @@ export default {
 
 				//@see AttendeePresenceObserver
 				attendeeManager:new AttendeeManager(),
-
-				// tileId-tileState pairs
-  			tileMap:new Map(),
 			}
 	},
 
@@ -346,34 +343,11 @@ export default {
 		},
 
 		setPresenter( attendeeId ){
-			this.unsetPresenter( attendeeId )
 			this.attendeeManager.setPresenter( attendeeId )
-
-			this.tileMap.forEach(  tileState => {
-				if(tileState.boundAttendeeId == attendeeId){
-						this.setIsPresenter( tileState )
-						this.toggleHiddeClass( tileState )
-				}
-			})
 		},
 
 		unsetPresenter( attendeeId ){
 			this.attendeeManager.unsetPresenter()
-
-			this.tileMap.forEach(  tileState => {
-				if( tileState.isPresenter ){
-					tileState.isPresenter = false
-					this.toggleHiddeClass( tileState )
-				}
-			})
-		},
-
-		/*
-		* Toogle css hidde class in videotile
-		*/
-		toggleHiddeClass( tileState ){
-			let id = Utils.getConstant('ID_PREFIX_FOR_VIDEO_ELEMENT') + tileState.tileId
-			document.getElementById(id).classList.toggle("hiddeVideoTile")
 		},
 
 		// ###################################
@@ -404,19 +378,12 @@ export default {
 
 			//TODO AudioVideoObserver @see isVideoAvailable
 
-			this.setIsPresenter( tileState )
-			this.tileMap.set(tileState.tileId, tileState);
-		},
+			this.attendeeManager.tileMap.set(tileState.tileId, tileState);
 
-		/*
-		* Set tilestate.isPresenter flag for attendee and his content
-		*/
-		setIsPresenter( tileState ){
-			let attendee = this.attendeeManager.attendeePresenceMap.get( tileState.boundAttendeeId )
+			let attendee = this.attendeeManager.getAttendee( tileState.tileId )
 			if( attendee && attendee.hasRole( Utils.getConstant('ROLE_NAME_PRESENTER'))){
-				tileState.isPresenter = true
-			}else{
-				tileState.isPresenter = false
+				// attendeeManager.setPresenter(id) set the flag tileMap.isPresenter too
+				this.attendeeManager.setPresenter( attendee.attendeeId )
 			}
 		},
 
@@ -426,7 +393,7 @@ export default {
 		* @see AudioVideoObserver
 		*/
 		videoTileWasRemoved( tileId ){
-			this.tileMap.delete( tileId );
+			this.attendeeManager.tileMap.delete( tileId );
 		}
 	}
 }

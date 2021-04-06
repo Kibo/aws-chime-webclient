@@ -111,6 +111,30 @@ export const ID_PREFIX_FOR_VIDEO_ELEMENT = "cz-kibo-meeting-chime-client-video-t
  */
 export const ID_ELEMENT_FOR_PREZENTATION_CANVAS = "cz-kibo-meeting-chime-client-prezentation-canvas";
 
+/**
+ * Canvas Width (px)
+ *
+ * @constant
+ * @type {number}
+ */
+export const PREZENTATION_CANVAS_WIDTH = 1280
+
+/**
+ * Canvas height (px)
+ *
+ * @constant
+ * @type {number}
+ */
+export const PREZENTATION_CANVAS_HEIGHT = 720
+
+/**
+ * Canvas padding (px)
+ *
+ * @constant
+ * @type {number}
+ */
+export const PREZENTATION_CANVAS_PADDING = 50
+
 // ## MESSAGING #######################################
 
 /**

@@ -49,7 +49,7 @@ class Attendee {
 class AttendeeManager{
 	constructor() {
 		this.attendeePresenceMap = new Map()
-		this.tilesMap = new Map()
+		this.tileMap = new Map()
 	}
 
 	/*
@@ -70,14 +70,17 @@ class AttendeeManager{
 	}
 
 	setPresenter( attendeeId ){
-		let currentPresenter = this.getPresenter()
-		if( currentPresenter ){
-			currentPresenter.removeRole( Utils.getConstant('ROLE_NAME_PRESENTER') )
-		}
+		this.unsetPresenter()
 
 		let newPresenter = this.attendeePresenceMap.get( attendeeId )
 		if( newPresenter ){
 			newPresenter.addRole( Utils.getConstant('ROLE_NAME_PRESENTER') )
+
+			let tileState = this.getTileState( newPresenter.attendeeId )
+			if( tileState ){
+				tileState.isPresenter = true
+				this.addHiddeClass( tileState )
+			}
 		}
 	}
 
@@ -85,6 +88,63 @@ class AttendeeManager{
 		let currentPresenter = this.getPresenter()
 		if( currentPresenter ){
 			currentPresenter.removeRole( Utils.getConstant('ROLE_NAME_PRESENTER') )
+
+			let tileState = this.getTileState( currentPresenter.attendeeId )
+			if( tileState ){
+				tileState.isPresenter = false
+				this.removeHiddeClass( tileState )
+			}
+		}
+	}
+
+	/*
+	*
+	* @returns {TileState | null}
+	*/
+	getTileState( attendeeId ){
+		let tileS = null
+			this.tileMap.forEach(  tileState => {
+				if( tileState.boundAttendeeId == attendeeId ){
+					tileS = tileState
+				}
+			})
+
+			return tileS
+	}
+
+	/*
+	* Get Atendee
+	*
+	* @returns {Atendee | null}
+	*/
+	getAttendee( tileId ){
+			let tileState = this.tileMap.get( tileId )
+			if( !tileState ){
+				return
+			}
+
+			return  this.attendeePresenceMap.get( tileState.boundAttendeeId )
+	}
+
+	/*
+	* Add css hidde class in videotile
+	*/
+	addHiddeClass( tileState ){
+		let id = Utils.getConstant('ID_PREFIX_FOR_VIDEO_ELEMENT') + tileState.tileId
+		let element = document.getElementById(id)
+		if(element){
+			element.classList.add("hiddeVideoTile")
+		}
+	}
+
+	/*
+	* remove css hidde class in videotile
+	*/
+	removeHiddeClass( tileState ){
+		let id = Utils.getConstant('ID_PREFIX_FOR_VIDEO_ELEMENT') + tileState.tileId
+		let element = document.getElementById(id)
+		if(element){
+			element.classList.remove("hiddeVideoTile")
 		}
 	}
 }
