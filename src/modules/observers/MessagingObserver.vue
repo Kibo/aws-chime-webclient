@@ -7,7 +7,7 @@ import Utils from "../tools/Utils.js"
 
 export default {
 	emits: ['setPresenter', 'unsetPresenter'],
-	props: ['meetingSession','attendeePresenceMap'],
+	props: ['meetingSession','attendeeManager'],
 	data() {
 		return {
 			logger:this.$store.state.logger,

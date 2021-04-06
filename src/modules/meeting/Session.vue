@@ -49,7 +49,7 @@
 		</ul>
 
 		<span class="navbar-text">
-			<i class="fa fa-users" aria-hidden="true"></i> {{this.attendeePresenceMap.size}} |
+			<i class="fa fa-users" aria-hidden="true"></i> {{this.attendeeManager.attendeePresenceMap.size}} |
 			<i class="fa fa-arrow-circle-o-up" aria-hidden="true"></i> {{uplink}} |
 			<i class="fa fa-arrow-circle-o-down" aria-hidden="true"></i> {{downlink}}
 		</span>
@@ -79,7 +79,7 @@
 		<div class="col">
 			<ChatPanel
 				v-if="utils.getSetting('SHOW_CHAT_PANEL', role)"
-				v-bind:attendeePresenceMap="attendeePresenceMap" />
+				v-bind:attendeeManager="attendeeManager" />
 		</div>
 	</div>
 
@@ -87,7 +87,7 @@
 		<div class="col">
 			<ModeratorPanel
 				v-if="utils.getSetting('SHOW_MODERATOR_PANEL', role)"
-				v-bind:attendeePresenceMap="attendeePresenceMap"
+				v-bind:attendeeManager="attendeeManager"
 				v-on:presenterChanged="presenterChanged" />
 		</div>
 	</div>
@@ -101,11 +101,11 @@
 
 	<AttendeePresenceObserver
 		v-bind:meetingSession="meetingSession"
-		v-bind:attendeePresenceMap="attendeePresenceMap" />
+		v-bind:attendeeManager="attendeeManager" />
 
 	<MessagingObserver
 		v-bind:meetingSession="meetingSession"
-		v-bind:attendeePresenceMap="attendeePresenceMap"
+		v-bind:attendeeManager="attendeeManager"
 		v-on:setPresenter="setPresenter"
 		v-on:unsetPresenter="unsetPresenter" />
 
@@ -121,7 +121,7 @@ import AttendeePresenceObserver from "../observers/AttendeePresenceObserver.vue"
 import AudioVideoObserver from "../observers/AudioVideoObserver.vue"
 import MessagingObserver from "../observers/MessagingObserver.vue"
 
-import {AttendeeMap} from "../common/Attendee.js"
+import {AttendeeManager} from "../common/Attendee.js"
 import Utils from "../tools/Utils.js"
 
 export default {
@@ -155,7 +155,7 @@ export default {
 				downlink:0,
 
 				//@see AttendeePresenceObserver
-				attendeePresenceMap:new AttendeeMap(),
+				attendeeManager:new AttendeeManager(),
 
 				// tileId-tileState pairs
   			tileMap:new Map(),
@@ -329,7 +329,7 @@ export default {
 		 * @params {String} - attendeeId
 		 */
 		presenterChanged( attendeeId ){
-				let attendee = this.attendeePresenceMap.get( attendeeId )
+				let attendee = this.attendeeManager.attendeePresenceMap.get( attendeeId )
 				if( !attendee ){
 					return
 				}
@@ -347,7 +347,7 @@ export default {
 
 		setPresenter( attendeeId ){
 			this.unsetPresenter( attendeeId )
-			this.attendeePresenceMap.setPresenter( attendeeId )
+			this.attendeeManager.setPresenter( attendeeId )
 
 			this.tileMap.forEach(  tileState => {
 				if(tileState.boundAttendeeId == attendeeId){
@@ -358,7 +358,7 @@ export default {
 		},
 
 		unsetPresenter( attendeeId ){
-			this.attendeePresenceMap.unsetPresenter()
+			this.attendeeManager.unsetPresenter()
 
 			this.tileMap.forEach(  tileState => {
 				if( tileState.isPresenter ){
@@ -412,7 +412,7 @@ export default {
 		* Set tilestate.isPresenter flag for attendee and his content
 		*/
 		setIsPresenter( tileState ){
-			let attendee = this.attendeePresenceMap.get( tileState.boundAttendeeId )
+			let attendee = this.attendeeManager.attendeePresenceMap.get( tileState.boundAttendeeId )
 			if( attendee && attendee.hasRole( Utils.getConstant('ROLE_NAME_PRESENTER'))){
 				tileState.isPresenter = true
 			}else{

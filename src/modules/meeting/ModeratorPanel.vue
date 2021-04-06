@@ -6,7 +6,7 @@
 		<div class="card-body p-0">
 			<table class="table table-borderless table-sm table-striped m-0">
 				<tbody>
-					<tr v-for="attendee in attendeePresenceMap.values()" v-bind:key="attendee.attendeeId">
+					<tr v-for="attendee in attendeeManager.attendeePresenceMap.values()" v-bind:key="attendee.attendeeId">
 						<td v-if="!attendee.isContent()">
 							<a href="#" v-on:click.prevent="presenterChanged(attendee.attendeeId)">
 								<i class="fa"
@@ -26,7 +26,7 @@ import Utils from "../tools/Utils.js"
 
 export default {
 	emits: ['presenterChanged'],
-	props: ['attendeePresenceMap'],
+	props: ['attendeeManager'],
 	data() {
 			return {
 				utils:Utils,

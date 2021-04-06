@@ -1,4 +1,4 @@
-import {Attendee, AttendeeMap } from "../src/modules/common/Attendee.js"
+import {Attendee, AttendeeManager } from "../src/modules/common/Attendee.js"
 
 test('Attendee roles', async () => {
 	let tom = new Attendee('tom')
@@ -35,75 +35,48 @@ test('Attendee isContent', async () => {
 	expect( tom.isContent() ).toBe( true )
 })
 
-test('AttendeeMap JSMap basic operation', async () => {
-
+test('AttendeeManager presenter operation', async () => {
 	let tom = new Attendee('1')
 	let jakub = new Attendee('2')
 	let mirek = new Attendee('3')
 
-	let map = new AttendeeMap()
-	expect( map.size).toBe( 0 )
+	let manager = new AttendeeManager()
 
-	map.set( tom.attendeeId, tom )
-	map.set( jakub.attendeeId, jakub )
-	map.set( mirek.attendeeId, mirek )
-	expect( map.size).toBe( 3 )
+	manager.attendeePresenceMap.set( tom.attendeeId, tom )
+	manager.attendeePresenceMap.set( jakub.attendeeId, jakub )
+	manager.attendeePresenceMap.set( mirek.attendeeId, mirek )
 
-	map.delete( mirek.attendeeId )
-	expect( map.size).toBe( 2 )
+	expect( manager.getPresenter()).toBeNull()
 
-	expect( map.has( mirek.attendeeId ) ).toBe( false )
-	expect( map.has( jakub.attendeeId ) ).toBe( true )
+	expect( manager.attendeePresenceMap.has( jakub.attendeeId ) ).toBe( true )
+	manager.setPresenter( jakub.attendeeId )
+	expect( manager.getPresenter()).toBe( jakub )
 
-	expect( map.get( tom.attendeeId ) ).toBe( tom )
-	expect( map.get( jakub.attendeeId ) ).toBe( jakub )
-
-	map.clear()
-	expect( map.size).toBe( 0 )
-})
-
-test('AttendeeMap presenter operation', async () => {
-	let tom = new Attendee('1')
-	let jakub = new Attendee('2')
-	let mirek = new Attendee('3')
-
-	let map = new AttendeeMap()
-
-	map.set( tom.attendeeId, tom )
-	map.set( jakub.attendeeId, jakub )
-	map.set( mirek.attendeeId, mirek )
-
-	expect( map.getPresenter()).toBeNull()
-
-	expect( map.has( jakub.attendeeId ) ).toBe( true )
-	map.setPresenter( jakub.attendeeId )
-	expect( map.getPresenter()).toBe( jakub )
-
-	expect( map.has( tom.attendeeId ) ).toBe( true )
-	map.setPresenter( tom.attendeeId )
-	expect( map.getPresenter()).toBe( tom )
+	expect( manager.attendeePresenceMap.has( tom.attendeeId ) ).toBe( true )
+	manager.setPresenter( tom.attendeeId )
+	expect( manager.getPresenter()).toBe( tom )
 })
 
 test('AttendeeMap unsetPresenter', async () => {
 	let tom = new Attendee('1')
 	let jakub = new Attendee('2')
 
-	let map = new AttendeeMap()
+	let manager = new AttendeeManager()
 
-	map.set( tom.attendeeId, tom )
-	map.set( jakub.attendeeId, jakub )
+	manager.attendeePresenceMap.set( tom.attendeeId, tom )
+	manager.attendeePresenceMap.set( jakub.attendeeId, jakub )
 
-	expect( map.getPresenter()).toBeNull()
+	expect( manager.getPresenter()).toBeNull()
 
-	map.setPresenter( jakub.attendeeId )
-	expect( map.getPresenter()).toBe( jakub )
+	manager.setPresenter( jakub.attendeeId )
+	expect( manager.getPresenter()).toBe( jakub )
 
- 	map.unsetPresenter()
- 	expect( map.getPresenter()).toBeNull()
+ 	manager.unsetPresenter()
+ 	expect( manager.getPresenter()).toBeNull()
 
-	map.setPresenter( tom.attendeeId )
-	expect( map.getPresenter()).toBe( tom )
+	manager.setPresenter( tom.attendeeId )
+	expect( manager.getPresenter()).toBe( tom )
 
- 	map.unsetPresenter()
- 	expect( map.getPresenter()).toBeNull()
+ 	manager.unsetPresenter()
+ 	expect( manager.getPresenter()).toBeNull()
 })
