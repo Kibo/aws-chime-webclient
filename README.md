@@ -5,12 +5,18 @@
 AWS Chime webclient using Vue.js.
 
 ## Version
-- 0.4.0 ( coding )
+- 0.6.0 ( possible for testing )
+
+
+Note for testing version 0.6.0:
+
+- Log as moderator (You can change role 'Presenter' in Moderator panel located below the main video.)
+- Use Google Chrome
 
 ### Dependencies
 - [amazon-chime-sdk-js](https://github.com/aws/amazon-chime-sdk-js)
-- [Vue.js](https://vuejs.org/) 
-	
+- [Vue.js](https://vuejs.org/)
+
 ### Tools
 - [NPM](https://npmjs.org) - Node.js package manager.
 - [Webpack](https://webpack.js.org/) - The JavaScript module bundler.
@@ -23,7 +29,7 @@ AWS Chime webclient using Vue.js.
 ```
 $ git clone git@github.com:Kibo/aws-chime-webclient.git
 $ cd aws-chime-client
-$ npm install 
+$ npm install
 $ npm run build
 ```
 ### Running the browser demo with a local server
@@ -56,6 +62,7 @@ $ npm run test
 
 ### Screens
 
-<img src="https://raw.githubusercontent.com/Kibo/aws-chime-webclient/master/src/img/screens/configure.png" alt="Configure">
-
-
+<img src="https://raw.githubusercontent.com/Kibo/aws-chime-webclient/master/src/img/screens/configure.jpg" alt="Configure">
+<img src="https://raw.githubusercontent.com/Kibo/aws-chime-webclient/master/src/img/screens/prezentation1.jpg" alt="Session">
+<img src="https://raw.githubusercontent.com/Kibo/aws-chime-webclient/master/src/img/screens/prezentation2.jpg" alt="Session">
+<img src="https://raw.githubusercontent.com/Kibo/aws-chime-webclient/master/src/img/screens/prezentation3.jpg" alt="Session">

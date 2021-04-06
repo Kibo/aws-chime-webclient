@@ -138,6 +138,11 @@ export default {
         )
 
         this.frames.forEach( frame => {
+
+          this.ctx.fillStyle = 'white';
+          let border = 5;
+          this.ctx.fillRect(frame.dx-border, frame.dy-border, frame.dWidth+2*border, frame.dHeight+2*border);
+
           this.ctx.drawImage( frame.video, frame.dx, frame.dy, frame.dWidth, frame.dHeight )
         })
     },
