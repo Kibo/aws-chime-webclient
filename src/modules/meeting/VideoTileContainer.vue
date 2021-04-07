@@ -8,7 +8,7 @@
   </div>
 
   <div class="row">
-    <div class="col bg-dark">
+    <div class="col bg-dark mb-1">
       <canvas class="d-block mx-auto my-2 bg-chime"
         v-bind:id="utils.getConstant('ID_ELEMENT_FOR_PREZENTATION_CANVAS')"
         v-bind:width="utils.getConstant('PREZENTATION_CANVAS_WIDTH')"
@@ -74,7 +74,7 @@ export default {
       let seg = Math.floor((timeStamp - time) / delay)
       if (seg > frame) {
           frame = seg;
-                    
+
           this.update()
     			this.draw()
           this.clear()

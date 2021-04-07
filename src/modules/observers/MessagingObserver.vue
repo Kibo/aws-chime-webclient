@@ -6,7 +6,7 @@
 import Utils from "../tools/Utils.js"
 
 export default {
-	emits: ['setPresenter', 'unsetPresenter'],
+	emits: ['setPresenter', 'unsetPresenter', 'showChatMessage'],
 	props: ['meetingSession','attendeeManager'],
 	data() {
 		return {
@@ -34,25 +34,7 @@ export default {
 		 * @see https://aws.github.io/amazon-chime-sdk-js/classes/datamessage.html
 		 */
 		systemMessageReceived( dataMessage ){
-				let message = Utils.encodeUint8array( dataMessage.data )
-				let tokens = message.split('#')
-				if( tokens.length != 2 ){
-						this.logger.warn( 'Received data in bad format ' +  message)
-				}
-
-				let command = tokens[0]
-				let text = tokens[1]
-
-				switch (command) {
-					case Utils.getConstant('SYSTEM_COMMAND_SET_PRESENTER'):
-						this.$emit('setPresenter', text)
-						break;
-					case Utils.getConstant('SYSTEM_COMMAND_UNSET_PRESENTER'):
-						this.$emit('unsetPresenter', text)
-						break;
-					default:
-						this.logger.warn( 'Unknown command ' +  command)
-				}
+					this.messageReceived( dataMessage )
 		},
 
 		/*
@@ -62,7 +44,37 @@ export default {
 		 * @see https://aws.github.io/amazon-chime-sdk-js/classes/datamessage.html
 		 */
 		chatMessageReceived( dataMessage ){
-			console.log("CHAT" + Utils.encodeUint8array( dataMessage.data ))
+			this.messageReceived( dataMessage )
+		},
+
+		/*
+		* Decode message
+		*/
+		messageReceived( dataMessage ){
+			let message = Utils.encodeUint8array( dataMessage.data )
+			let tokens = message.split(Utils.getConstant('COMMAND_DELIMITER'))
+			if( tokens.length != 2 ){
+					this.logger.warn( 'Received data in bad format ' +  message)
+			}
+
+			let command = tokens[0]
+			let text = tokens[1]
+
+			switch (command) {
+				case Utils.getConstant('SYSTEM_COMMAND_SET_PRESENTER'):
+					this.$emit('setPresenter', text)
+					break
+				case Utils.getConstant('SYSTEM_COMMAND_UNSET_PRESENTER'):
+					this.$emit('unsetPresenter', text)
+					break
+				case Utils.getConstant('CHAT_COMMAND_SEND_MESSAGE'):
+					this.$emit('showChatMessage', text)
+					break
+				default:
+					this.logger.warn( 'Unknown command ' +  command)
+			}
 		}
+
+
 	}
 }</script>

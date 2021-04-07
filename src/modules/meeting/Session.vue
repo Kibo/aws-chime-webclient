@@ -77,18 +77,18 @@
 
 	<div class="row">
 		<div class="col">
-			<ChatPanel
-				v-if="utils.getSetting('SHOW_CHAT_PANEL', role)"
-				v-bind:attendeeManager="attendeeManager" />
-		</div>
-	</div>
-
-	<div class="row">
-		<div class="col">
 			<ModeratorPanel
 				v-if="utils.getSetting('SHOW_MODERATOR_PANEL', role)"
 				v-bind:attendeeManager="attendeeManager"
 				v-on:presenterChanged="presenterChanged" />
+
+			<ChatPanel
+				v-if="utils.getSetting('SHOW_CHAT_PANEL', role)"
+				v-bind:attendeeManager="attendeeManager"
+				v-bind:chatMessages="chatMessages"
+				v-on:sendChatMessage="sendChatMessage"
+				v-on:showChatMessage="showChatMessage" />
+
 		</div>
 	</div>
 
@@ -107,7 +107,8 @@
 		v-bind:meetingSession="meetingSession"
 		v-bind:attendeeManager="attendeeManager"
 		v-on:setPresenter="setPresenter"
-		v-on:unsetPresenter="unsetPresenter" />
+		v-on:unsetPresenter="unsetPresenter"
+		v-on:showChatMessage="showChatMessage"/>
 
 </template>
 
@@ -139,6 +140,7 @@ export default {
 	props: ['meetingSession'],
 	data() {
 			return {
+				utils:Utils,
 				logger:this.$store.state.logger,
 				role: this.$store.getters.role,
 				localAttendeeId: this.$store.getters.attendeeId,
@@ -149,12 +151,11 @@ export default {
 
 				alerts : [],
 
-				utils:Utils,
+				chatMessages:[],
 
 				uplink:0,
 				downlink:0,
 
-				//@see AttendeePresenceObserver
 				attendeeManager:new AttendeeManager(),
 			}
 	},
@@ -222,11 +223,15 @@ export default {
 
 			this.isShare = this.isShare ? false : true
 
-			if( this.isShare ){
-				await this.meetingSession.audioVideo.startContentShareFromScreenCapture();
-			}else{
-				await this.meetingSession.audioVideo.stopContentShare();
-				this.isShare = false
+			try{
+				if( this.isShare ){
+					await this.meetingSession.audioVideo.startContentShareFromScreenCapture();
+				}else{
+					await this.meetingSession.audioVideo.stopContentShare();
+					this.isShare = false
+				}
+			}catch(e){
+						this.logger.warn(e)
 			}
 
 			return
@@ -284,6 +289,16 @@ export default {
 		},
 
 		/*
+		 * Show chat message
+		 * @param {String} - message
+		 */
+		showChatMessage( message ){
+			if(message){
+				this.chatMessages.push({text:message, type:"alert-info"})
+			}
+		},
+
+		/*
 		 * Send chat message
 		 * @param {String} - message
 		 */
@@ -334,11 +349,11 @@ export default {
 				let isPresenter = attendee.hasRole( Utils.getConstant('ROLE_NAME_PRESENTER'))
 
 				if(isPresenter){
-					this.sendSystemMessage( Utils.getConstant('SYSTEM_COMMAND_UNSET_PRESENTER') + '#' + attendeeId )
+					this.sendSystemMessage( Utils.getConstant('SYSTEM_COMMAND_UNSET_PRESENTER') + Utils.getConstant('COMMAND_DELIMITER') + attendeeId )
 					this.unsetPresenter( attendeeId )
 				}else{
 					this.setPresenter( attendeeId )
-					this.sendSystemMessage( Utils.getConstant('SYSTEM_COMMAND_SET_PRESENTER') + '#' + attendeeId )
+					this.sendSystemMessage( Utils.getConstant('SYSTEM_COMMAND_SET_PRESENTER') + Utils.getConstant('COMMAND_DELIMITER') + attendeeId )
 				}
 		},
 

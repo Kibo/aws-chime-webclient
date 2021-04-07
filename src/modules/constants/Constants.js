@@ -192,6 +192,14 @@ export const MESSAGE_CHAT_TOPIC_NAME = "chat"
 
 // ## COMMANDS #######################################
 
+/*
+* Command delimiter
+*
+* @constant
+* @type {string}
+*/
+export const COMMAND_DELIMITER = "#"
+
 /**
  * System command - setPresenter
  *
@@ -213,3 +221,14 @@ export const SYSTEM_COMMAND_SET_PRESENTER = "setPresenter"
  * @type {string}
  */
 export const SYSTEM_COMMAND_UNSET_PRESENTER = "unsetPresenter"
+
+/**
+ * Chat command - sendMessage
+ *
+ * usage:
+ * sendMessage#Hello
+ *
+ * @constant
+ * @type {string}
+ */
+export const CHAT_COMMAND_SEND_MESSAGE = "sendMessage"
