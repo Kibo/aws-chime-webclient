@@ -103,6 +103,8 @@ export const ID_VIDEO_ELEMENT_FOR_PREVIEW = "cz-kibo-meeting-chime-client-video-
  */
 export const ID_PREFIX_FOR_VIDEO_ELEMENT = "cz-kibo-meeting-chime-client-video-tile-";
 
+// ## PREZENTATION CANVAS #######################################
+
 /**
  * The DOM ID element for canvas
  *
@@ -128,12 +130,44 @@ export const PREZENTATION_CANVAS_WIDTH = 1280
 export const PREZENTATION_CANVAS_HEIGHT = 720
 
 /**
- * Canvas padding (px)
+ * Canvas FPS
  *
  * @constant
  * @type {number}
  */
-export const PREZENTATION_CANVAS_PADDING = 50
+export const PREZENTATION_CANVAS_FPS = 15
+
+/**
+ * Canvas padding - top (px)
+ *
+ * @constant
+ * @type {number}
+ */
+export const PREZENTATION_CANVAS_PADDING_TOP = 50
+
+/**
+ * Canvas padding - bottom (px)
+ *
+ * @constant
+ * @type {number}
+ */
+export const PREZENTATION_CANVAS_PADDING_BOTTOM = 50
+
+/**
+ * Canvas padding - left (px)
+ *
+ * @constant
+ * @type {number}
+ */
+export const PREZENTATION_CANVAS_PADDING_LEFT = 50
+
+/**
+ * Canvas padding - right (px)
+ *
+ * @constant
+ * @type {number}
+ */
+export const PREZENTATION_CANVAS_PADDING_RIGHT = 50
 
 // ## MESSAGING #######################################
 

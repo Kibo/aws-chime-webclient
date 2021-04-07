@@ -22,6 +22,11 @@
 import Utils from "../tools/Utils.js"
 import VideoTile from "./VideoTile.vue"
 
+let fps = Utils.getConstant('PREZENTATION_CANVAS_FPS')
+let delay = 1000 / fps  // calc. time per frame
+let time = null
+let frame = -1
+
 export default {
   components: {
 		VideoTile
@@ -33,18 +38,13 @@ export default {
 				utils:Utils,
 			  logger:this.$store.state.logger,
 
-        requestID:null,
-
         canvas:null,
         ctx:null,
 
         offscreen:null,
         offctx:null,
 
-        secondsPassed:0,
-				oldTimeStamp:0,
-				fps:0,
-
+        requestID:null,
         frames:[]
 			}
 	},
@@ -67,16 +67,18 @@ export default {
 	methods:{
 
     animationLoop( timeStamp ){
-			// Calculate the number of seconds passed since the last frame
-    	this.secondsPassed = ( timeStamp - this.oldTimeStamp) / 1000;
-    	this.oldTimeStamp = timeStamp;
+      if (time === null){
+        time = timeStamp
+      }
 
-    	// Calculate fps
-    	this.fps = Math.round(1 / this.secondsPassed);
-
-      this.update()
-			this.draw()
-      this.clear()
+      let seg = Math.floor((timeStamp - time) / delay)
+      if (seg > frame) {
+          frame = seg;
+                    
+          this.update()
+    			this.draw()
+          this.clear()
+      }
 
 			this.requestID = this.getRequestAnimationFrame()( this.animationLoop.bind( this ) );
 		},
@@ -88,8 +90,8 @@ export default {
           isContent = true
           this.frames.push({
             video:tileState.boundVideoElement,
-            dx: Utils.getConstant('PREZENTATION_CANVAS_WIDTH') - (Utils.getSetting('VIDEO_INPUT_QUALITY_WIDTH') + Utils.getConstant('PREZENTATION_CANVAS_PADDING')),
-            dy:Utils.getConstant('PREZENTATION_CANVAS_PADDING'),
+            dx: Utils.getConstant('PREZENTATION_CANVAS_WIDTH') - (Utils.getSetting('VIDEO_INPUT_QUALITY_WIDTH') + Utils.getConstant('PREZENTATION_CANVAS_PADDING_RIGHT')),
+            dy:Utils.getConstant('PREZENTATION_CANVAS_PADDING_TOP'),
             dWidth:Utils.getSetting('VIDEO_INPUT_QUALITY_WIDTH'),
             dHeight:Utils.getSetting('VIDEO_INPUT_QUALITY_HEIGHT'),
           })
@@ -101,12 +103,12 @@ export default {
 
         if( tileState.isPresenter && tileState.boundVideoElement){
           let dx = isContent
-            ? Utils.getConstant('PREZENTATION_CANVAS_PADDING')
-            : Utils.getConstant('PREZENTATION_CANVAS_WIDTH') - (Utils.getSetting('VIDEO_INPUT_QUALITY_WIDTH') + Utils.getConstant('PREZENTATION_CANVAS_PADDING'))
+            ? Utils.getConstant('PREZENTATION_CANVAS_PADDING_LEFT')
+            : Utils.getConstant('PREZENTATION_CANVAS_WIDTH') - (Utils.getSetting('VIDEO_INPUT_QUALITY_WIDTH') + Utils.getConstant('PREZENTATION_CANVAS_PADDING_RIGHT'))
 
           let dy = isContent
-            ? Utils.getConstant('PREZENTATION_CANVAS_HEIGHT') - (Utils.getSetting('VIDEO_INPUT_QUALITY_HEIGHT')/resizeRatio + Utils.getConstant('PREZENTATION_CANVAS_PADDING'))
-            : Utils.getConstant('PREZENTATION_CANVAS_PADDING')
+            ? Utils.getConstant('PREZENTATION_CANVAS_HEIGHT') - (Utils.getSetting('VIDEO_INPUT_QUALITY_HEIGHT')/resizeRatio + Utils.getConstant('PREZENTATION_CANVAS_PADDING_BOTTOM'))
+            : Utils.getConstant('PREZENTATION_CANVAS_PADDING_TOP')
 
           let dWidth = isContent
             ? Utils.getSetting('VIDEO_INPUT_QUALITY_WIDTH')/resizeRatio
