@@ -3,7 +3,7 @@
 		<div class="card-header">
 			Moderator panel
 		</div>
-		<div class="card-body p-0">
+		<div class="card-body p-1">
 			<table class="table table-borderless table-sm table-striped m-0">
 				<tbody>
 					<tr v-for="attendee in attendeeManager.attendeePresenceMap.values()" v-bind:key="attendee.attendeeId">

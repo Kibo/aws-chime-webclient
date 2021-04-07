@@ -74,7 +74,5 @@ export default {
 					this.logger.warn( 'Unknown command ' +  command)
 			}
 		}
-
-
 	}
 }</script>
