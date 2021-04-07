@@ -13,7 +13,7 @@
 			</div>
 
 			<div class="input-group mb-3">
-				  <input v-model.trim="message" type="text" class="form-control">
+				  <input v-model.trim="message" type="text" class="form-control" maxlength="256">
 				  <div class="input-group-append">
 				    <button v-on:click.prevent="sendMessage" class="btn btn-success" type="button">Send</button>
 				  </div>
@@ -35,7 +35,7 @@ export default {
 	data() {
 			return {
 				utils:Utils,
-				localAttendeeId: this.$store.getters.attendeeId,
+				externalUserId: this.$store.getters.externalUserId,
 				logger:this.$store.state.logger,
 				message:""
 			}
@@ -46,16 +46,9 @@ export default {
 	methods:{
 			sendMessage(){
 				if(this.message){
-
-          let message = this.message
-					let attendee = this.attendeeManager.attendeePresenceMap.get(this.localAttendeeId)
-					if(attendee){
-						message = "<b>" + Utils.getAttendeeName(attendee.externalUserId) + "</b>: " + this.message
-					}
-
+					let message = "<b>" + Utils.getAttendeeName(this.externalUserId) + "</b>: " + this.message
 					this.$emit('showChatMessage', message )
 					this.$emit('sendChatMessage', Utils.getConstant('CHAT_COMMAND_SEND_MESSAGE') + Utils.getConstant('COMMAND_DELIMITER') + message )
-
 					this.message = ""
 				}
 			}

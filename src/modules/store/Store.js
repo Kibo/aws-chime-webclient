@@ -9,13 +9,13 @@ state () {
 		audioInputDeviceId : null,
 		audioOutputDeviceId : null,
 		credentials: {},
-		logger:logger,		
+		logger:logger,
 	}
 }, mutations: {
 	credentials(state, credentials){
 		state.credentials = credentials
 	},
-	
+
 	videoInputId(state, deviceId) {
 		state.videoInputDeviceId = deviceId
 	},
@@ -32,10 +32,20 @@ getters: {
     role(state) {
       return state.credentials.role
     },
-    
+
     attendeeId(state) {
-      return state.credentials.attendee.AttendeeId
-    }
+			if(state.credentials.attendee){
+					return state.credentials.attendee.AttendeeId
+			}
+
+    },
+		externalUserId(state) {
+			if(state.credentials.attendee){
+					return state.credentials.attendee.ExternalUserId
+			}
+		}
+
+
   }
 })
 
