@@ -1,4 +1,5 @@
 import { createStore } from 'vuex'
+import Utils from "../tools/Utils.js"
 import {ConsoleLogger,LogLevel} from 'amazon-chime-sdk-js';
 const logger = new ConsoleLogger('MeetingLogs', LogLevel.WARN);
 
@@ -10,6 +11,7 @@ state () {
 		audioOutputDeviceId : null,
 		credentials: {},
 		logger:logger,
+		fps:Utils.getConstant('PREZENTATION_CANVAS_FPS')
 	}
 }, mutations: {
 	credentials(state, credentials){
@@ -26,6 +28,12 @@ state () {
 
 	audioOutputId(state, deviceId) {
 		state.audioOutputDeviceId = deviceId
+	},
+
+	fps(state, value) {
+		let min = 1
+		let max = 60
+		state.fps = Math.min( Math.max(parseInt(value), min), max);
 	}
 },
 getters: {

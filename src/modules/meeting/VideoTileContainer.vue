@@ -22,8 +22,6 @@
 import Utils from "../tools/Utils.js"
 import VideoTile from "./VideoTile.vue"
 
-let fps = Utils.getConstant('PREZENTATION_CANVAS_FPS')
-let delay = 1000 / fps  // calc. time per frame
 let time = null
 let frame = -1
 
@@ -37,6 +35,8 @@ export default {
 			return {
 				utils:Utils,
 			  logger:this.$store.state.logger,
+
+        fps:this.$store.state.fps,
 
         canvas:null,
         ctx:null,
@@ -71,6 +71,7 @@ export default {
         time = timeStamp
       }
 
+      let delay = 1000 / this.fps  // calc. time per frame
       let seg = Math.floor((timeStamp - time) / delay)
       if (seg > frame) {
           frame = seg;

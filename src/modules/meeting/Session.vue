@@ -69,6 +69,15 @@
 
 	<div class="row">
 		<div class="col">
+			<ModeratorPanel
+				v-if="utils.getSetting('SHOW_MODERATOR_PANEL', role)"
+				v-bind:attendeeManager="attendeeManager"
+				v-on:presenterChanged="presenterChanged" />
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col">
 			<VideoTileContainer
 				v-bind:meetingSession="meetingSession"
 				v-bind:attendeeManager="attendeeManager" />
@@ -77,18 +86,12 @@
 
 	<div class="row">
 		<div class="col">
-			<ModeratorPanel
-				v-if="utils.getSetting('SHOW_MODERATOR_PANEL', role)"
-				v-bind:attendeeManager="attendeeManager"
-				v-on:presenterChanged="presenterChanged" />
-
 			<ChatPanel
 				v-if="utils.getSetting('SHOW_CHAT_PANEL', role)"
 				v-bind:attendeeManager="attendeeManager"
 				v-bind:chatMessages="chatMessages"
 				v-on:sendChatMessage="sendChatMessage"
 				v-on:showChatMessage="showChatMessage" />
-
 		</div>
 	</div>
 
