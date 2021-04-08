@@ -36,13 +36,16 @@ export default {
 				utils:Utils,
 			  logger:this.$store.state.logger,
 
-        fps:this.$store.state.fps,
-
         canvas:null,
         ctx:null,
 
-        offscreen:null,
-        offctx:null,
+        // Background
+        bgCanvas:null,
+        bgCtx:null,
+
+        // Foreground
+        fgCanvas:null,
+        fgCtx:null,
 
         requestID:null,
         frames:[]
@@ -50,19 +53,37 @@ export default {
 	},
 	mounted() {
     this.canvas = document.getElementById( Utils.getConstant('ID_ELEMENT_FOR_PREZENTATION_CANVAS') );
-    this.offscreen = new OffscreenCanvas(this.canvas.width, this.canvas.height)
+    this.bgCanvas = new OffscreenCanvas(this.canvas.width, this.canvas.height)
+    this.fgCanvas = new OffscreenCanvas(this.canvas.width, this.canvas.height)
 
     this.ctx = this.canvas.getContext("2d");
-    this.offctx = this.offscreen.getContext('2d');
+    this.bgCtx = this.bgCanvas.getContext('2d');
+    this.fgCtx = this.fgCanvas.getContext('2d');
 
-    this.setupOffscreen()
-
-    this.getRequestAnimationFrame()( this.animationLoop.bind( this ) );
+    window.requestAnimationFrame( this.animationLoop );
   },
 	beforeUnmount(){
     if( this.requestID ){
-      this.getCancelAnimationFrame()( this.requestID );
+      window.cancelAnimationFrame( this.requestID );
     }
+  },
+  computed: {
+    delay(){
+      frame = -1
+      return 1000/ this.$store.state.canvasSetting.fps
+    },
+    background(){
+      this.drawImage( this.bgCtx, this.$store.state.canvasSetting.background )
+      return this.bgCanvas
+    },
+    foreground(){
+      this.drawImage( this.fgCtx, this.$store.state.canvasSetting.foreground )
+      return this.fgCanvas
+    },
+    isForeground(){
+      return this.$store.state.canvasSetting.foreground ? true : false
+    }
+
   },
 	methods:{
 
@@ -71,17 +92,20 @@ export default {
         time = timeStamp
       }
 
-      let delay = 1000 / this.fps  // calc. time per frame
-      let seg = Math.floor((timeStamp - time) / delay)
+      let seg = Math.floor((timeStamp - time) / this.delay)
       if (seg > frame) {
           frame = seg;
 
-          this.update()
-    			this.draw()
-          this.clear()
+          if(this.isForeground){
+            this.drawForeground()
+          }else{
+            this.update()
+            this.draw()
+            this.clear()
+          }
       }
 
-			this.requestID = this.getRequestAnimationFrame()( this.animationLoop.bind( this ) );
+			this.requestID = window.requestAnimationFrame( this.animationLoop );
 		},
 
     update(){
@@ -133,7 +157,7 @@ export default {
     draw(){
         // draw from off-screen canvas
         this.ctx.drawImage(
-          this.offscreen,
+          this.background,
           0,
           0,
           this.canvas.width,
@@ -143,11 +167,21 @@ export default {
         this.frames.forEach( frame => {
 
           this.ctx.fillStyle = 'white';
-          let border = 5;
+          let border = 5; //px
           this.ctx.fillRect(frame.dx-border, frame.dy-border, frame.dWidth+2*border, frame.dHeight+2*border);
 
           this.ctx.drawImage( frame.video, frame.dx, frame.dy, frame.dWidth, frame.dHeight )
         })
+    },
+
+    drawForeground(){
+      this.ctx.drawImage(
+        this.foreground,
+        0,
+        0,
+        this.canvas.width,
+        this.canvas.height
+      )
     },
 
     clear(){
@@ -155,29 +189,28 @@ export default {
     },
 
     /*
-    * Draw something to off-screen canvas
+    * Draw image to canvas
+    *
+    * @param {CanvasContext} - ctx
+    * @param {String} url - image url
     */
-    setupOffscreen(){
-      var img = new Image();
+    drawImage(ctx, url){
+      if(!url){
+        return
+      }
+
+      let img = new Image();
       img.onload = () => {
-        this.offctx.drawImage(img,
+        ctx.drawImage(img,
           0,
           0,
           this.canvas.width,
           this.canvas.height
         )
       };
-
-      img.src = '/bg_1280x720.png';
-    },
-
-    getRequestAnimationFrame(){
-			return window.requestAnimationFrame
-		},
-
-		getCancelAnimationFrame(){
-			return window.cancelAnimationFrame
-		}
+      img.src = url;
+      console.log( "draw " + url)
+    }
 	}
 }
 </script>

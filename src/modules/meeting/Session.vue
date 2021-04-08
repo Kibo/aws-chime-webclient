@@ -72,7 +72,11 @@
 			<ModeratorPanel
 				v-if="utils.getSetting('SHOW_MODERATOR_PANEL', role)"
 				v-bind:attendeeManager="attendeeManager"
-				v-on:presenterChanged="presenterChanged" />
+				v-on:presenterChanged="presenterChanged"
+				v-on:fpsChanged="setFps"
+				v-on:backgroundChanged="setCanvasBg"
+				v-on:foregroundChanged="setCanvasFg"
+				v-on:systemMessage="sendSystemMessage" />
 		</div>
 	</div>
 
@@ -111,7 +115,10 @@
 		v-bind:attendeeManager="attendeeManager"
 		v-on:setPresenter="setPresenter"
 		v-on:unsetPresenter="unsetPresenter"
-		v-on:showChatMessage="showChatMessage"/>
+		v-on:setFps="setFps"
+		v-on:setCanvasFg="setCanvasFg"
+		v-on:setCanvasBg="setCanvasBg"
+		v-on:showChatMessage="showChatMessage" />
 
 </template>
 
@@ -366,6 +373,18 @@ export default {
 
 		unsetPresenter( attendeeId ){
 			this.attendeeManager.unsetPresenter()
+		},
+
+		setFps(value){
+			this.$store.commit('canvasSetting', {fps:value})
+		},
+
+		setCanvasFg(url){		
+			this.$store.commit('canvasSetting', {foreground:url})
+		},
+
+		setCanvasBg(url){
+			this.$store.commit('canvasSetting', {background:url})
 		},
 
 		// ###################################

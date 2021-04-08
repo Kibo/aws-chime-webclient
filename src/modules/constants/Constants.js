@@ -223,6 +223,39 @@ export const SYSTEM_COMMAND_SET_PRESENTER = "setPresenter"
 export const SYSTEM_COMMAND_UNSET_PRESENTER = "unsetPresenter"
 
 /**
+ * System command - setFps
+ *
+ * usage:
+ * setFps#30
+ *
+ * @constant
+ * @type {string}
+ */
+export const SYSTEM_COMMAND_SET_FPS = "setFps"
+
+/**
+ * System command - setFCanvasFg
+ *
+ * usage:
+ * setFCanvasFg#URL
+ *
+ * @constant
+ * @type {string}
+ */
+export const SYSTEM_COMMAND_SET_CANVAS_FG = "setCanvasFg"
+
+/**
+ * System command - setFCanvasBg
+ *
+ * usage:
+ * setFCanvasBg#URL
+ *
+ * @constant
+ * @type {string}
+ */
+export const SYSTEM_COMMAND_SET_CANVAS_BG = "setCanvasBg"
+
+/**
  * Chat command - sendMessage
  *
  * usage:

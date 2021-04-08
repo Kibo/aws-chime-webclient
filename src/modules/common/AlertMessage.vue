@@ -1,6 +1,6 @@
 <template>
 	<div class="alert alert-dismissible fade show my-1" v-bind:class="alert && alert.type ? alert.type : 'alert-info' " role="alert">
-		<small v-html="alert && alert.text"></small>
+		<small>{{alert && alert.text}}</small>
 		<button type="button" class="close" data-dismiss="alert" aria-label="Close" v-on:click.prevent="dismissAlert(alert)">
 			<span aria-hidden="true">&times;</span>
 		</button>

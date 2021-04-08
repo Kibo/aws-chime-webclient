@@ -6,7 +6,7 @@
 import Utils from "../tools/Utils.js"
 
 export default {
-	emits: ['setPresenter', 'unsetPresenter', 'showChatMessage'],
+	emits: ['setPresenter', 'unsetPresenter', 'showChatMessage', 'setFps', 'setCanvasBg', 'setCanvasFg'],
 	props: ['meetingSession','attendeeManager'],
 	data() {
 		return {
@@ -58,17 +58,26 @@ export default {
 			}
 
 			let command = tokens[0]
-			let text = tokens[1]
+			let value = tokens[1]
 
 			switch (command) {
 				case Utils.getConstant('SYSTEM_COMMAND_SET_PRESENTER'):
-					this.$emit('setPresenter', text)
+					this.$emit('setPresenter', value)
 					break
 				case Utils.getConstant('SYSTEM_COMMAND_UNSET_PRESENTER'):
-					this.$emit('unsetPresenter', text)
+					this.$emit('unsetPresenter', value)
 					break
 				case Utils.getConstant('CHAT_COMMAND_SEND_MESSAGE'):
-					this.$emit('showChatMessage', text)
+					this.$emit('showChatMessage', value)
+					break
+				case Utils.getConstant('SYSTEM_COMMAND_SET_FPS'):
+					this.$emit('setFps', value)
+					break
+				case Utils.getConstant('SYSTEM_COMMAND_SET_CANVAS_FG'):
+					this.$emit('setCanvasFg', value)
+					break
+				case Utils.getConstant('SYSTEM_COMMAND_SET_CANVAS_BG'):
+					this.$emit('setCanvasBg', value)
 					break
 				default:
 					this.logger.warn( 'Unknown command ' +  command)

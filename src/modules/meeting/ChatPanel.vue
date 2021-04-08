@@ -46,7 +46,7 @@ export default {
 	methods:{
 			sendMessage(){
 				if(this.message){
-					let message = "<b>" + Utils.getAttendeeName(this.externalUserId) + "</b>: " + this.message
+					let message = Utils.getAttendeeName(this.externalUserId) + ": " + this.message
 					this.$emit('showChatMessage', message )
 					this.$emit('sendChatMessage', Utils.getConstant('CHAT_COMMAND_SEND_MESSAGE') + Utils.getConstant('COMMAND_DELIMITER') + message )
 					this.message = ""

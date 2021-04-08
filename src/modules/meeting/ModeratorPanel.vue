@@ -8,24 +8,17 @@
 				<div class="row">
 					<div class="col-12 col-sm-12 col-md-6">
 						<table class="table table-borderless table-sm table-striped m-0">
-							<thead>
-									<tr>
-											<th>Name</th>
-											<th>ID</th>
-											<th>&nbsp;</th>
-									</tr>
-							</thead>
 							<tbody v-for="attendee in attendeeManager.attendeePresenceMap.values()" v-bind:key="attendee.attendeeId">
 								<tr v-if="!attendee.isContent()">
 										<td>
-											<i class="fa"
-												v-bind:class="attendee.hasRole(utils.getConstant('ROLE_NAME_PRESENTER')) ? 'fa-user-secret' :'fa-user'">
-											</i> <small>{{utils.getAttendeeName(attendee.externalUserId)}}</small>
+											<i class="fa fa-user">
+											</i> {{utils.getAttendeeName(attendee.externalUserId)}}
 										</td>
 										<td>{{attendee.attendeeId}}</td>
 										<td class="text-right">
 												<div class="btn-group btn-group-sm" role="group">
-														<button type="button" class="btn btn-secondary btn-sm"
+														<button type="button" class="btn btn-sm"
+															v-bind:class="attendee.hasRole(utils.getConstant('ROLE_NAME_PRESENTER')) ? 'btn-success' :'btn-outline-secondary'"
 															v-on:click.prevent="presenterChanged(attendee.attendeeId)">presenter</button>
 												</div>
 										</td>
@@ -39,11 +32,12 @@
 							<label>Foreground</label>
 							<div class="input-group input-group-sm mb-3">
 									<div class="input-group-prepend">
-	    							<span class="input-group-text">http://abc.cz/abc/cde/b.jpg (TODO)</span>
+	    							<span class="input-group-text">{{$store.state.canvasSetting.foreground}}</span>
 	  							</div>
-									<input type="text" class="form-control">
+									<input type="text" class="form-control" v-model.trim="foreground">
 									<div class="input-group-append">
-										<button class="btn btn-outline-secondary btn-sm" type="button" >Set</button>
+										<button class="btn btn-outline-secondary btn-sm" type="button"
+											v-on:click.prevent="setForeground" >Set</button>
 									</div>
 							</div>
 					  </div>
@@ -52,11 +46,13 @@
 							<label>Background</label>
 							<div class="input-group input-group-sm mb-3">
 									<div class="input-group-prepend">
-	    							<span class="input-group-text">http://abc.cz/abc/cde/a.jpg (TODO)</span>
+	    							<span class="input-group-text">{{$store.state.canvasSetting.background}}</span>
 	  							</div>
-									<input type="text" class="form-control">
+									<input type="text" class="form-control"
+										v-model.trim="background">
 									<div class="input-group-append">
-										<button class="btn btn-outline-secondary btn-sm" type="button" >Set</button>
+										<button class="btn btn-outline-secondary btn-sm" type="button"
+											v-on:click.prevent="setBackground" >Set</button>
 									</div>
 							</div>
 					  </div>
@@ -91,11 +87,13 @@
 							<label>Fps</label>
 							<div class="input-group input-group-sm mb-3">
 									<div class="input-group-prepend">
-	    							<span class="input-group-text">15 (TODO)</span>
+	    							<span class="input-group-text">Fps: {{$store.state.canvasSetting.fps}}</span>
 	  							</div>
-									<input type="text" class="form-control">
+									<input type="number" step="1" min="1" max="60" class="form-control"
+										v-model.trim="fps" >
 									<div class="input-group-append">
-										<button class="btn btn-outline-secondary btn-sm" type="button" >Set</button>
+										<button class="btn btn-outline-secondary btn-sm" type="button"
+											v-on:click.prevent="setFps" >Set</button>
 									</div>
 							</div>
 					  </div>
@@ -110,12 +108,15 @@
 import Utils from "../tools/Utils.js"
 
 export default {
-	emits: ['presenterChanged'],
+	emits: ['presenterChanged', 'systemMessage', 'fpsChanged', 'foregroundChanged', 'backgroundChanged'],
 	props: ['attendeeManager'],
 	data() {
 			return {
 				utils:Utils,
 				logger:this.$store.state.logger,
+				fps:15,
+				foreground:"",
+				background:""
 			}
 	},
 	mounted() {},
@@ -128,7 +129,32 @@ export default {
 			*/
 			presenterChanged( attendeeId ){
 				this.$emit('presenterChanged', attendeeId )
-			}
+			},
+
+			/*
+			* Fps changed - handler
+			*/
+			setFps(){
+				this.$emit('fpsChanged', this.fps )
+				this.$emit('systemMessage', Utils.getConstant('SYSTEM_COMMAND_SET_FPS') + Utils.getConstant('COMMAND_DELIMITER') + this.fps )
+			},
+
+			/*
+			* Background changed - handler
+			*/
+			setBackground(){
+				this.$emit('backgroundChanged', this.background )
+				this.$emit('systemMessage', Utils.getConstant('SYSTEM_COMMAND_SET_CANVAS_BG') + Utils.getConstant('COMMAND_DELIMITER') + this.background )
+			},
+
+			/*
+			* Foreground changed - handler
+			*/
+			setForeground(){
+				this.$emit('foregroundChanged', this.foreground )
+				this.$emit('systemMessage', Utils.getConstant('SYSTEM_COMMAND_SET_CANVAS_FG') + Utils.getConstant('COMMAND_DELIMITER') + this.foreground )
+			},
+
 	}
 }
 </script>

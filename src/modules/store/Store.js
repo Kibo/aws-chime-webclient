@@ -11,7 +11,11 @@ state () {
 		audioOutputDeviceId : null,
 		credentials: {},
 		logger:logger,
-		fps:Utils.getConstant('PREZENTATION_CANVAS_FPS')
+		canvasSetting:{
+			fps:Utils.getConstant('PREZENTATION_CANVAS_FPS'),
+			background:"/assets/bg_1280x720_blue.jpg",
+			foreground:""
+		}
 	}
 }, mutations: {
 	credentials(state, credentials){
@@ -30,10 +34,20 @@ state () {
 		state.audioOutputDeviceId = deviceId
 	},
 
-	fps(state, value) {
-		let min = 1
-		let max = 60
-		state.fps = Math.min( Math.max(parseInt(value), min), max);
+	canvasSetting(state, canvasSetting) {
+		if( canvasSetting.fps ){
+				let min = 1
+				let max = 60
+				state.canvasSetting.fps = Math.min( Math.max(parseInt( canvasSetting.fps ), min), max);
+		}
+
+		if( typeof canvasSetting.background === 'string' ){
+				state.canvasSetting.background = canvasSetting.background
+		}
+
+		if( typeof canvasSetting.foreground === 'string' ){
+				state.canvasSetting.foreground = canvasSetting.foreground
+		}
 	}
 },
 getters: {
@@ -52,8 +66,6 @@ getters: {
 					return state.credentials.attendee.ExternalUserId
 			}
 		}
-
-
   }
 })
 
