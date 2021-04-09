@@ -13,7 +13,7 @@ state () {
 		logger:logger,
 		canvasSetting:{
 			fps:Utils.getConstant('PREZENTATION_CANVAS_FPS'),
-			background:"/assets/bg_1280x720_blue.jpg",
+			background:"",
 			foreground:""
 		}
 	}

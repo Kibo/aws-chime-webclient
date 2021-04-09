@@ -84,7 +84,8 @@
 		<div class="col">
 			<VideoTileContainer
 				v-bind:meetingSession="meetingSession"
-				v-bind:attendeeManager="attendeeManager" />
+				v-bind:attendeeManager="attendeeManager"
+				v-bind:alerts="alerts"/>
 		</div>
 	</div>
 
@@ -379,7 +380,7 @@ export default {
 			this.$store.commit('canvasSetting', {fps:value})
 		},
 
-		setCanvasFg(url){		
+		setCanvasFg(url){
 			this.$store.commit('canvasSetting', {foreground:url})
 		},
 

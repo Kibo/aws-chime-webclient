@@ -30,7 +30,7 @@ export default {
 		VideoTile
 	},
 	emits: [],
-	props: ['meetingSession', 'attendeeManager'],
+	props: ['meetingSession', 'attendeeManager', 'alerts'],
 	data() {
 			return {
 				utils:Utils,
@@ -48,7 +48,10 @@ export default {
         fgCtx:null,
 
         requestID:null,
-        frames:[]
+        frames:[],
+
+        // redraw bg or fg
+        redraw:false
 			}
 	},
 	mounted() {
@@ -73,17 +76,28 @@ export default {
       return 1000/ this.$store.state.canvasSetting.fps
     },
     background(){
-      this.drawImage( this.bgCtx, this.$store.state.canvasSetting.background )
-      return this.bgCanvas
+      return this.$store.state.canvasSetting.background
     },
     foreground(){
-      this.drawImage( this.fgCtx, this.$store.state.canvasSetting.foreground )
-      return this.fgCanvas
+      return this.$store.state.canvasSetting.foreground
     },
     isForeground(){
       return this.$store.state.canvasSetting.foreground ? true : false
+    },
+    countOfTiles(){
+      return this.attendeeManager.tileMap.size
     }
-
+  },
+  watch: {
+    background (newBg, oldBg) {
+        this.drawImageFromURL( this.bgCtx, this.$store.state.canvasSetting.background)
+    },
+    foreground (newFg, oldFg) {
+      this.drawImageFromURL( this.fgCtx, this.$store.state.canvasSetting.foreground)
+    },
+    countOfTiles (newBg, oldBg) {
+        this.drawImageFromURL( this.bgCtx, this.$store.state.canvasSetting.background)
+    }
   },
 	methods:{
 
@@ -96,13 +110,18 @@ export default {
       if (seg > frame) {
           frame = seg;
 
-          if(this.isForeground){
-            this.drawForeground()
+          if( this.isForeground ){
+            if(this.redraw){
+              // draw background from off-screen canvas
+              this.drawImage( this.ctx, this.fgCanvas )
+              this.logger.warn('Draw foreground image')
+            }
           }else{
             this.update()
             this.draw()
-            this.clear()
           }
+
+          this.clear()
       }
 
 			this.requestID = window.requestAnimationFrame( this.animationLoop );
@@ -155,14 +174,11 @@ export default {
     },
 
     draw(){
-        // draw from off-screen canvas
-        this.ctx.drawImage(
-          this.background,
-          0,
-          0,
-          this.canvas.width,
-          this.canvas.height
-        )
+        if( this.redraw ){
+          // draw background from off-screen canvas
+          this.drawImage( this.ctx, this.bgCanvas )
+          this.logger.warn('Draw background image')
+        }
 
         this.frames.forEach( frame => {
 
@@ -174,42 +190,63 @@ export default {
         })
     },
 
-    drawForeground(){
-      this.ctx.drawImage(
-        this.foreground,
+    clear(){
+      this.frames = []
+      this.redraw = false
+    },
+
+    /*
+    * Draw image from URL to canvas
+    *
+    * @param {CanvasContext} - ctx
+    * @param {String} url - image url
+    */
+    drawImageFromURL(ctx, url){
+      let img = new Image();
+      img.onload = () => {
+        /*
+        if (img.width + img.height == 0) {
+            img.onerror();
+            return;
+        }
+        */
+        this.drawImage( ctx, img )
+        this.redraw = true
+      }
+
+      img.onerror = () => {
+        ctx.fillStyle = "#343a40";
+        ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+        // TODO huh some bug in Chrome Version 89.0.4389.90 (Official Build) (64-bit) ?
+        //ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+        if(url){
+          this.alerts.push({
+						text : 'Failed to load image: ' + url,
+						type:"alert-danger"
+					});
+        }
+
+        this.redraw = true
+      }
+
+      img.src = url;
+    },
+
+    /*
+    * Draw img to contex
+    *
+    * @param {CanvasContext} - ctx
+    * @param {Image} - img
+    */
+    drawImage( ctx, img ){
+      ctx.drawImage(img,
         0,
         0,
         this.canvas.width,
         this.canvas.height
       )
-    },
-
-    clear(){
-      this.frames = []
-    },
-
-    /*
-    * Draw image to canvas
-    *
-    * @param {CanvasContext} - ctx
-    * @param {String} url - image url
-    */
-    drawImage(ctx, url){
-      if(!url){
-        return
-      }
-
-      let img = new Image();
-      img.onload = () => {
-        ctx.drawImage(img,
-          0,
-          0,
-          this.canvas.width,
-          this.canvas.height
-        )
-      };
-      img.src = url;
-      console.log( "draw " + url)
     }
 	}
 }

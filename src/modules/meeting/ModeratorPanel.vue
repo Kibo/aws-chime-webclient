@@ -32,9 +32,10 @@
 							<label>Foreground</label>
 							<div class="input-group input-group-sm mb-3">
 									<div class="input-group-prepend">
-	    							<span class="input-group-text">{{$store.state.canvasSetting.foreground}}</span>
+	    							<span class="input-group-text">{{$store.state.canvasSetting.foreground ? $store.state.canvasSetting.foreground : 'Empty slot' }}</span>
 	  							</div>
-									<input type="text" class="form-control" v-model.trim="foreground">
+									<input type="text" class="form-control" placeholder="Image url | empty"
+										v-model.trim="foreground" >
 									<div class="input-group-append">
 										<button class="btn btn-outline-secondary btn-sm" type="button"
 											v-on:click.prevent="setForeground" >Set</button>
@@ -46,9 +47,9 @@
 							<label>Background</label>
 							<div class="input-group input-group-sm mb-3">
 									<div class="input-group-prepend">
-	    							<span class="input-group-text">{{$store.state.canvasSetting.background}}</span>
+	    							<span class="input-group-text">{{$store.state.canvasSetting.background ? $store.state.canvasSetting.background : 'Empty slot'}}</span>
 	  							</div>
-									<input type="text" class="form-control"
+									<input type="text" class="form-control" placeholder="Image url | empty"
 										v-model.trim="background">
 									<div class="input-group-append">
 										<button class="btn btn-outline-secondary btn-sm" type="button"
@@ -89,7 +90,7 @@
 									<div class="input-group-prepend">
 	    							<span class="input-group-text">Fps: {{$store.state.canvasSetting.fps}}</span>
 	  							</div>
-									<input type="number" step="1" min="1" max="60" class="form-control"
+									<input type="number" step="1" min="1" max="60" class="form-control" placeholder="Number: 1 - 60"
 										v-model.trim="fps" >
 									<div class="input-group-append">
 										<button class="btn btn-outline-secondary btn-sm" type="button"
