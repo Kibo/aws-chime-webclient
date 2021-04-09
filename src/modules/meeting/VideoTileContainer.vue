@@ -86,6 +86,9 @@ export default {
     },
     countOfTiles(){
       return this.attendeeManager.tileMap.size
+    },
+    presenter(){
+      return this.attendeeManager.getPresenter()
     }
   },
   watch: {
@@ -96,6 +99,9 @@ export default {
       this.drawImageFromURL( this.fgCtx, this.$store.state.canvasSetting.foreground)
     },
     countOfTiles (newBg, oldBg) {
+        this.drawImageFromURL( this.bgCtx, this.$store.state.canvasSetting.background)
+    },
+    presenter (newP, oldP) {
         this.drawImageFromURL( this.bgCtx, this.$store.state.canvasSetting.background)
     }
   },

@@ -109,7 +109,7 @@
 import Utils from "../tools/Utils.js"
 
 export default {
-	emits: ['presenterChanged', 'systemMessage', 'fpsChanged', 'foregroundChanged', 'backgroundChanged'],
+	emits: ['setPresenter', 'unsetPresenter', 'systemMessage', 'fpsChanged', 'foregroundChanged', 'backgroundChanged'],
 	props: ['attendeeManager'],
 	data() {
 			return {
@@ -129,7 +129,17 @@ export default {
 			* @param {Number} attendeeId
 			*/
 			presenterChanged( attendeeId ){
-				this.$emit('presenterChanged', attendeeId )
+				let attendee = this.attendeeManager.attendeePresenceMap.get( attendeeId )
+				let isPresenter = attendee.hasRole( Utils.getConstant('ROLE_NAME_PRESENTER'))
+
+				if(isPresenter){
+					this.$emit('unsetPresenter', attendeeId )
+					this.$emit('systemMessage', Utils.getConstant('SYSTEM_COMMAND_UNSET_PRESENTER') + Utils.getConstant('COMMAND_DELIMITER') + attendeeId )
+
+				}else{
+					this.$emit('setPresenter', attendeeId )
+					this.$emit('systemMessage', Utils.getConstant('SYSTEM_COMMAND_SET_PRESENTER') + Utils.getConstant('COMMAND_DELIMITER') + attendeeId )
+				}
 			},
 
 			/*

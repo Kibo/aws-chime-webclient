@@ -72,7 +72,8 @@
 			<ModeratorPanel
 				v-if="utils.getSetting('SHOW_MODERATOR_PANEL', role)"
 				v-bind:attendeeManager="attendeeManager"
-				v-on:presenterChanged="presenterChanged"
+				v-on:setPresenter="setPresenter"
+				v-on:unsetPresenter="unsetPresenter"
 				v-on:fpsChanged="setFps"
 				v-on:backgroundChanged="setCanvasBg"
 				v-on:foregroundChanged="setCanvasFg"
@@ -346,32 +347,21 @@ export default {
 		// ###################################
 		// ## Handlers from ModeratorPanel
 		// ###################################
-     /*
-		 * Presente changed - handler
-		 *
-		 * @params {String} - attendeeId
-		 */
-		presenterChanged( attendeeId ){
-				let attendee = this.attendeeManager.attendeePresenceMap.get( attendeeId )
-				if( !attendee ){
-					return
-				}
 
-				let isPresenter = attendee.hasRole( Utils.getConstant('ROLE_NAME_PRESENTER'))
-
-				if(isPresenter){
-					this.sendSystemMessage( Utils.getConstant('SYSTEM_COMMAND_UNSET_PRESENTER') + Utils.getConstant('COMMAND_DELIMITER') + attendeeId )
-					this.unsetPresenter( attendeeId )
-				}else{
-					this.setPresenter( attendeeId )
-					this.sendSystemMessage( Utils.getConstant('SYSTEM_COMMAND_SET_PRESENTER') + Utils.getConstant('COMMAND_DELIMITER') + attendeeId )
-				}
-		},
-
+		/*
+		* set Presente  - handler
+		*
+		* @params {String} - attendeeId
+		*/
 		setPresenter( attendeeId ){
 			this.attendeeManager.setPresenter( attendeeId )
 		},
 
+		/*
+		* unset Presente - handler
+		*
+		* @params {String} - attendeeId
+		*/
 		unsetPresenter( attendeeId ){
 			this.attendeeManager.unsetPresenter()
 		},
