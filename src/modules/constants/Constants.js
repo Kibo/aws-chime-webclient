@@ -18,15 +18,6 @@ export const CRENDTIALS_TO_MEETING_URL = "http://localhost:3000/meeting/";
  */
 export const ID_APP = "cz-kibo-meeting-chime-client";
 
-// ## ROLES #######################################
-/**
- * The presenter role name
- *
- * @constant
- * @type {string}
- */
-export const ROLE_NAME_PRESENTER = "presenter";
-
 // ## MAIN STATUSES #######################################
 
 /**

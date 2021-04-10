@@ -38,6 +38,7 @@ export default {
 			if (present) {
 				let attendee = new Attendee(attendeeId)
 				attendee.externalUserId = externalUserId
+				attendee.addRole( this.$store.getters.role )
 				this.attendeeManager.attendeePresenceMap.set(attendeeId, attendee);
 			} else {
 				this.attendeeManager.attendeePresenceMap.delete(attendeeId);

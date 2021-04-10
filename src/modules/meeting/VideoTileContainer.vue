@@ -4,7 +4,8 @@
         v-for="tileState in attendeeManager.tileMap.values()"
         v-bind:key="tileState.tileId"
         v-bind:tileState="tileState"
-        v-bind:meetingSession="meetingSession" />
+        v-bind:meetingSession="meetingSession"
+        v-bind:attendeeManager="attendeeManager" />
   </div>
 
   <div class="row">
@@ -151,7 +152,7 @@ export default {
       this.attendeeManager.tileMap.forEach( tileState => {
         const resizeRatio = 4
 
-        if( tileState.isPresenter && tileState.boundVideoElement){
+        if( this.attendeeManager.isPresenter( tileState.boundAttendeeId ) && tileState.boundVideoElement){
           let dx = isContent
             ? Utils.getConstant('PREZENTATION_CANVAS_PADDING_LEFT')
             : Utils.getConstant('PREZENTATION_CANVAS_WIDTH') - (Utils.getSetting('VIDEO_INPUT_QUALITY_WIDTH') + Utils.getConstant('PREZENTATION_CANVAS_PADDING_RIGHT'))

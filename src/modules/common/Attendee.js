@@ -50,51 +50,39 @@ class AttendeeManager{
 	constructor() {
 		this.attendeePresenceMap = new Map()
 		this.tileMap = new Map()
+		this.presenter = ""
 	}
 
 	/*
-	 * Get the attendee with the role presenter
+	 * Get the attendeeId who has presenter role or empty string
 	 *
-	 * @returns {Object | null}
+	 * @returns {String | empty}
 	 */
 	getPresenter(){
-		for (let [key, value] of this.attendeePresenceMap.entries()) {
-  			if(value
-  				&& (typeof value.hasRole === 'function')
-  				&& value.hasRole( Utils.getConstant('ROLE_NAME_PRESENTER'))){
-  				return value
-  			}
-		}
-
-		return null
+		return this.presenter
 	}
 
 	setPresenter( attendeeId ){
 		this.unsetPresenter()
+		this.presenter = attendeeId
 
-		let newPresenter = this.attendeePresenceMap.get( attendeeId )
-		if( newPresenter ){
-			newPresenter.addRole( Utils.getConstant('ROLE_NAME_PRESENTER') )
-
-			let tileState = this.getTileState( newPresenter.attendeeId )
-			if( tileState ){
-				tileState.isPresenter = true
-				this.addHiddeClass( tileState )
-			}
+		let tileState = this.getTileState( this.getPresenter() )
+		if( tileState ){
+			this.addHiddeClass( tileState )
 		}
 	}
 
 	unsetPresenter(){
-		let currentPresenter = this.getPresenter()
-		if( currentPresenter ){
-			currentPresenter.removeRole( Utils.getConstant('ROLE_NAME_PRESENTER') )
-
-			let tileState = this.getTileState( currentPresenter.attendeeId )
-			if( tileState ){
-				tileState.isPresenter = false
+		let tileState = this.getTileState( this.getPresenter() )
+		if( tileState ){
 				this.removeHiddeClass( tileState )
-			}
 		}
+
+		this.presenter = ""
+	}
+
+	isPresenter( attendeeId ){
+		return attendeeId && attendeeId == this.presenter
 	}
 
 	/*

@@ -18,7 +18,7 @@
 										<td class="text-right">
 												<div class="btn-group btn-group-sm" role="group">
 														<button type="button" class="btn btn-sm"
-															v-bind:class="attendee.hasRole(utils.getConstant('ROLE_NAME_PRESENTER')) ? 'btn-success' :'btn-outline-secondary'"
+															v-bind:class="attendeeManager.isPresenter( attendee.attendeeId ) ? 'btn-success' :'btn-outline-secondary'"
 															v-on:click.prevent="presenterChanged(attendee.attendeeId)">presenter</button>
 												</div>
 										</td>
@@ -129,10 +129,8 @@ export default {
 			* @param {Number} attendeeId
 			*/
 			presenterChanged( attendeeId ){
-				let attendee = this.attendeeManager.attendeePresenceMap.get( attendeeId )
-				let isPresenter = attendee.hasRole( Utils.getConstant('ROLE_NAME_PRESENTER'))
 
-				if(isPresenter){
+				if( this.attendeeManager.isPresenter( attendeeId ) ){
 					this.$emit('unsetPresenter', attendeeId )
 					this.$emit('systemMessage', Utils.getConstant('SYSTEM_COMMAND_UNSET_PRESENTER') + Utils.getConstant('COMMAND_DELIMITER') + attendeeId )
 

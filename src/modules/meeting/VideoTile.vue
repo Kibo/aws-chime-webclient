@@ -19,7 +19,7 @@ export default {
 
 	},
 	emits: [],
-	props: ['meetingSession', 'tileState'],
+	props: ['meetingSession', 'tileState', 'attendeeManager'],
 	data() {
 			return {
 				utils:Utils,
@@ -36,7 +36,7 @@ export default {
       this.isHidden = true
     }
 
-    if(this.tileState.isPresenter){
+    if(this.attendeeManager.isPresenter( this.tileState.boundAttendeeId )){
       this.isHidden = true
     }
 

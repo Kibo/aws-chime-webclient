@@ -407,11 +407,9 @@ export default {
 			//TODO AudioVideoObserver @see isVideoAvailable
 
 			this.attendeeManager.tileMap.set(tileState.tileId, tileState);
-
-			let attendee = this.attendeeManager.getAttendee( tileState.tileId )
-			if( attendee && attendee.hasRole( Utils.getConstant('ROLE_NAME_PRESENTER'))){
-				// attendeeManager.setPresenter(id) set the flag tileMap.isPresenter too
-				this.attendeeManager.setPresenter( attendee.attendeeId )
+			if( this.attendeeManager.isPresenter( tileState.boundAttendeeId )){
+					// attendeeManager.setPresenter(id) resolve the hide/show state
+					this.attendeeManager.setPresenter( tileState.boundAttendeeId )
 			}
 		},
 
