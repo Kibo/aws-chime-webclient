@@ -10,7 +10,7 @@ AWS Chime webclient using Vue.js.
 
 Note for testing version 0.6.0:
 
-- Log as moderator (You can change role 'Presenter' in Moderator panel located below the main video.)
+- Log as moderator (You can change the role 'Presenter' in Moderator panel.)
 - Use Google Chrome
 
 ### Dependencies

@@ -58,7 +58,7 @@
 
 	<div class="row">
 		<div class="col">
-			<div v-if="alerts.length">
+			<div v-if="alerts.length && isAlertsAllowed">
 				<AlertMessage
 					v-for="(alert, index) in alerts"
 					v-bind:alert="alert"
@@ -183,7 +183,11 @@ export default {
 	beforeUnmount(){
 		this.leaveMeeting()
 	},
-
+	computed: {
+		isAlertsAllowed(){
+			return Utils.getSetting('SUPRESS_ATERTS_DURING_MEETING', this.role) == false
+		}
+	},
 	methods:{
 
 		/*

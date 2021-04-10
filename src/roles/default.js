@@ -123,7 +123,13 @@ const Setting = {
 	 */
 	SHOW_CHAT_PANEL:false,
 
-
+	/**
+	 * Supress alert
+	 *
+	 * @constant
+	 * @type {Boolean}
+	 */
+	SUPRESS_ATERTS_DURING_MEETING:false
 }
 
 export default Setting
