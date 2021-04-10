@@ -1,5 +1,6 @@
 <template>
-  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 row-cols-lg-6 row-cols-xl-12">
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 row-cols-lg-6 row-cols-xl-12"
+    v-bind:class="{'hiddeVideoTile':isHideVideoTiles}">
       <VideoTile
         v-for="tileState in attendeeManager.tileMap.values()"
         v-bind:key="tileState.tileId"
@@ -31,7 +32,7 @@ export default {
 		VideoTile
 	},
 	emits: [],
-	props: ['meetingSession', 'attendeeManager', 'alerts'],
+	props: ['meetingSession', 'attendeeManager', 'alerts' ,'role'],
 	data() {
 			return {
 				utils:Utils,
@@ -90,6 +91,9 @@ export default {
     },
     presenter(){
       return this.attendeeManager.getPresenter()
+    },
+    isHideVideoTiles(){
+      return Utils.getSetting('SHOW_VIDEO_TILES_CONTAINER', this.role) == false
     }
   },
   watch: {

@@ -41,7 +41,7 @@
 
 			<li class="nav-item">
 				<a class="nav-link" href="#"
-				v-on:click.prevent="leaveMeeting">
+				v-on:click.prevent="$emit('endSession')">
 					<i class="fa fa-sign-out" aria-hidden="true"></i> Leave
 				</a>
 			</li>
@@ -86,7 +86,8 @@
 			<VideoTileContainer
 				v-bind:meetingSession="meetingSession"
 				v-bind:attendeeManager="attendeeManager"
-				v-bind:alerts="alerts"/>
+				v-bind:alerts="alerts"
+				v-bind:role="role" />
 		</div>
 	</div>
 
@@ -148,7 +149,7 @@ export default {
 		AudioVideoObserver,
 		MessagingObserver
 	},
-	emits: ['configureDevices'],
+	emits: ['configureDevices', 'endSession'],
 	props: ['meetingSession'],
 	data() {
 			return {
@@ -253,8 +254,8 @@ export default {
 		 * User click to Leave button
 		 */
 		leaveMeeting(){
-			this.logger.info('Leave meeting - handler')
 			this.meetingSession.audioVideo.stop()
+			this.logger.warn('a user leave the session')
 		},
 
 		/*

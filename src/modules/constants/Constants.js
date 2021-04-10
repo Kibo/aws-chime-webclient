@@ -50,6 +50,16 @@ export const APP_STATUS_CONFIGURE = "configure";
  */
 export const APP_STATUS_SESSION = "session";
 
+/**
+ * The app status - send
+ *
+ * a meeting ends
+ *
+ * @constant
+ * @type {string}
+ */
+export const APP_STATUS_ENDING = "ending";
+
 
 // ## configure - AUDIO SETTING  #######################################
 /**
