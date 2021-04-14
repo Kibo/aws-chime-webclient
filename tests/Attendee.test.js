@@ -46,15 +46,15 @@ test('AttendeeManager presenter operation', async () => {
 	manager.attendeePresenceMap.set( jakub.attendeeId, jakub )
 	manager.attendeePresenceMap.set( mirek.attendeeId, mirek )
 
-	expect( manager.getPresenter()).toBeNull()
+	expect( manager.getPresenter()).toBe("")
 
 	expect( manager.attendeePresenceMap.has( jakub.attendeeId ) ).toBe( true )
 	manager.setPresenter( jakub.attendeeId )
-	expect( manager.getPresenter()).toBe( jakub )
+	expect( manager.getPresenter() == jakub.attendeeId).toBe(true)
 
 	expect( manager.attendeePresenceMap.has( tom.attendeeId ) ).toBe( true )
 	manager.setPresenter( tom.attendeeId )
-	expect( manager.getPresenter()).toBe( tom )
+	expect( manager.getPresenter() == tom.attendeeId).toBe(true)
 })
 
 test('AttendeeMap unsetPresenter', async () => {
@@ -66,17 +66,35 @@ test('AttendeeMap unsetPresenter', async () => {
 	manager.attendeePresenceMap.set( tom.attendeeId, tom )
 	manager.attendeePresenceMap.set( jakub.attendeeId, jakub )
 
-	expect( manager.getPresenter()).toBeNull()
+	expect( manager.getPresenter()).toBe("")
 
 	manager.setPresenter( jakub.attendeeId )
-	expect( manager.getPresenter()).toBe( jakub )
+	expect( manager.getPresenter() == jakub.attendeeId ).toBe( true )
 
  	manager.unsetPresenter()
- 	expect( manager.getPresenter()).toBeNull()
+ 	expect( manager.getPresenter()).toBe("")
 
 	manager.setPresenter( tom.attendeeId )
-	expect( manager.getPresenter()).toBe( tom )
+	expect( manager.getPresenter() == tom.attendeeId ).toBe( true )
 
  	manager.unsetPresenter()
- 	expect( manager.getPresenter()).toBeNull()
+ 	expect( manager.getPresenter()).toBe("")
+})
+
+test('AttendeeMap shareContent', async () => {
+	let manager = new AttendeeManager()
+
+	let tom = new Attendee('1')
+	manager.attendeePresenceMap.set( tom.attendeeId, tom )
+	expect( manager.shareContent( tom.attendeeId )).toBeFalsy()
+
+	let tomContent = new Attendee('1#content')
+	manager.attendeePresenceMap.set( tomContent.attendeeId, tomContent )
+	expect( manager.shareContent( tom.attendeeId )).toBeTruthy()
+
+	manager.attendeePresenceMap.delete( tomContent.attendeeId)
+	expect( manager.shareContent( tom.attendeeId )).toBeFalsy()
+
+	manager.attendeePresenceMap.delete( tom.attendeeId)
+	expect( manager.shareContent( tom.attendeeId )).toBeFalsy()
 })

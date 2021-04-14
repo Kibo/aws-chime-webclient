@@ -20,6 +20,11 @@
 														<button type="button" class="btn btn-sm"
 															v-bind:class="attendeeManager.isPresenter( attendee.attendeeId ) ? 'btn-success' :'btn-outline-secondary'"
 															v-on:click.prevent="presenterChanged(attendee.attendeeId)">presenter</button>
+														<button type="button" class="btn btn-sm"
+															v-bind:class="attendeeManager.shareContent( attendee.attendeeId ) ? 'btn-danger' :'btn-outline-secondary'"
+																v-on:click.prevent="unshare(attendee.attendeeId)" >stop sharing</button>
+														<button type="button" class="btn btn-sm btn-outline-danger"
+															v-on:click.prevent="detachAttendee(attendee.attendeeId)">detach</button>
 												</div>
 										</td>
 								</tr>
@@ -109,7 +114,15 @@
 import Utils from "../tools/Utils.js"
 
 export default {
-	emits: ['setPresenter', 'unsetPresenter', 'systemMessage', 'fpsChanged', 'foregroundChanged', 'backgroundChanged'],
+	emits: [
+		'setPresenter',
+		'unsetPresenter',
+		'systemMessage',
+		'fpsChanged',
+		'foregroundChanged',
+		'backgroundChanged',
+		'detachAttendee',
+		'unshareContent'],
 	props: ['attendeeManager'],
 	data() {
 			return {
@@ -126,7 +139,7 @@ export default {
 			/*
 			* Presenter changed - handler
 			*
-			* @param {Number} attendeeId
+			* @param {String} attendeeId
 			*/
 			presenterChanged( attendeeId ){
 
@@ -140,6 +153,25 @@ export default {
 				}
 			},
 
+			/*
+			* Detach attendee - handler
+			*
+			* @param {String} attendeeId
+			*/
+			detachAttendee( attendeeId ){
+				this.$emit('detachAttendee', attendeeId )
+				this.$emit('systemMessage', Utils.getConstant('SYSTEM_COMMAND_DETACH_ATTENDEE') + Utils.getConstant('COMMAND_DELIMITER') + attendeeId )
+			},
+
+			/*
+			* Stop sharing content - handler
+			*
+			* @param {String} attendeeId
+			*/
+			unshare( attendeeId ){
+				this.$emit('unshareContent', attendeeId )
+				this.$emit('systemMessage', Utils.getConstant('SYSTEM_COMMAND_UNSHARE_CONTENT') + Utils.getConstant('COMMAND_DELIMITER') + attendeeId )
+			},
 			/*
 			* Fps changed - handler
 			*/

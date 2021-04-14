@@ -1,5 +1,5 @@
 <template>
-
+  PDF viewer
 </template>
 
 <script>
@@ -9,16 +9,15 @@ import { PDFJS } from 'pdfjs-dist'
 export default {
   components: {},
 	emits: [],
-	props: [],
+	props: ['file'],
 	data() {
 			return {
 				utils:Utils,
 			  logger:this.$store.state.logger
-        pathToPdfFile:'/assets/testa.pdf'
 			}
 	},
 	mounted() {
-      PDFJS.getDocument( pathToPdfFile )
+      PDFJS.getDocument( this.file )
   },
 	beforeUnmount(){
 

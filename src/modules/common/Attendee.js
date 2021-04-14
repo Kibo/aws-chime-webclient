@@ -86,6 +86,15 @@ class AttendeeManager{
 	}
 
 	/*
+	* Share content?
+	*
+	* @returns {boolean}
+	*/
+	shareContent( attendeeId ){
+		let contentId = attendeeId + "#content"
+		return this.attendeePresenceMap.get( contentId ) ? true : false
+	}
+	/*
 	*
 	* @returns {TileState | null}
 	*/

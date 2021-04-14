@@ -235,6 +235,28 @@ export const SYSTEM_COMMAND_UNSET_PRESENTER = "unsetPresenter"
 export const SYSTEM_COMMAND_SET_FPS = "setFps"
 
 /**
+ * System command - detechAttendee
+ *
+ * usage:
+ * detechAttendee#attendeeId
+ *
+ * @constant
+ * @type {string}
+ */
+export const SYSTEM_COMMAND_DETACH_ATTENDEE = "detachAttendee"
+
+/**
+ * System command - unshareContent
+ *
+ * usage:
+ * unshareContent#attendeeId
+ *
+ * @constant
+ * @type {string}
+ */
+export const SYSTEM_COMMAND_UNSHARE_CONTENT = "unshareContent"
+
+/**
  * System command - setFCanvasFg
  *
  * usage:

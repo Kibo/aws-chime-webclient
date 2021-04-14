@@ -6,7 +6,15 @@
 import Utils from "../tools/Utils.js"
 
 export default {
-	emits: ['setPresenter', 'unsetPresenter', 'showChatMessage', 'setFps', 'setCanvasBg', 'setCanvasFg'],
+	emits: [
+		'setPresenter',
+		'unsetPresenter',
+		'showChatMessage',
+		'setFps',
+		'detachAttendee',
+		'unshareContent',
+		'setCanvasBg',
+		'setCanvasFg'],
 	props: ['meetingSession','attendeeManager'],
 	data() {
 		return {
@@ -72,6 +80,12 @@ export default {
 					break
 				case Utils.getConstant('SYSTEM_COMMAND_SET_FPS'):
 					this.$emit('setFps', value)
+					break
+				case Utils.getConstant('SYSTEM_COMMAND_DETACH_ATTENDEE'):
+					this.$emit('detachAttendee', value)
+					break
+				case Utils.getConstant('SYSTEM_COMMAND_UNSHARE_CONTENT'):
+					this.$emit('unshareContent', value)
 					break
 				case Utils.getConstant('SYSTEM_COMMAND_SET_CANVAS_FG'):
 					this.$emit('setCanvasFg', value)

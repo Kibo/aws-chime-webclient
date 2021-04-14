@@ -74,6 +74,8 @@
 				v-bind:attendeeManager="attendeeManager"
 				v-on:setPresenter="setPresenter"
 				v-on:unsetPresenter="unsetPresenter"
+				v-on:detachAttendee="detachAttendee"
+				v-on:unshareContent="unshareContent"
 				v-on:fpsChanged="setFps"
 				v-on:backgroundChanged="setCanvasBg"
 				v-on:foregroundChanged="setCanvasFg"
@@ -119,6 +121,8 @@
 		v-on:setPresenter="setPresenter"
 		v-on:unsetPresenter="unsetPresenter"
 		v-on:setFps="setFps"
+		v-on:detachAttendee="detachAttendee"
+		v-on:unshareContent="unshareContent"
 		v-on:setCanvasFg="setCanvasFg"
 		v-on:setCanvasBg="setCanvasBg"
 		v-on:showChatMessage="showChatMessage" />
@@ -226,10 +230,14 @@ export default {
 		    	}
 
 			}else{
-				this.meetingSession.audioVideo.stopLocalVideoTile();
-				this.meetingSession.audioVideo.removeLocalVideoTile();
-				this.isVideo = false
+					this.stopLocalVideo()
 			}
+		},
+
+		stopLocalVideo(){
+			this.meetingSession.audioVideo.stopLocalVideoTile();
+			this.meetingSession.audioVideo.removeLocalVideoTile();
+			this.isVideo = false
 		},
 
 		/*
@@ -244,8 +252,7 @@ export default {
 				if( this.isShare ){
 					await this.meetingSession.audioVideo.startContentShareFromScreenCapture();
 				}else{
-					await this.meetingSession.audioVideo.stopContentShare();
-					this.isShare = false
+					this.stopSharing()
 				}
 			}catch(e){
 						this.logger.warn(e)
@@ -254,10 +261,17 @@ export default {
 			return
 		},
 
+		async stopSharing(){
+			await this.meetingSession.audioVideo.stopContentShare();
+			this.isShare = false
+		},
+
 		/*
 		 * User click to Leave button
 		 */
 		leaveMeeting(){
+			this.stopLocalVideo()
+			this.stopSharing()
 			this.meetingSession.audioVideo.stop()
 			this.logger.warn('a user leave the session')
 		},
@@ -373,6 +387,30 @@ export default {
 
 		setFps(value){
 			this.$store.commit('canvasSetting', {fps:value})
+		},
+
+		/*
+		* Detach attendee from meeting - handler
+		*
+		* @params {String} - attendeeId
+		*/
+		detachAttendee( attendeeId ){
+				if( attendeeId == this.localAttendeeId ){
+					this.logger.warn("Moderator detach attendee from the session. AtendeeId: " + attendeeId)
+					this.$emit('endSession')
+				}
+		},
+
+		/*
+		* Stop sharing content - handler
+		*
+		* @params {String} - attendeeId
+		*/
+		unshareContent( attendeeId ){
+			if( attendeeId == this.localAttendeeId ){
+				this.logger.warn("Moderator stoped sharing content for attendee: " + attendeeId)
+				this.stopSharing()
+			}
 		},
 
 		setCanvasFg(url){
