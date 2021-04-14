@@ -6,18 +6,29 @@ const logger = new ConsoleLogger('MeetingLogs', LogLevel.WARN);
 const Store = createStore({
 state () {
 	return {
+		logger:logger,
+		title : null,
 		videoInputDeviceId : null,
 		audioInputDeviceId : null,
 		audioOutputDeviceId : null,
 		credentials: {},
-		logger:logger,
-		canvasSetting:{
+		moderatorSetting:{
 			fps:Utils.getConstant('PREZENTATION_CANVAS_FPS'),
 			background:"",
-			foreground:""
+			foreground:"",
+			pdf:"",
+			video:"",
+			isPublicChat:false
+		},
+		pdfDocument:{
+			currentPageIndex:0
 		}
 	}
 }, mutations: {
+	title(state, title){
+		state.title = title
+	},
+
 	credentials(state, credentials){
 		state.credentials = credentials
 	},
@@ -34,19 +45,31 @@ state () {
 		state.audioOutputDeviceId = deviceId
 	},
 
-	canvasSetting(state, canvasSetting) {
-		if( canvasSetting.fps ){
+	moderatorSetting(state, moderatorSetting) {
+		if( moderatorSetting.fps ){
 				let min = 1
 				let max = 60
-				state.canvasSetting.fps = Math.min( Math.max(parseInt( canvasSetting.fps ), min), max);
+				state.moderatorSetting.fps = Math.min( Math.max(parseInt( moderatorSetting.fps ), min), max);
 		}
 
-		if( typeof canvasSetting.background === 'string' ){
-				state.canvasSetting.background = canvasSetting.background
+		if( typeof moderatorSetting.background === 'string' ){
+				state.moderatorSetting.background = moderatorSetting.background
 		}
 
-		if( typeof canvasSetting.foreground === 'string' ){
-				state.canvasSetting.foreground = canvasSetting.foreground
+		if( typeof moderatorSetting.foreground === 'string' ){
+				state.moderatorSetting.foreground = moderatorSetting.foreground
+		}
+
+		if( typeof moderatorSetting.pdf === 'string' ){
+				state.moderatorSetting.pdf = moderatorSetting.pdf
+		}
+
+		if( typeof moderatorSetting.video === 'string' ){
+				state.moderatorSetting.video = moderatorSetting.video
+		}
+
+		if( typeof moderatorSetting.isPublicChat === 'boolean' ){
+				state.moderatorSetting.isPublicChat = moderatorSetting.isPublicChat
 		}
 	}
 },
@@ -59,7 +82,6 @@ getters: {
 			if(state.credentials.attendee){
 					return state.credentials.attendee.AttendeeId
 			}
-
     },
 		externalUserId(state) {
 			if(state.credentials.attendee){

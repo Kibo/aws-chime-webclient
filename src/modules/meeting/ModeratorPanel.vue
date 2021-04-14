@@ -37,7 +37,7 @@
 							<label>Foreground</label>
 							<div class="input-group input-group-sm mb-3">
 									<div class="input-group-prepend">
-	    							<span class="input-group-text">{{$store.state.canvasSetting.foreground ? $store.state.canvasSetting.foreground : 'Empty slot' }}</span>
+	    							<span class="input-group-text">{{$store.state.moderatorSetting.foreground ? $store.state.moderatorSetting.foreground : 'Empty slot' }}</span>
 	  							</div>
 									<input type="text" class="form-control" placeholder="Image url | empty"
 										v-model.trim="foreground" >
@@ -52,7 +52,7 @@
 							<label>Background</label>
 							<div class="input-group input-group-sm mb-3">
 									<div class="input-group-prepend">
-	    							<span class="input-group-text">{{$store.state.canvasSetting.background ? $store.state.canvasSetting.background : 'Empty slot'}}</span>
+	    							<span class="input-group-text">{{$store.state.moderatorSetting.background ? $store.state.moderatorSetting.background : 'Empty slot'}}</span>
 	  							</div>
 									<input type="text" class="form-control" placeholder="Image url | empty"
 										v-model.trim="background">
@@ -67,53 +67,78 @@
 							<label>PDF</label>
 							<div class="input-group input-group-sm mb-3">
 									<div class="input-group-prepend">
-	    							<span class="input-group-text">http://abc.cz/abc/cde/abc.pdf (TODO)</span>
+	    							<span class="input-group-text">{{$store.state.moderatorSetting.pdf ? $store.state.moderatorSetting.pdf : 'Empty slot'}}</span>
 	  							</div>
-									<input type="text" class="form-control">
-									<div class="input-group-append">
-										<button class="btn btn-outline-secondary btn-sm" type="button" >Set</button>
-									</div>
-							</div>
-					  </div>
-
-						<div class="form-group">
-							<label>Youtube</label>
-							<div class="input-group input-group-sm mb-3">
-									<div class="input-group-prepend">
-	    							<span class="input-group-text">https://youtu.be/dsODRfCMRoM (TODO)</span>
-	  							</div>
-									<input type="text" class="form-control">
-									<div class="input-group-append">
-										<button class="btn btn-outline-secondary btn-sm" type="button" >Set</button>
-									</div>
-							</div>
-					  </div>
-
-						<div class="form-group">
-							<label>Fps</label>
-							<div class="input-group input-group-sm mb-3">
-									<div class="input-group-prepend">
-	    							<span class="input-group-text">Fps: {{$store.state.canvasSetting.fps}}</span>
-	  							</div>
-									<input type="number" step="1" min="1" max="60" class="form-control" placeholder="Number: 1 - 60"
-										v-model.trim="fps" >
+									<input type="text" class="form-control" placeholder="PDF url | empty"
+										v-model.trim="pdf">
 									<div class="input-group-append">
 										<button class="btn btn-outline-secondary btn-sm" type="button"
-											v-on:click.prevent="setFps" >Set</button>
+											v-on:click.prevent="setPdf" >Set</button>
 									</div>
 							</div>
 					  </div>
 
+						<div class="form-group">
+							<label>Video</label>
+							<div class="input-group input-group-sm mb-3">
+									<div class="input-group-prepend">
+	    							<span class="input-group-text">{{$store.state.moderatorSetting.video ? $store.state.moderatorSetting.video : 'Empty slot'}}</span>
+	  							</div>
+									<input type="text" class="form-control" placeholder="Video url | empty"
+										v-model.trim="video">
+									<div class="input-group-append">
+										<button class="btn btn-outline-secondary btn-sm" type="button"
+											v-on:click.prevent="setVideo">Set</button>
+									</div>
+							</div>
+					  </div>
+
+						<div class="form-row">
+							<div class="col">
+									<div class="form-group">
+										<label>Fps</label>
+										<div class="input-group input-group-sm mb-3">
+												<div class="input-group-prepend">
+				    							<span class="input-group-text">Fps: {{$store.state.moderatorSetting.fps}}</span>
+				  							</div>
+												<input type="number" step="1" min="1" max="60" class="form-control" placeholder="Number: 1 - 60"
+													v-model.trim="fps" >
+												<div class="input-group-append">
+													<button class="btn btn-outline-secondary btn-sm" type="button"
+														v-on:click.prevent="setFps" >Set</button>
+												</div>
+										</div>
+								  </div>
+							</div>
+							<div class="col">
+									<div class="form-group form-check">
+										<label class="form-check-label" >
+							    			<input type="checkbox" class="form-check-input"
+												v-model="isPublicChat" v-on:change="togglePublicChat()"> is public chat
+							    	</label>
+										<small class="form-text text-muted">Allow people from all over the world send message to this session chat. Dangerous!.</small>
+							  	</div>
+							</div>
+						</div>
 					</div>
 				</div>
 		</div>
 	</div>
+
+	<PDFDocument
+		v-if="$store.state.moderatorSetting.pdf"
+		v-bind:src="$store.state.moderatorSetting.pdf" />
+
 </template>
 
 <script>
 import Utils from "../tools/Utils.js"
+import PDFDocument from "../pdf/PDFDocument.vue"
 
 export default {
+	components: {
+			PDFDocument
+	},
 	emits: [
 		'setPresenter',
 		'unsetPresenter',
@@ -130,10 +155,20 @@ export default {
 				logger:this.$store.state.logger,
 				fps:15,
 				foreground:"",
-				background:""
+				background:"",
+				pdf:"",
+				video:"",
+				isPublicChat:false,
 			}
 	},
-	mounted() {},
+	mounted() {
+		this.fps = this.$store.state.moderatorSetting.fps
+		this.foreground = this.$store.state.moderatorSetting.foreground
+		this.backgound = this.$store.state.moderatorSetting.background
+		this.pdf = this.$store.state.moderatorSetting.pdf
+		this.video = this.$store.state.moderatorSetting.video
+		this.isPublicChat = this.$store.state.moderatorSetting.isPublicChat
+	},
 	beforeUnmount(){},
 	methods:{
 			/*
@@ -196,6 +231,26 @@ export default {
 				this.$emit('systemMessage', Utils.getConstant('SYSTEM_COMMAND_SET_CANVAS_FG') + Utils.getConstant('COMMAND_DELIMITER') + this.foreground )
 			},
 
+			/*
+			* PDF url changed - handler
+			*/
+			setPdf(){
+				this.$store.commit("moderatorSetting", {pdf:this.pdf})
+			},
+
+			/*
+			* Video URL changed - handler
+			*/
+			setVideo(){
+				console.log('set video')
+			},
+
+			/*
+			* Public chat statuch changed - handler
+			*/
+			togglePublicChat(){
+				console.log('toggle public chat')
+			},
 	}
 }
 </script>

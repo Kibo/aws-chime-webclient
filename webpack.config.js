@@ -14,7 +14,7 @@ module.exports = (env = {}) => ({
 	output: {
 		filename: '[name]-chime.js',
 		path: path.resolve(__dirname, "./dist"),
-		publicPath: "/dist/"
+		publicPath: "/"
 	},
 	resolve: {
 		alias: {
@@ -30,6 +30,14 @@ module.exports = (env = {}) => ({
       {
         test: /\.vue$/,
         use: "vue-loader"
+      },
+			{
+        test: /\.worker\.js$/,
+	      loader: "worker-loader",
+				options: {
+					filename: '[name].js',
+					esModule: false,
+				}
       },
       {
         test: /\.png$/,
@@ -58,6 +66,6 @@ module.exports = (env = {}) => ({
     new VueLoaderPlugin(),
     new MiniCssExtractPlugin({
       filename: "[name].css"
-    })    	     
+    })
   ]
 });

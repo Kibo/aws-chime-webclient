@@ -170,6 +170,14 @@ export const PREZENTATION_CANVAS_PADDING_LEFT = 50
  */
 export const PREZENTATION_CANVAS_PADDING_RIGHT = 50
 
+/**
+ * The canvas ID
+ *
+ * @constant
+ * @type {string}
+ */
+export const ID_ELEMENT_FOR_PDF_CANVAS = "cz-kibo-meeting-chime-client-pdf-canvas";
+
 // ## MESSAGING #######################################
 
 /**

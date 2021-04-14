@@ -75,16 +75,16 @@ export default {
   computed: {
     delay(){
       frame = -1
-      return 1000/ this.$store.state.canvasSetting.fps
+      return 1000/ this.$store.state.moderatorSetting.fps
     },
     background(){
-      return this.$store.state.canvasSetting.background
+      return this.$store.state.moderatorSetting.background
     },
     foreground(){
-      return this.$store.state.canvasSetting.foreground
+      return this.$store.state.moderatorSetting.foreground
     },
     isForeground(){
-      return this.$store.state.canvasSetting.foreground ? true : false
+      return this.$store.state.moderatorSetting.foreground ? true : false
     },
     countOfTiles(){
       return this.attendeeManager.tileMap.size
@@ -98,16 +98,16 @@ export default {
   },
   watch: {
     background (newBg, oldBg) {
-        this.drawImageFromURL( this.bgCtx, this.$store.state.canvasSetting.background)
+        this.drawImageFromURL( this.bgCtx, this.$store.state.moderatorSetting.background)
     },
     foreground (newFg, oldFg) {
-      this.drawImageFromURL( this.fgCtx, this.$store.state.canvasSetting.foreground)
+      this.drawImageFromURL( this.fgCtx, this.$store.state.moderatorSetting.foreground)
     },
     countOfTiles (newBg, oldBg) {
-        this.drawImageFromURL( this.bgCtx, this.$store.state.canvasSetting.background)
+        this.drawImageFromURL( this.bgCtx, this.$store.state.moderatorSetting.background)
     },
     presenter (newP, oldP) {
-        this.drawImageFromURL( this.bgCtx, this.$store.state.canvasSetting.background)
+        this.drawImageFromURL( this.bgCtx, this.$store.state.moderatorSetting.background)
     }
   },
 	methods:{

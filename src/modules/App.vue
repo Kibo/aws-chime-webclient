@@ -42,7 +42,7 @@ export default {
     DeviceConfigurator,
     Session
   },
-  props: ['meeting'],
+  props: ['meeting', 'title'],
   data() {
     return {
     	utils:Utils,
@@ -51,6 +51,9 @@ export default {
     	logger:this.$store.state.logger
     }
   },
+	mounted(){
+		this.title ? this.$store.commit('title', this.title) : this.$store.commit('title', "AWS Chime")
+	},
   methods: {
     /*
   	 * This handler is called after the LoginForm send a valid credentials from server.
@@ -103,5 +106,14 @@ body {
 	min-height: 100%;
 	background: rgb(63,181,30);
 	background: linear-gradient(180deg, rgba(63,181,30,1) 20%, rgba(14,117,0,1) 80%);
+}
+
+.hiddeVideoTile {
+	position:fixed;
+  top:0;
+  left:0;
+  width:1px;
+  height:1px;
+  overflow: hidden;
 }
 </style>

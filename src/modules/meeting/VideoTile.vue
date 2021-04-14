@@ -73,13 +73,3 @@ export default {
 	}
 }
 </script>
-<style lang="stylus">
-.hiddeVideoTile {
-	position:fixed;
-  top:0;
-  left:0;
-  width:1px;
-  height:1px;
-  overflow: hidden;
-}
-</style>

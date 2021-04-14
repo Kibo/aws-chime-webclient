@@ -1,7 +1,7 @@
 <template>
 
 	<nav class="navbar sticky-top navbar-expand-sm navbar-light bg-light mb-1">
-		<span class="navbar-brand d-none d-sm-block" >AWS Chime</span>
+		<span class="navbar-brand d-none d-sm-block" >{{$store.state.title}}</span>
 
 		<ul class="navbar-nav mr-auto">
 
@@ -93,6 +93,15 @@
 		</div>
 	</div>
 
+	<div class="row mb-1">
+		<div class="col text-center">
+				<div class="btn-group btn-group-sm mx-auto">
+					<button class="btn btn-secondary" v-on:click.prevent="PDFPrevPage()">Prev</button>
+					<button class="btn btn-secondary" v-on:click.prevent="PDFNextPage()">Next</button>
+				</div>
+		</div>
+	</div>
+
 	<div class="row">
 		<div class="col">
 			<ChatPanel
@@ -173,7 +182,7 @@ export default {
 				uplink:0,
 				downlink:0,
 
-				attendeeManager:new AttendeeManager(),
+				attendeeManager:new AttendeeManager()
 			}
 	},
 
@@ -250,7 +259,21 @@ export default {
 
 			try{
 				if( this.isShare ){
-					await this.meetingSession.audioVideo.startContentShareFromScreenCapture();
+
+					// Share PDF
+					if(this.$store.state.moderatorSetting.pdf){
+							let canvas = document.getElementById(Utils.getConstant('ID_ELEMENT_FOR_PDF_CANVAS'))
+
+							if(!canvas){
+								this.logger.warn("PDF Canvas not found. #ID" + Utils.getConstant('ID_ELEMENT_FOR_PDF_CANVAS'))
+							}
+							await this.meetingSession.audioVideo.startContentShare( canvas.captureStream() );
+
+					}else{
+						// Share screen
+						await this.meetingSession.audioVideo.startContentShareFromScreenCapture();
+					}
+
 				}else{
 					this.stopSharing()
 				}
@@ -386,7 +409,7 @@ export default {
 		},
 
 		setFps(value){
-			this.$store.commit('canvasSetting', {fps:value})
+			this.$store.commit('moderatorSetting', {fps:value})
 		},
 
 		/*
@@ -414,11 +437,11 @@ export default {
 		},
 
 		setCanvasFg(url){
-			this.$store.commit('canvasSetting', {foreground:url})
+			this.$store.commit('moderatorSetting', {foreground:url})
 		},
 
 		setCanvasBg(url){
-			this.$store.commit('canvasSetting', {background:url})
+			this.$store.commit('moderatorSetting', {background:url})
 		},
 
 		// ###################################
@@ -463,6 +486,17 @@ export default {
 		*/
 		videoTileWasRemoved( tileId ){
 			this.attendeeManager.tileMap.delete( tileId );
+		},
+
+		// ###################################
+		// ## PDFDocument - handlers
+		// ###################################
+		PDFPrevPage(){
+			console.log("prev")
+		},
+
+		PDFNextPage(){
+			console.log("next")
 		}
 	}
 }
