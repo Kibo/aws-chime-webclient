@@ -14,7 +14,8 @@ export default {
 		'detachAttendee',
 		'unshareContent',
 		'setCanvasBg',
-		'setCanvasFg'],
+		'setCanvasFg',
+		'setPdfPageIndex'],
 	props: ['meetingSession','attendeeManager'],
 	data() {
 		return {
@@ -92,6 +93,9 @@ export default {
 					break
 				case Utils.getConstant('SYSTEM_COMMAND_SET_CANVAS_BG'):
 					this.$emit('setCanvasBg', value)
+					break
+				case Utils.getConstant('SYSTEM_COMMAND_SET_PDF_PAGE_INDEX'):				
+					this.$emit('setPdfPageIndex', value)
 					break
 				default:
 					this.logger.warn( 'Unknown command ' +  command)

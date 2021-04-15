@@ -287,6 +287,17 @@ export const SYSTEM_COMMAND_SET_CANVAS_FG = "setCanvasFg"
 export const SYSTEM_COMMAND_SET_CANVAS_BG = "setCanvasBg"
 
 /**
+ * System command - setPdfPageIdx
+ *
+ * usage:
+ * setPdfPageIdx#NUmber
+ *
+ * @constant
+ * @type {string}
+ */
+export const SYSTEM_COMMAND_SET_PDF_PAGE_INDEX = "setPdfPageIdx"
+
+/**
  * Chat command - sendMessage
  *
  * usage:

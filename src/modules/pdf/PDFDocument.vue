@@ -19,12 +19,34 @@ export default {
     return {
     	utils:Utils,
 
-      currentPageIndex:0,
       pdf:undefined,
       totalPagesCount:0,
 
       canvas:null,
       ctx:null,
+    }
+  },
+  computed: {
+    currentPageIndex(){
+      let idx = this.$store.state.moderatorSetting.pdfCurrentPageIndex
+
+      if( idx > this.totalPagesCount - 1 ){
+        this.$store.commit('moderatorSetting',{pdfCurrentPageIndex: this.totalPagesCount - 1})
+        return
+      }
+
+      if( idx < 0 ){
+        this.$store.commit('moderatorSetting',{pdfCurrentPageIndex:0})
+        return
+      }
+
+      return this.$store.state.moderatorSetting.pdfCurrentPageIndex
+    },
+
+  },
+  watch: {
+    currentPageIndex ( idx ) {      
+      this.render()
     }
   },
   mounted() {
@@ -36,30 +58,6 @@ export default {
     this.pdf.destroy()
   },
   methods: {
-    /*
-    * Render next page - handler
-    */
-    nextPage(){
-      this.currentPageIndex++
-      if( this.currentPageIndex > this.totalPagesCount - 1 ){
-        this.currentPageIndex = this.totalPagesCount - 1
-      }
-
-      this.render()
-    },
-
-    /*
-    * Render previous page - handler
-    */
-    prevPage(){
-      this.currentPageIndex--
-      if( this.currentPageIndex < 0 ){
-        this.currentPageIndex = 0
-      }
-
-      this.render()
-    },
-
     /*
     * Fetch PDF file fomr server
     */

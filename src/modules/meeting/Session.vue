@@ -95,10 +95,9 @@
 
 	<div class="row mb-1">
 		<div class="col text-center">
-				<div class="btn-group btn-group-sm mx-auto">
-					<button class="btn btn-secondary" v-on:click.prevent="PDFPrevPage()">Prev</button>
-					<button class="btn btn-secondary" v-on:click.prevent="PDFNextPage()">Next</button>
-				</div>
+				<PDFNavbar
+					v-on:sendSystemMessage="sendSystemMessage"
+					v-on:pdfPageIndexChanged="setPdfPageIndex" />
 		</div>
 	</div>
 
@@ -134,6 +133,7 @@
 		v-on:unshareContent="unshareContent"
 		v-on:setCanvasFg="setCanvasFg"
 		v-on:setCanvasBg="setCanvasBg"
+		v-on:setPdfPageIndex="setPdfPageIndex"
 		v-on:showChatMessage="showChatMessage" />
 
 </template>
@@ -142,6 +142,7 @@
 import AlertMessage from "../common/AlertMessage.vue"
 import ModeratorPanel from "./ModeratorPanel.vue"
 import ChatPanel from "./ChatPanel.vue"
+import PDFNavbar from "../pdf/PDFNavbar.vue"
 import VideoTileContainer from "./VideoTileContainer.vue"
 import ContentShareObserver from "../observers/ContentShareObserver.vue"
 import AttendeePresenceObserver from "../observers/AttendeePresenceObserver.vue"
@@ -160,7 +161,8 @@ export default {
 		ContentShareObserver,
 		AttendeePresenceObserver,
 		AudioVideoObserver,
-		MessagingObserver
+		MessagingObserver,
+		PDFNavbar
 	},
 	emits: ['configureDevices', 'endSession'],
 	props: ['meetingSession'],
@@ -444,6 +446,12 @@ export default {
 			this.$store.commit('moderatorSetting', {background:url})
 		},
 
+		setPdfPageIndex( idx ){
+			this.$store.commit('moderatorSetting', {pdfCurrentPageIndex:idx})
+			console.log('set ' + idx)
+			console.log('store ' + JSON.stringify(this.$store.state.moderatorSetting))
+    },
+
 		// ###################################
 		// ## Handlers from audioVideoObserver
 		// ###################################
@@ -486,17 +494,6 @@ export default {
 		*/
 		videoTileWasRemoved( tileId ){
 			this.attendeeManager.tileMap.delete( tileId );
-		},
-
-		// ###################################
-		// ## PDFDocument - handlers
-		// ###################################
-		PDFPrevPage(){
-			console.log("prev")
-		},
-
-		PDFNextPage(){
-			console.log("next")
 		}
 	}
 }

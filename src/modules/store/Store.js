@@ -17,12 +17,10 @@ state () {
 			background:"",
 			foreground:"",
 			pdf:"",
+			pdfCurrentPageIndex:0,
 			video:"",
 			isPublicChat:false
 		},
-		pdfDocument:{
-			currentPageIndex:0
-		}
 	}
 }, mutations: {
 	title(state, title){
@@ -70,6 +68,10 @@ state () {
 
 		if( typeof moderatorSetting.isPublicChat === 'boolean' ){
 				state.moderatorSetting.isPublicChat = moderatorSetting.isPublicChat
+		}
+
+		if( typeof moderatorSetting.pdfCurrentPageIndex === 'number' ){
+				state.moderatorSetting.pdfCurrentPageIndex = moderatorSetting.pdfCurrentPageIndex
 		}
 	}
 },
