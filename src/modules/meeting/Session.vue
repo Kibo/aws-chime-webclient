@@ -95,9 +95,11 @@
 
 	<div class="row mb-1">
 		<div class="col text-center">
-				<PDFNavbar
-					v-on:sendSystemMessage="sendSystemMessage"
-					v-on:pdfPageIndexChanged="setPdfPageIndex" />
+			<PDFNavbar
+				v-bind:isPresenter="attendeeManager.isPresenter(localAttendeeId)"
+				v-bind:pageIndex="pdfPageIndex"
+				v-on:sendSystemMessage="sendSystemMessage"
+				v-on:pdfPageIndexChanged="setPdfPageIndex"	/>
 		</div>
 	</div>
 
@@ -142,15 +144,14 @@
 import AlertMessage from "../common/AlertMessage.vue"
 import ModeratorPanel from "./ModeratorPanel.vue"
 import ChatPanel from "./ChatPanel.vue"
-import PDFNavbar from "../pdf/PDFNavbar.vue"
 import VideoTileContainer from "./VideoTileContainer.vue"
 import ContentShareObserver from "../observers/ContentShareObserver.vue"
 import AttendeePresenceObserver from "../observers/AttendeePresenceObserver.vue"
 import AudioVideoObserver from "../observers/AudioVideoObserver.vue"
 import MessagingObserver from "../observers/MessagingObserver.vue"
-
 import {AttendeeManager} from "../common/Attendee.js"
 import Utils from "../tools/Utils.js"
+import PDFNavbar from "../pdf/PDFNavbar.vue"
 
 export default {
 	components: {
@@ -184,7 +185,9 @@ export default {
 				uplink:0,
 				downlink:0,
 
-				attendeeManager:new AttendeeManager()
+				attendeeManager:new AttendeeManager(),
+
+				pdfPageIndex:0
 			}
 	},
 
@@ -270,6 +273,9 @@ export default {
 								this.logger.warn("PDF Canvas not found. #ID" + Utils.getConstant('ID_ELEMENT_FOR_PDF_CANVAS'))
 							}
 							await this.meetingSession.audioVideo.startContentShare( canvas.captureStream() );
+
+							// redraw canvas
+							this.setPdfPageIndex( -1 )
 
 					}else{
 						// Share screen
@@ -447,9 +453,7 @@ export default {
 		},
 
 		setPdfPageIndex( idx ){
-			this.$store.commit('moderatorSetting', {pdfCurrentPageIndex:idx})
-			console.log('set ' + idx)
-			console.log('store ' + JSON.stringify(this.$store.state.moderatorSetting))
+			this.pdfPageIndex = idx
     },
 
 		// ###################################

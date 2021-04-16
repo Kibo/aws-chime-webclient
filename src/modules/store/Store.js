@@ -17,7 +17,6 @@ state () {
 			background:"",
 			foreground:"",
 			pdf:"",
-			pdfCurrentPageIndex:0,
 			video:"",
 			isPublicChat:false
 		},
@@ -68,10 +67,6 @@ state () {
 
 		if( typeof moderatorSetting.isPublicChat === 'boolean' ){
 				state.moderatorSetting.isPublicChat = moderatorSetting.isPublicChat
-		}
-
-		if( typeof moderatorSetting.pdfCurrentPageIndex === 'number' ){
-				state.moderatorSetting.pdfCurrentPageIndex = moderatorSetting.pdfCurrentPageIndex
 		}
 	}
 },

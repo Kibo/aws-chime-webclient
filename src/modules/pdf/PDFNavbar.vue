@@ -1,21 +1,30 @@
 <template>
-  <div class="btn-group btn-group-sm mx-auto">
+
+  <div class="btn-group btn-group-sm mx-auto"
+    v-if="isPresenter">
     <button class="btn btn-secondary" v-on:click.prevent="PDFPrevPage()">Prev</button>
     <button class="btn btn-secondary" v-on:click.prevent="PDFNextPage()">Next</button>
   </div>
+
+  <PDFDocument
+    v-if="$store.state.moderatorSetting.pdf"
+    v-bind:pageIndex="pageIndex"
+    v-bind:src="$store.state.moderatorSetting.pdf" />
 </template>
 
 <script>
 import Utils from "../tools/Utils.js"
+import PDFDocument from "./PDFDocument.vue"
 
 export default {
-  components: {},
+  components: {
+    PDFDocument
+  },
   emits:['sendSystemMessage', 'pdfPageIndexChanged'],
-  props: [],
+  props: ['pageIndex', 'isPresenter'],
   data() {
     return {
     	utils:Utils,
-
     }
   },
   computed: {},
@@ -24,13 +33,13 @@ export default {
 	beforeUnmount(){},
   methods: {
     PDFPrevPage(){
-      let idx = this.$store.state.moderatorSetting.pdfCurrentPageIndex - 1
+      let idx = parseInt(this.pageIndex, 10) - 1
       this.$emit('pdfPageIndexChanged', idx)
       this.$emit('sendSystemMessage', Utils.getConstant('SYSTEM_COMMAND_SET_PDF_PAGE_INDEX') + Utils.getConstant('COMMAND_DELIMITER') + idx)
     },
 
     PDFNextPage(){
-      let idx = this.$store.state.moderatorSetting.pdfCurrentPageIndex + 1
+      let idx = parseInt(this.pageIndex, 10) + 1
       this.$emit('pdfPageIndexChanged', idx)
       this.$emit('sendSystemMessage', Utils.getConstant('SYSTEM_COMMAND_SET_PDF_PAGE_INDEX') + Utils.getConstant('COMMAND_DELIMITER') + idx)
     }

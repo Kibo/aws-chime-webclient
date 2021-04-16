@@ -124,20 +124,14 @@
 				</div>
 		</div>
 	</div>
-
-	<PDFDocument
-		v-if="$store.state.moderatorSetting.pdf"
-		v-bind:src="$store.state.moderatorSetting.pdf" />
-
 </template>
 
 <script>
 import Utils from "../tools/Utils.js"
-import PDFDocument from "../pdf/PDFDocument.vue"
 
 export default {
 	components: {
-			PDFDocument
+
 	},
 	emits: [
 		'setPresenter',

@@ -14,38 +14,35 @@ pdfjs.GlobalWorkerOptions.workerPort = new PdfjsWorker();
 
 export default {
   components: {},
-  props: ['src'],
+  props: ['src', 'pageIndex'],
   data() {
     return {
     	utils:Utils,
 
       pdf:undefined,
       totalPagesCount:0,
+      currentPageIndex:0,
 
       canvas:null,
       ctx:null,
     }
   },
-  computed: {
-    currentPageIndex(){
-      let idx = this.$store.state.moderatorSetting.pdfCurrentPageIndex
-
-      if( idx > this.totalPagesCount - 1 ){
-        this.$store.commit('moderatorSetting',{pdfCurrentPageIndex: this.totalPagesCount - 1})
-        return
-      }
-
-      if( idx < 0 ){
-        this.$store.commit('moderatorSetting',{pdfCurrentPageIndex:0})
-        return
-      }
-
-      return this.$store.state.moderatorSetting.pdfCurrentPageIndex
-    },
-
-  },
   watch: {
-    currentPageIndex ( idx ) {      
+    pageIndex ( newIdx, oldIdx) {
+      if(oldIdx > newIdx){
+        this.currentPageIndex--
+      }else{
+        this.currentPageIndex++
+      }
+
+      if( this.currentPageIndex > this.totalPagesCount - 1 ){
+        this.currentPageIndex = this.totalPagesCount - 1
+      }
+
+      if( this.currentPageIndex < 0 ){
+        this.currentPageIndex = 0
+      }
+
       this.render()
     }
   },
