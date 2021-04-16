@@ -15,7 +15,9 @@ export default {
 		'unshareContent',
 		'setCanvasBg',
 		'setCanvasFg',
-		'setPdfPageIndex'],
+		'setPdfPageIndex',
+		'pdfSharingChanged'],
+		
 	props: ['meetingSession','attendeeManager'],
 	data() {
 		return {
@@ -94,8 +96,11 @@ export default {
 				case Utils.getConstant('SYSTEM_COMMAND_SET_CANVAS_BG'):
 					this.$emit('setCanvasBg', value)
 					break
-				case Utils.getConstant('SYSTEM_COMMAND_SET_PDF_PAGE_INDEX'):				
+				case Utils.getConstant('SYSTEM_COMMAND_SET_PDF_PAGE_INDEX'):
 					this.$emit('setPdfPageIndex', value)
+					break
+				case Utils.getConstant('SYSTEM_COMMAND_IS_PDF_SHARING'):
+					this.$emit('pdfSharingChanged', value)
 					break
 				default:
 					this.logger.warn( 'Unknown command ' +  command)

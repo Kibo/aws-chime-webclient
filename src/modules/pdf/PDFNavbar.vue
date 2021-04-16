@@ -1,7 +1,7 @@
 <template>
 
   <div class="btn-group btn-group-sm mx-auto"
-    v-if="isPresenter">
+    v-if="isNavbarVisible">
     <button class="btn btn-secondary" v-on:click.prevent="PDFPrevPage()">Prev</button>
     <button class="btn btn-secondary" v-on:click.prevent="PDFNextPage()">Next</button>
   </div>
@@ -21,7 +21,7 @@ export default {
     PDFDocument
   },
   emits:['sendSystemMessage', 'pdfPageIndexChanged'],
-  props: ['pageIndex', 'isPresenter'],
+  props: ['pageIndex', 'isNavbarVisible'],
   data() {
     return {
     	utils:Utils,

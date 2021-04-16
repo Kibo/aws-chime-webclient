@@ -287,6 +287,17 @@ export const SYSTEM_COMMAND_SET_CANVAS_FG = "setCanvasFg"
 export const SYSTEM_COMMAND_SET_CANVAS_BG = "setCanvasBg"
 
 /**
+ * System command - isPdfSharing
+ *
+ * usage:
+ * isPdfSharing#Boolean
+ *
+ * @constant
+ * @type {string}
+ */
+export const SYSTEM_COMMAND_IS_PDF_SHARING = "isPdfSharing"
+
+/**
  * System command - setPdfPageIdx
  *
  * usage:

@@ -96,7 +96,7 @@
 	<div class="row mb-1">
 		<div class="col text-center">
 			<PDFNavbar
-				v-bind:isPresenter="attendeeManager.isPresenter(localAttendeeId)"
+				v-bind:isNavbarVisible="isPDFNavbarVisible"
 				v-bind:pageIndex="pdfPageIndex"
 				v-on:sendSystemMessage="sendSystemMessage"
 				v-on:pdfPageIndexChanged="setPdfPageIndex"	/>
@@ -135,6 +135,7 @@
 		v-on:unshareContent="unshareContent"
 		v-on:setCanvasFg="setCanvasFg"
 		v-on:setCanvasBg="setCanvasBg"
+		v-on:pdfSharingChanged="setIsPdfSharing"
 		v-on:setPdfPageIndex="setPdfPageIndex"
 		v-on:showChatMessage="showChatMessage" />
 
@@ -187,6 +188,7 @@ export default {
 
 				attendeeManager:new AttendeeManager(),
 
+				isPdfSharing:false,
 				pdfPageIndex:0
 			}
 	},
@@ -204,6 +206,9 @@ export default {
 	computed: {
 		isAlertsAllowed(){
 			return Utils.getSetting('SUPRESS_ATERTS_DURING_MEETING', this.role) == false
+		},
+		isPDFNavbarVisible(){
+			return this.isPdfSharing && this.attendeeManager.isPresenter( this.localAttendeeId )
 		}
 	},
 	methods:{
@@ -259,40 +264,56 @@ export default {
 		 */
 		async toggleShare(){
 			this.logger.info('toggleShare - handler')
-
 			this.isShare = this.isShare ? false : true
 
 			try{
-				if( this.isShare ){
-
-					// Share PDF
-					if(this.$store.state.moderatorSetting.pdf){
-							let canvas = document.getElementById(Utils.getConstant('ID_ELEMENT_FOR_PDF_CANVAS'))
-
-							if(!canvas){
-								this.logger.warn("PDF Canvas not found. #ID" + Utils.getConstant('ID_ELEMENT_FOR_PDF_CANVAS'))
-							}
-							await this.meetingSession.audioVideo.startContentShare( canvas.captureStream() );
-
-							// redraw canvas
-							this.setPdfPageIndex( -1 )
-
+					if( this.isShare ){
+						this.startSharing()
 					}else{
-						// Share screen
-						await this.meetingSession.audioVideo.startContentShareFromScreenCapture();
+						this.stopSharing()
 					}
-
-				}else{
-					this.stopSharing()
-				}
 			}catch(e){
-						this.logger.warn(e)
+				this.logger.warn(e)
 			}
 
 			return
 		},
 
+		async startSharing(){
+			if(this.$store.state.moderatorSetting.pdf){
+				this.startSharingPDF()
+			}else{
+				this.startSharingScreen()
+			}
+		},
+
+		async startSharingScreen(){
+				await this.meetingSession.audioVideo.startContentShareFromScreenCapture();
+		},
+
+		async startSharingPDF(){
+			let canvas = document.getElementById(Utils.getConstant('ID_ELEMENT_FOR_PDF_CANVAS'))
+
+			if(!canvas){
+				this.logger.warn("PDF Canvas not found. #ID" + Utils.getConstant('ID_ELEMENT_FOR_PDF_CANVAS'))
+			}
+
+			await this.meetingSession.audioVideo.startContentShare( canvas.captureStream() );
+			this.isPdfSharing = true
+			this.sendSystemMessage(Utils.getConstant('SYSTEM_COMMAND_IS_PDF_SHARING') + Utils.getConstant('COMMAND_DELIMITER') + true)
+			this.setPdfPageIndex( -1 ) // redraw canvas
+		},
+
+		stopSharingPDF(){
+			this.isPdfSharing = false
+			this.sendSystemMessage(Utils.getConstant('SYSTEM_COMMAND_IS_PDF_SHARING') + Utils.getConstant('COMMAND_DELIMITER') + false)
+		},
+
 		async stopSharing(){
+			if(this.$store.state.moderatorSetting.pdf){
+				this.stopSharingPDF()
+			}
+
 			await this.meetingSession.audioVideo.stopContentShare();
 			this.isShare = false
 		},
@@ -455,6 +476,10 @@ export default {
 		setPdfPageIndex( idx ){
 			this.pdfPageIndex = idx
     },
+
+		setIsPdfSharing( value ){
+			this.isPdfSharing = (value === 'true') ? true : false
+		},
 
 		// ###################################
 		// ## Handlers from audioVideoObserver
