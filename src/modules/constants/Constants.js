@@ -309,6 +309,27 @@ export const SYSTEM_COMMAND_IS_PDF_SHARING = "isPdfSharing"
 export const SYSTEM_COMMAND_SET_PDF_PAGE_INDEX = "setPdfPageIdx"
 
 /**
+ * System command - isVideoSharing
+ *
+ * usage:
+ * isVideoSharing#Boolean
+ *
+ * @constant
+ * @type {string}
+ */
+export const SYSTEM_COMMAND_IS_VIDEO_SHARING = "isVideoSharing"
+
+/**
+ * System command - isSharedVideoPlay
+ *
+ * usage:
+ * isSharedVideoPlay#Boolean
+ *
+ * @constant
+ * @type {string}
+ */
+export const SYSTEM_COMMAND_SHARED_VIDEO_PLAY = "isSharedVideoPlay"
+/**
  * Chat command - sendMessage
  *
  * usage:

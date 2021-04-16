@@ -99,7 +99,13 @@
 				v-bind:isNavbarVisible="isPDFNavbarVisible"
 				v-bind:pageIndex="pdfPageIndex"
 				v-on:sendSystemMessage="sendSystemMessage"
-				v-on:pdfPageIndexChanged="setPdfPageIndex"	/>
+				v-on:pdfPageIndexChanged="setPdfPageIndex" />
+
+			<VideoNavbar
+				v-bind:isNavbarVisible="isVideoNavbarVisible"
+				v-bind:isVideoPlay="isSharedVideoPlay"
+				v-on:sendSystemMessage="sendSystemMessage"
+				v-on:sharedVideoPlay="toggleSharedVideoPlay" />
 		</div>
 	</div>
 
@@ -137,6 +143,8 @@
 		v-on:setCanvasBg="setCanvasBg"
 		v-on:pdfSharingChanged="setIsPdfSharing"
 		v-on:setPdfPageIndex="setPdfPageIndex"
+		v-on:videoSharingChanged="setIsVideoSharing"
+		v-on:sharedVideoPlay="toggleSharedVideoPlay"
 		v-on:showChatMessage="showChatMessage" />
 
 </template>
@@ -153,6 +161,7 @@ import MessagingObserver from "../observers/MessagingObserver.vue"
 import {AttendeeManager} from "../common/Attendee.js"
 import Utils from "../tools/Utils.js"
 import PDFNavbar from "../pdf/PDFNavbar.vue"
+import VideoNavbar from "../video/VideoNavbar.vue"
 
 export default {
 	components: {
@@ -164,7 +173,8 @@ export default {
 		AttendeePresenceObserver,
 		AudioVideoObserver,
 		MessagingObserver,
-		PDFNavbar
+		PDFNavbar,
+		VideoNavbar
 	},
 	emits: ['configureDevices', 'endSession'],
 	props: ['meetingSession'],
@@ -189,7 +199,10 @@ export default {
 				attendeeManager:new AttendeeManager(),
 
 				isPdfSharing:false,
-				pdfPageIndex:0
+				pdfPageIndex:0,
+
+				isVideoSharing:false,
+				isSharedVideoPlay:false
 			}
 	},
 
@@ -209,6 +222,9 @@ export default {
 		},
 		isPDFNavbarVisible(){
 			return this.isPdfSharing && this.attendeeManager.isPresenter( this.localAttendeeId )
+		},
+		isVideoNavbarVisible(){
+			return this.isVideoSharing && this.attendeeManager.isPresenter( this.localAttendeeId )
 		}
 	},
 	methods:{
@@ -241,7 +257,7 @@ export default {
 
 				try {
 					// TODO
-		      		await this.meetingSession.audioVideo.chooseVideoInputDevice( this.$store.state.videoInputDeviceId );
+		      		await this.meetingSession.audioVideo.setSharedVideoPlaychooseVideoInputDevice( this.$store.state.videoInputDeviceId );
 		      		this.meetingSession.audioVideo.startLocalVideoTile();
 		    	} catch (e) {
 		      		this.logger.error(e)
@@ -282,6 +298,10 @@ export default {
 		async startSharing(){
 			if(this.$store.state.moderatorSetting.pdf){
 				this.startSharingPDF()
+
+			}else if(this.$store.state.moderatorSetting.video){
+				this.startSharingVideo()
+
 			}else{
 				this.startSharingScreen()
 			}
@@ -309,9 +329,24 @@ export default {
 			this.sendSystemMessage(Utils.getConstant('SYSTEM_COMMAND_IS_PDF_SHARING') + Utils.getConstant('COMMAND_DELIMITER') + false)
 		},
 
+		async startSharingVideo(){
+			//TODO
+			this.isVideoSharing = true
+			this.sendSystemMessage(Utils.getConstant('SYSTEM_COMMAND_IS_VIDEO_SHARING') + Utils.getConstant('COMMAND_DELIMITER') + true)
+		},
+
+		stopSharingVideo(){
+			this.isVideoSharing = false
+			this.sendSystemMessage(Utils.getConstant('SYSTEM_COMMAND_IS_VIDEO_SHARING') + Utils.getConstant('COMMAND_DELIMITER') + false)
+		},
+
 		async stopSharing(){
 			if(this.$store.state.moderatorSetting.pdf){
 				this.stopSharingPDF()
+			}
+
+			if(this.$store.state.moderatorSetting.video){
+				this.stopSharingVideo()
 			}
 
 			await this.meetingSession.audioVideo.stopContentShare();
@@ -479,6 +514,14 @@ export default {
 
 		setIsPdfSharing( value ){
 			this.isPdfSharing = (value === 'true') ? true : false
+		},
+
+		setIsVideoSharing( value ){
+			this.isVideoSharing = (value === 'true') ? true : false
+		},
+
+		toggleSharedVideoPlay( value ){
+			this.isSharedVideoPlay = value
 		},
 
 		// ###################################

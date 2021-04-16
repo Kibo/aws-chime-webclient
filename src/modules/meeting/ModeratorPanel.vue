@@ -236,7 +236,7 @@ export default {
 			* Video URL changed - handler
 			*/
 			setVideo(){
-				console.log('set video')
+				this.$store.commit("moderatorSetting", {video:this.video})
 			},
 
 			/*

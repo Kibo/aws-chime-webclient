@@ -58,8 +58,8 @@ export default {
 	},
 	mounted() {
     this.canvas = document.getElementById( Utils.getConstant('ID_ELEMENT_FOR_PREZENTATION_CANVAS') );
-    this.bgCanvas = new OffscreenCanvas(this.canvas.width, this.canvas.height)
-    this.fgCanvas = new OffscreenCanvas(this.canvas.width, this.canvas.height)
+    this.bgCanvas = this.getNewOffscreenCanvasPolyfill()
+    this.fgCanvas = this.getNewOffscreenCanvasPolyfill()
 
     this.ctx = this.canvas.getContext("2d");
     this.bgCtx = this.bgCanvas.getContext('2d');
@@ -258,6 +258,17 @@ export default {
         this.canvas.width,
         this.canvas.height
       )
+    },
+
+    getNewOffscreenCanvasPolyfill(){
+      if (window.OffscreenCanvas) {
+        return new OffscreenCanvas(this.canvas.width, this.canvas.height)
+      }
+
+      let canvas = document.createElement('canvas');
+      canvas.width = this.canvas.width
+      canvas.height = this.canvas.height
+      return canvas
     }
 	}
 }
