@@ -257,7 +257,7 @@ export default {
 
 				try {
 					// TODO
-		      		await this.meetingSession.audioVideo.setSharedVideoPlaychooseVideoInputDevice( this.$store.state.videoInputDeviceId );
+		      		await this.meetingSession.audioVideo.chooseVideoInputDevice( this.$store.state.videoInputDeviceId );
 		      		this.meetingSession.audioVideo.startLocalVideoTile();
 		    	} catch (e) {
 		      		this.logger.error(e)
@@ -517,7 +517,7 @@ export default {
 		},
 
 		setIsVideoSharing( value ){
-			this.isVideoSharing = (value === 'true') ? true : false
+			this.isVideoSharing = value
 		},
 
 		toggleSharedVideoPlay( value ){
