@@ -77,6 +77,24 @@ const Utils = {
 	 */
 	encodeUint8array( array ){
 		return new TextDecoder().decode( array )
+	},
+
+	/*
+	* Convert string to boolean
+	*
+	* @param {String | Boolean}
+	* @returns {boolean}
+	*/
+	value2Boolean( value ){
+		if(typeof value == 'boolean'){
+			return value
+		}
+
+		if(typeof value == 'string'){
+			return (value === 'true') ? true : false
+		}
+
+		throw new Error( "Unknown type of value: " + typeof value );
 	}
 }
 

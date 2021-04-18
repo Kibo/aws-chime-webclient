@@ -41,5 +41,20 @@ test('Get Attendee name', async () => {
 	expect( Utils.getAttendeeName() ).toBe("Unknown")
 	expect( Utils.getAttendeeName('1234')).toBe("Unknown")
 	expect( Utils.getAttendeeName('1234#')).toBe("Unknown")
+})
 
+test('Value to boolean', async () => {
+		expect(Utils.value2Boolean( true )).toBeTruthy()
+		expect(Utils.value2Boolean( false )).toBeFalsy()
+
+		expect(Utils.value2Boolean( 'true' )).toBeTruthy()
+		expect(Utils.value2Boolean( 'false' )).toBeFalsy()
+
+		expect(Utils.value2Boolean( 'abc' )).toBeFalsy()
+
+		try {
+    	expect(Utils.value2Boolean( 123 ))
+  	} catch (error) {
+    	expect(error.toString()).toBe('Error: Unknown type of value: number');
+  	}
 })

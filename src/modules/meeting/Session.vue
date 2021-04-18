@@ -257,12 +257,12 @@ export default {
 
 				try {
 					// TODO
-		      		await this.meetingSession.audioVideo.chooseVideoInputDevice( this.$store.state.videoInputDeviceId );
-		      		this.meetingSession.audioVideo.startLocalVideoTile();
-		    	} catch (e) {
-		      		this.logger.error(e)
-		      		return
-		    	}
+					await this.meetingSession.audioVideo.chooseVideoInputDevice( this.$store.state.videoInputDeviceId );
+		      this.meetingSession.audioVideo.startLocalVideoTile();
+		    } catch (e) {
+		     	this.logger.error(e)
+		      return
+		    }
 
 			}else{
 					this.stopLocalVideo()
@@ -330,7 +330,22 @@ export default {
 		},
 
 		async startSharingVideo(){
-			//TODO
+			let video = document.getElementById(Utils.getConstant('ID_ELEMENT_FOR_PREZENTATION_VIDEO'))
+
+			if(!video){
+				this.logger.warn("Video for prezentation not found. #ID" + Utils.getConstant('ID_ELEMENT_FOR_PREZENTATION_VIDEO'))
+			}
+
+			let mStream
+			// TODO
+			/*
+			if (this.defaultBrowserBehaviour.hasFirefoxWebRTC()) {
+				mStream = video.mozCaptureStream();
+			}
+			*/
+			mStream = video.captureStream()
+
+			await this.meetingSession.audioVideo.startContentShare( mStream );
 			this.isVideoSharing = true
 			this.sendSystemMessage(Utils.getConstant('SYSTEM_COMMAND_IS_VIDEO_SHARING') + Utils.getConstant('COMMAND_DELIMITER') + true)
 		},
@@ -513,15 +528,15 @@ export default {
     },
 
 		setIsPdfSharing( value ){
-			this.isPdfSharing = (value === 'true') ? true : false
+			this.isPdfSharing = Utils.value2Boolean( value )
 		},
 
 		setIsVideoSharing( value ){
-			this.isVideoSharing = value
+			this.isVideoSharing = Utils.value2Boolean( value )
 		},
 
 		toggleSharedVideoPlay( value ){
-			this.isSharedVideoPlay = value
+			this.isSharedVideoPlay = Utils.value2Boolean( value )
 		},
 
 		// ###################################

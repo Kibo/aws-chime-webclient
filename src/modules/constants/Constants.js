@@ -115,6 +115,14 @@ export const ID_PREFIX_FOR_VIDEO_ELEMENT = "cz-kibo-meeting-chime-client-video-t
 export const ID_ELEMENT_FOR_PREZENTATION_CANVAS = "cz-kibo-meeting-chime-client-prezentation-canvas";
 
 /**
+ * The DOM ID element for video
+ *
+ * @constant
+ * @type {string}
+ */
+export const ID_ELEMENT_FOR_PREZENTATION_VIDEO = "cz-kibo-meeting-chime-client-prezentation-video";
+
+/**
  * Canvas Width (px)
  *
  * @constant

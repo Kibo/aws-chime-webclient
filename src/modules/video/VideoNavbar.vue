@@ -5,14 +5,20 @@
     <button class="btn btn-secondary" v-on:click.prevent="toggle()">{{isVideoPlay ? 'Stop' : 'Play' }}</button>
   </div>
 
+  <VideoPrezentation
+    v-if="$store.state.moderatorSetting.video"
+    v-bind:isVideoPlay="isVideoPlay"
+    v-bind:src="$store.state.moderatorSetting.video" />
+
 </template>
 
 <script>
 import Utils from "../tools/Utils.js"
+import VideoPrezentation from "./VideoPrezentation.vue"
 
 export default {
   components: {
-
+    VideoPrezentation
   },
   emits:['sendSystemMessage', 'sharedVideoPlay'],
   props: ['isNavbarVisible', 'isVideoPlay'],
