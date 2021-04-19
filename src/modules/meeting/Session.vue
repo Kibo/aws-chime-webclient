@@ -337,14 +337,13 @@ export default {
 			}
 
 			let mStream
-			// TODO
-			/*
-			if (this.defaultBrowserBehaviour.hasFirefoxWebRTC()) {
-				mStream = video.mozCaptureStream();
+			if( video.mozCaptureStream ){
+				mStream = video.mozCaptureStream(); // Firefox
+			}else{
+				mStream = video.captureStream()
 			}
-			*/
-			mStream = video.captureStream()
 
+			// @see Chrome bug - https://github.com/aws/amazon-chime-sdk-js/issues/1031
 			await this.meetingSession.audioVideo.startContentShare( mStream );
 			this.isVideoSharing = true
 			this.sendSystemMessage(Utils.getConstant('SYSTEM_COMMAND_IS_VIDEO_SHARING') + Utils.getConstant('COMMAND_DELIMITER') + true)

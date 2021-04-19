@@ -1,8 +1,9 @@
 <template>
   <video class="d-block hiddeVideoTile"
     preload="auto"
+    loop="true"
     crossOrigin="anonymous"
-    playsinline
+    playsinline="true"
     v-bind:id="utils.getConstant('ID_ELEMENT_FOR_PREZENTATION_VIDEO')"
     v-bind:width="utils.getSetting('VIDEO_INPUT_QUALITY_WIDTH')"
     v-bind:height="utils.getSetting('VIDEO_INPUT_QUALITY_HEIGHT')"
