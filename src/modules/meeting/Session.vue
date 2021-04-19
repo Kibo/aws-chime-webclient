@@ -325,11 +325,14 @@ export default {
 		},
 
 		stopSharingPDF(){
-			this.isPdfSharing = false
 			this.sendSystemMessage(Utils.getConstant('SYSTEM_COMMAND_IS_PDF_SHARING') + Utils.getConstant('COMMAND_DELIMITER') + false)
+			this.isPdfSharing = false
 		},
 
 		async startSharingVideo(){
+			this.isSharedVideoPlay = true
+			this.sendSystemMessage( Utils.getConstant('SYSTEM_COMMAND_SHARED_VIDEO_PLAY') + Utils.getConstant('COMMAND_DELIMITER') + true)
+
 			let video = document.getElementById(Utils.getConstant('ID_ELEMENT_FOR_PREZENTATION_VIDEO'))
 
 			if(!video){
@@ -345,11 +348,15 @@ export default {
 
 			// @see Chrome bug - https://github.com/aws/amazon-chime-sdk-js/issues/1031
 			await this.meetingSession.audioVideo.startContentShare( mStream );
+
 			this.isVideoSharing = true
 			this.sendSystemMessage(Utils.getConstant('SYSTEM_COMMAND_IS_VIDEO_SHARING') + Utils.getConstant('COMMAND_DELIMITER') + true)
 		},
 
 		stopSharingVideo(){
+			this.isSharedVideoPlay = false
+			this.sendSystemMessage( Utils.getConstant('SYSTEM_COMMAND_SHARED_VIDEO_PLAY') + Utils.getConstant('COMMAND_DELIMITER') + false)
+
 			this.isVideoSharing = false
 			this.sendSystemMessage(Utils.getConstant('SYSTEM_COMMAND_IS_VIDEO_SHARING') + Utils.getConstant('COMMAND_DELIMITER') + false)
 		},
