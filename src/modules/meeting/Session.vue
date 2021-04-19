@@ -6,7 +6,7 @@
 		<ul class="navbar-nav mr-auto">
 
 			<li class="nav-item"
-			v-if="utils.getSetting('IS_AUDIO_INPUT_DEVICE', role)">
+				v-if="utils.getSetting('IS_AUDIO_INPUT_DEVICE', role)">
 				<a class="nav-link" href="#"
 				v-bind:class="isAudio ? 'active' :''"
 				v-on:click.prevent="toggleAudio">
@@ -15,7 +15,7 @@
 			</li>
 
 			<li class="nav-item"
-			v-if="utils.getSetting('IS_VIDEO_INPUT_DEVICE', role)">
+				v-if="utils.getSetting('IS_VIDEO_INPUT_DEVICE', role)">
 				<a class="nav-link" href="#"
 				v-bind:class="isVideo ? 'active' :''"
 				v-on:click.prevent="toggleVideo">
@@ -24,7 +24,7 @@
 			</li>
 
 			<li class="nav-item"
-			v-if="utils.getSetting('CAN_SHARE_CONTENT', role)">
+				v-if="utils.getSetting('CAN_SHARE_CONTENT', role)">
 				<a class="nav-link" href="#"
 				v-bind:class="isShare ? 'active' :''"
 				v-on:click.prevent="toggleShare">
@@ -36,6 +36,15 @@
 				<a class="nav-link" href="#"
 				v-on:click.prevent="plugDevices">
 					<i class="fa fa-plug" aria-hidden="true"></i> Devices
+				</a>
+			</li>
+
+			<li class="nav-item"
+				v-if="utils.getSetting('SHOW_MODERATOR_PANEL', role)">
+				<a class="nav-link" href="#"
+				v-bind:class="isModeratorPanelVisible ? 'active' :''"
+				v-on:click.prevent="toggleModeratorPanel">
+					<i class="fa fa-desktop" aria-hidden="true"></i> Moderator
 				</a>
 			</li>
 
@@ -70,7 +79,7 @@
 	<div class="row">
 		<div class="col">
 			<ModeratorPanel
-				v-if="utils.getSetting('SHOW_MODERATOR_PANEL', role)"
+				v-if="isModeratorPanelVisible"
 				v-bind:attendeeManager="attendeeManager"
 				v-on:setPresenter="setPresenter"
 				v-on:unsetPresenter="unsetPresenter"
@@ -151,8 +160,8 @@
 
 <script>
 import AlertMessage from "../common/AlertMessage.vue"
-import ModeratorPanel from "./ModeratorPanel.vue"
-import ChatPanel from "./ChatPanel.vue"
+import ModeratorPanel from "../moderator/ModeratorPanel.vue"
+import ChatPanel from "../chat/ChatPanel.vue"
 import VideoTileContainer from "./VideoTileContainer.vue"
 import ContentShareObserver from "../observers/ContentShareObserver.vue"
 import AttendeePresenceObserver from "../observers/AttendeePresenceObserver.vue"
@@ -202,7 +211,9 @@ export default {
 				pdfPageIndex:0,
 
 				isVideoSharing:false,
-				isSharedVideoPlay:false
+				isSharedVideoPlay:false,
+
+				isModeratorPanelVisible:false
 			}
 	},
 
@@ -495,6 +506,10 @@ export default {
 
 		setFps(value){
 			this.$store.commit('moderatorSetting', {fps:value})
+		},
+
+		toggleModeratorPanel(){
+			this.isModeratorPanelVisible = !this.isModeratorPanelVisible
 		},
 
 		/*
