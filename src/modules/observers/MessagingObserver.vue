@@ -18,7 +18,8 @@ export default {
 		'setPdfPageIndex',
 		'pdfSharingChanged',
 		'videoSharingChanged',
-		'sharedVideoPlay'],
+		'sharedVideoPlay',
+		'isPublicChat'],
 
 	props: ['meetingSession','attendeeManager'],
 	data() {
@@ -109,6 +110,9 @@ export default {
 					break
 				case Utils.getConstant('SYSTEM_COMMAND_SHARED_VIDEO_PLAY'):
 					this.$emit('sharedVideoPlay', value)
+					break
+				case Utils.getConstant('CHAT_COMMAND_IS_PUBLIC_CHAT'):
+					this.$emit('isPublicChat', value)
 					break
 				default:
 					this.logger.warn( 'Unknown command ' +  command)

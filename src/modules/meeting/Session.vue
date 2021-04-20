@@ -88,6 +88,7 @@
 				v-on:fpsChanged="setFps"
 				v-on:backgroundChanged="setCanvasBg"
 				v-on:foregroundChanged="setCanvasFg"
+				v-on:isPublicChat="setIsPublicChat"
 				v-on:systemMessage="sendSystemMessage" />
 		</div>
 	</div>
@@ -154,7 +155,8 @@
 		v-on:setPdfPageIndex="setPdfPageIndex"
 		v-on:videoSharingChanged="setIsVideoSharing"
 		v-on:sharedVideoPlay="toggleSharedVideoPlay"
-		v-on:showChatMessage="showChatMessage" />
+		v-on:showChatMessage="showChatMessage"
+		v-on:isPublicChat="setIsPublicChat" />
 
 </template>
 
@@ -558,6 +560,10 @@ export default {
 
 		toggleSharedVideoPlay( value ){
 			this.isSharedVideoPlay = Utils.value2Boolean( value )
+		},
+
+		setIsPublicChat( value ){
+			this.$store.commit('moderatorSetting', {isPublicChat: Utils.value2Boolean( value ) })
 		},
 
 		// ###################################

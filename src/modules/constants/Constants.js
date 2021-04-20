@@ -8,7 +8,7 @@
  *
  * @see server.js
  */
-export const CRENDTIALS_TO_MEETING_URL = "http://localhost:3000/meeting/";
+export const CRENDTIALS_TO_MEETING_URL = "http://localhost:8080/meeting/";
 
 /**
  * The App main wrapper element ID.
@@ -337,6 +337,7 @@ export const SYSTEM_COMMAND_IS_VIDEO_SHARING = "isVideoSharing"
  * @type {string}
  */
 export const SYSTEM_COMMAND_SHARED_VIDEO_PLAY = "isSharedVideoPlay"
+
 /**
  * Chat command - sendMessage
  *
@@ -347,3 +348,26 @@ export const SYSTEM_COMMAND_SHARED_VIDEO_PLAY = "isSharedVideoPlay"
  * @type {string}
  */
 export const CHAT_COMMAND_SEND_MESSAGE = "sendMessage"
+
+/**
+ * Chat command - isPublicChat
+ *
+ * usage:
+ * isPublicChat#boolean
+ *
+ * @constant
+ * @type {string}
+ */
+export const CHAT_COMMAND_IS_PUBLIC_CHAT = "isPublicChat"
+
+// ## PUBLIC CHAT #################################
+
+/**
+ * Socket.io server for public chat
+ *
+ * Not required for internal chat. Used only if the moderator allows public chat.
+ *
+ * @constant
+ * @type {string}
+ */
+export const SOCKET_SERVER_URL = "localhost:3000"

@@ -151,7 +151,8 @@ export default {
 		'foregroundChanged',
 		'backgroundChanged',
 		'detachAttendee',
-		'unshareContent'],
+		'unshareContent',
+		'isPublicChat'],
 	props: ['attendeeManager'],
 	data() {
 			return {
@@ -253,7 +254,8 @@ export default {
 			* Public chat statuch changed - handler
 			*/
 			togglePublicChat(){
-				console.log('toggle public chat')
+				this.$emit('isPublicChat', this.isPublicChat )
+				this.$emit('systemMessage', Utils.getConstant('CHAT_COMMAND_IS_PUBLIC_CHAT') + Utils.getConstant('COMMAND_DELIMITER') + this.isPublicChat )
 			},
 	}
 }

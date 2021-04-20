@@ -1,6 +1,6 @@
 const express = require('express')
 const app = express()
-const port = 3000
+const port = 8080
 app.use(express.static('dist'))
 
 const AWS = require('aws-sdk');
@@ -23,50 +23,50 @@ app.get('/', (req, res) => {
 
 app.get('/meeting/:id/:pin/:name', async (req, res) => {
 	if(!MEETINGS.has(req.params.id)){
-		res.status(403).json()		
-		return	
+		res.status(403).json()
+		return
 	}
-		
+
 	if(!MEETINGS.get( req.params.id ).isActive){
 		res.status(403).json()
-		return	
+		return
 	}
-	
+
 	if( MEETINGS.get( req.params.id ).isLocked ){
 		res.status(403).json()
-		return		
+		return
 	}
-	
+
 	if(!PINS.has(req.params.pin)){
 		res.status(403).json()
-		return	
+		return
 	}
-	
+
 	let chimeCreateMeetingResponse
 	let chimeCreateAttendeeResponse
-	try{		
+	try{
 		chimeCreateMeetingResponse = await chime.createMeeting({
-			ClientRequestToken: MEETINGS.get( req.params.id ).id, 
-			ExternalMeetingId:MEETINGS.get( req.params.id ).title, 
+			ClientRequestToken: MEETINGS.get( req.params.id ).id,
+			ExternalMeetingId:MEETINGS.get( req.params.id ).title,
 			MediaRegion:MEETINGS.get( req.params.id ).region
 		}).promise();
-		
+
 		chimeCreateAttendeeResponse = await chime.createAttendee({
 			MeetingId: chimeCreateMeetingResponse.Meeting.MeetingId,
 			ExternalUserId: `${uuidv4().substring(0, 8)}#${req.params.name ? req.params.name : 'Joe'}`.substring(0, 64),
 		}).promise()
-		
+
 	}catch(e){
 		console.error(e)
-		res.status(500).json();		
-		return		
+		res.status(500).json();
+		return
 	}
-					 
+
 	res.status(200).json({
 		role: PINS.get(req.params.pin).role ,
-		meeting:chimeCreateMeetingResponse.Meeting, 
+		meeting:chimeCreateMeetingResponse.Meeting,
 		attendee:chimeCreateAttendeeResponse.Attendee});
-	return  
+	return
 })
 
 app.listen(port, () => {
