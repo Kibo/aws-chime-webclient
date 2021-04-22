@@ -2,9 +2,11 @@ const webpack = require('webpack');
 const path = require("path");
 const { VueLoaderPlugin } = require("vue-loader");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const package = require("./package.json");
+var banner = package.name + ' - ' + package.version;
 
 module.exports = (env = {}) => ({
-	watch: true,
+	watch: env.prod ? false : true,
 	mode: env.prod ? "production" : "development",
 	devtool: env.prod ? "source-map" : "cheap-module-eval-source-map",
 
@@ -66,6 +68,7 @@ module.exports = (env = {}) => ({
     new VueLoaderPlugin(),
     new MiniCssExtractPlugin({
       filename: "[name].css"
-    })
+    }),
+		new webpack.BannerPlugin( banner )
   ]
 });
