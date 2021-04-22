@@ -8,7 +8,7 @@
  *
  * @see server.js
  */
-export const CRENDTIALS_TO_MEETING_URL = "http://localhost:8080/meeting/";
+export const CRENDTIALS_TO_MEETING_URL = "http://localhost:3000/gateway/";
 
 /**
  * The App main wrapper element ID.

@@ -5,7 +5,7 @@
 AWS Chime webclient using Vue.js.
 
 ## Version
-- 0.8.0
+- 0.9.0
 
 - Log as moderator (You can change the role 'Presenter' in Moderator panel.)
 
@@ -35,7 +35,7 @@ $ npm run build
 ```
 $ npm run start
 ```
-Open http://localhost:8080 in your browser.
+Open http://localhost:3000 in your browser.
 
 Passwords (see PINS in [server.js](https://github.com/Kibo/aws-chime-webclient/blob/master/server.js)):
 - "lektor"

@@ -1,6 +1,6 @@
 const express = require('express')
 const app = express()
-const port = 8080
+const port = 3000
 app.use(express.static('dist'))
 
 const AWS = require('aws-sdk');
@@ -21,7 +21,7 @@ app.get('/', (req, res) => {
   res.sendFile('demo/meeting.html', {root: __dirname })
 })
 
-app.get('/meeting/:id/:pin/:name', async (req, res) => {
+app.get('/gateway/:id/:pin/:name', async (req, res) => {
 	if(!MEETINGS.has(req.params.id)){
 		res.status(403).json()
 		return
