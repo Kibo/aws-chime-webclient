@@ -1,13 +1,13 @@
 <template>
 
-	<nav class="navbar sticky-top navbar-expand-sm navbar-light bg-light mb-1">
+	<nav class="navbar sticky-top navbar-expand-sm navbar-light bg-info mb-1">
 		<span class="navbar-brand d-none d-sm-block" >{{$store.state.title}}</span>
 
 		<ul class="navbar-nav mr-auto">
 
 			<li class="nav-item"
 				v-if="utils.getSetting('IS_AUDIO_INPUT_DEVICE', role)">
-				<a class="nav-link" href="#"
+				<a class="nav-link text-light" href="#"
 				v-bind:class="isAudio ? 'active' :''"
 				v-on:click.prevent="toggleAudio">
 					<i class="fa fa-microphone" aria-hidden="true"></i> Voice
@@ -16,7 +16,7 @@
 
 			<li class="nav-item"
 				v-if="utils.getSetting('IS_VIDEO_INPUT_DEVICE', role)">
-				<a class="nav-link" href="#"
+				<a class="nav-link text-light" href="#"
 				v-bind:class="isVideo ? 'active' :''"
 				v-on:click.prevent="toggleVideo">
 					<i class="fa fa-video-camera" aria-hidden="true"></i> Video
@@ -25,7 +25,7 @@
 
 			<li class="nav-item"
 				v-if="utils.getSetting('CAN_SHARE_CONTENT', role)">
-				<a class="nav-link" href="#"
+				<a class="nav-link text-light" href="#"
 				v-bind:class="isShare ? 'active' :''"
 				v-on:click.prevent="toggleShare">
 					<i class="fa fa-share-alt" aria-hidden="true"></i> Share
@@ -33,7 +33,7 @@
 			</li>
 
 			<li class="nav-item">
-				<a class="nav-link" href="#"
+				<a class="nav-link text-light" href="#"
 				v-on:click.prevent="plugDevices">
 					<i class="fa fa-plug" aria-hidden="true"></i> Devices
 				</a>
@@ -41,7 +41,7 @@
 
 			<li class="nav-item"
 				v-if="utils.getSetting('SHOW_MODERATOR_PANEL', role)">
-				<a class="nav-link" href="#"
+				<a class="nav-link text-light" href="#"
 				v-bind:class="isModeratorPanelVisible ? 'active' :''"
 				v-on:click.prevent="toggleModeratorPanel">
 					<i class="fa fa-desktop" aria-hidden="true"></i> Moderator
@@ -49,7 +49,7 @@
 			</li>
 
 			<li class="nav-item">
-				<a class="nav-link" href="#"
+				<a class="nav-link text-light" href="#"
 				v-on:click.prevent="$emit('endSession')">
 					<i class="fa fa-sign-out" aria-hidden="true"></i> Leave
 				</a>

@@ -8,15 +8,15 @@ var banner = package.name + ' - ' + package.version;
 module.exports = (env = {}) => ({
 	watch: env.prod ? false : true,
 	mode: env.prod ? "production" : "development",
-	//devtool: env.prod ? "source-map" : "cheap-module-eval-source-map",
+	devtool: env.prod ? "source-map" : "cheap-module-eval-source-map",
 
 	entry: {
 		client: './src/main.js'
 	},
 	output: {
 		filename: '[name]-chime.js',
-		path: path.resolve(__dirname, "./dist"),
-		publicPath: "/"
+		path: path.resolve(__dirname, "./dist/js/chime/"),
+		publicPath: "/js/chime/"
 	},
 	resolve: {
 		alias: {

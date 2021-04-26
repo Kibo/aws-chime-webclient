@@ -58,7 +58,7 @@ $ npm run test
 
 ### Screens
 
-<img src="https://raw.githubusercontent.com/Kibo/aws-chime-webclient/master/src/img/screens/configure.jpg" alt="Configure">
-<img src="https://raw.githubusercontent.com/Kibo/aws-chime-webclient/master/src/img/screens/prezentation1.jpg" alt="Session">
-<img src="https://raw.githubusercontent.com/Kibo/aws-chime-webclient/master/src/img/screens/prezentation2.jpg" alt="Session">
-<img src="https://raw.githubusercontent.com/Kibo/aws-chime-webclient/master/src/img/screens/prezentation3.jpg" alt="Session">
+<img src="https://raw.githubusercontent.com/Kibo/aws-chime-webclient/master/src/img/screens/login.jpg" alt="Configure">
+<img src="https://raw.githubusercontent.com/Kibo/aws-chime-webclient/master/src/img/screens/devices.jpg" alt="Session">
+<img src="https://raw.githubusercontent.com/Kibo/aws-chime-webclient/master/src/img/screens/pdf.jpg" alt="Session">
+<img src="https://raw.githubusercontent.com/Kibo/aws-chime-webclient/master/src/img/screens/video.jpg" alt="Session">

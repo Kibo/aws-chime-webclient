@@ -10,12 +10,14 @@
   </div>
 
   <div class="row">
-    <div class="col bg-dark mb-1">
-      <canvas class="d-block mx-auto my-2 bg-chime"
-        v-bind:id="utils.getConstant('ID_ELEMENT_FOR_PREZENTATION_CANVAS')"
-        v-bind:width="utils.getConstant('PREZENTATION_CANVAS_WIDTH')"
-        v-bind:height="utils.getConstant('PREZENTATION_CANVAS_HEIGHT')">
-      </canvas>
+    <div class="col">
+      <div class="bg-dark">
+        <canvas class="d-block mx-auto my-2 bg-chime"
+          v-bind:id="utils.getConstant('ID_ELEMENT_FOR_PREZENTATION_CANVAS')"
+          v-bind:width="utils.getConstant('PREZENTATION_CANVAS_WIDTH')"
+          v-bind:height="utils.getConstant('PREZENTATION_CANVAS_HEIGHT')">
+        </canvas>
+      </div>
     </div>
   </div>
 </template>

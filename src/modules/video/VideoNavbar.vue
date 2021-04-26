@@ -2,7 +2,7 @@
 
   <div class="btn-group btn-group-sm mx-auto"
     v-if="isNavbarVisible">
-    <button class="btn btn-secondary" v-on:click.prevent="toggle()">{{isVideoPlay ? 'Stop' : 'Play' }}</button>
+    <button class="btn btn-success" v-on:click.prevent="toggle()">{{isVideoPlay ? 'Stop' : 'Play' }}</button>
   </div>
 
   <VideoPrezentation

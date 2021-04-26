@@ -21,7 +21,7 @@ app.get('/', (req, res) => {
   res.sendFile('demo/meeting.html', {root: __dirname })
 })
 
-app.get('/gateway/:id/:pin/:name', async (req, res) => {
+app.get('/rooms/gateway/:id/:pin/:name', async (req, res) => {
 	if(!MEETINGS.has(req.params.id)){
 		res.status(403).json()
 		return

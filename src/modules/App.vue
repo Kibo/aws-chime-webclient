@@ -3,6 +3,7 @@
 	<div v-if="status === utils.getConstant( 'APP_STATUS_LOGIN' )">
 		<LoginForm
 			v-bind:meeting="meeting"
+			v-bind:title="title"
 			v-on:credentials="createMeetingSession" />
 	</div>
 
@@ -98,16 +99,7 @@ export default {
 }
 </script>
 
-<style lang="stylus">
-html {
-  height: 100%;
-}
-body {
-	min-height: 100%;
-	background: rgb(63,181,30);
-	background: linear-gradient(180deg, rgba(63,181,30,1) 20%, rgba(14,117,0,1) 80%);
-}
-
+<style lang="stylus" module>
 .hiddeVideoTile {
 	position:fixed;
   top:0;

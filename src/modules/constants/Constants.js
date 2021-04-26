@@ -8,7 +8,7 @@
  *
  * @see server.js
  */
-export const CRENDTIALS_TO_MEETING_URL = "http://localhost:3000/gateway/";
+export const CRENDTIALS_TO_MEETING_URL = "http://localhost:3000/rooms/gateway/";
 
 /**
  * The App main wrapper element ID.
@@ -370,4 +370,4 @@ export const CHAT_COMMAND_IS_PUBLIC_CHAT = "isPublicChat"
  * @constant
  * @type {string}
  */
-export const SOCKET_SERVER_URL = "localhost:3000"
+export const SOCKET_SERVER_URL = "http://localhost:3000"

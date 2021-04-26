@@ -39,7 +39,7 @@
 											<label>Foreground</label>
 											<div class="input-group input-group-sm mb-3">
 													<div class="input-group-prepend">
-														<span class="input-group-text">{{$store.state.moderatorSetting.foreground ? $store.state.moderatorSetting.foreground : 'Empty slot' }}</span>
+														<span class="input-group-text bg-info text-light">{{$store.state.moderatorSetting.foreground ? $store.state.moderatorSetting.foreground : 'Empty slot' }}</span>
 													</div>
 													<input type="text" class="form-control" placeholder="Image url | empty"
 														v-model.trim="foreground" >
@@ -55,7 +55,7 @@
 											<label>Background</label>
 											<div class="input-group input-group-sm mb-3">
 													<div class="input-group-prepend">
-														<span class="input-group-text">{{$store.state.moderatorSetting.background ? $store.state.moderatorSetting.background : 'Empty slot'}}</span>
+														<span class="input-group-text bg-info text-light">{{$store.state.moderatorSetting.background ? $store.state.moderatorSetting.background : 'Empty slot'}}</span>
 													</div>
 													<input type="text" class="form-control" placeholder="Image url | empty"
 														v-model.trim="background">
@@ -74,7 +74,7 @@
 											<label>PDF</label>
 											<div class="input-group input-group-sm mb-3">
 													<div class="input-group-prepend">
-														<span class="input-group-text">{{$store.state.moderatorSetting.pdf ? $store.state.moderatorSetting.pdf : 'Empty slot'}}</span>
+														<span class="input-group-text bg-info text-light">{{$store.state.moderatorSetting.pdf ? $store.state.moderatorSetting.pdf : 'Empty slot'}}</span>
 													</div>
 													<input type="text" class="form-control" placeholder="PDF url | empty"
 														v-model.trim="pdf">
@@ -90,7 +90,7 @@
 											<label>Video</label>
 											<div class="input-group input-group-sm mb-3">
 													<div class="input-group-prepend">
-														<span class="input-group-text">{{$store.state.moderatorSetting.video ? $store.state.moderatorSetting.video : 'Empty slot'}}</span>
+														<span class="input-group-text bg-info text-light">{{$store.state.moderatorSetting.video ? $store.state.moderatorSetting.video : 'Empty slot'}}</span>
 													</div>
 													<input type="text" class="form-control" placeholder="Video url | empty"
 														v-model.trim="video">
@@ -109,7 +109,7 @@
 											<label>Fps</label>
 											<div class="input-group input-group-sm mb-3">
 													<div class="input-group-prepend">
-														<span class="input-group-text">Fps: {{$store.state.moderatorSetting.fps}}</span>
+														<span class="input-group-text bg-info text-light">Fps: {{$store.state.moderatorSetting.fps}}</span>
 													</div>
 													<input type="number" step="1" min="1" max="60" class="form-control" placeholder="Number: 1 - 60"
 														v-model.trim="fps" >

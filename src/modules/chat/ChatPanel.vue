@@ -1,6 +1,6 @@
 <template>
-	<div class="card mb-1">
-		<div class="card-header">
+	<div class="card mb-1 mt-0">
+		<div class="card-header bg-info text-light">
 			Chat panel
 		</div>
 		<div class="card-body p-1">
@@ -12,7 +12,7 @@
 					v-bind:alerts="chatMessages" />
 			</div>
 
-			<div class="input-group mb-3">
+			<div class="input-group">
 				  <input v-model.trim="message" type="text" class="form-control" maxlength="256">
 				  <div class="input-group-append">
 				    <button v-on:click.prevent="sendMessage" class="btn btn-success" type="button">Send</button>

@@ -2,8 +2,8 @@
 
   <div class="btn-group btn-group-sm mx-auto"
     v-if="isNavbarVisible">
-    <button class="btn btn-secondary" v-on:click.prevent="PDFPrevPage()">Prev</button>
-    <button class="btn btn-secondary" v-on:click.prevent="PDFNextPage()">Next</button>
+    <button class="btn btn-success" v-on:click.prevent="PDFPrevPage()">Prev</button>
+    <button class="btn btn-success" v-on:click.prevent="PDFNextPage()">Next</button>
   </div>
 
   <PDFDocument
