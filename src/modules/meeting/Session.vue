@@ -31,14 +31,7 @@
 					<i class="fa fa-share-alt" aria-hidden="true"></i> Share
 				</a>
 			</li>
-
-			<li class="nav-item">
-				<a class="nav-link text-light" href="#"
-				v-on:click.prevent="plugDevices">
-					<i class="fa fa-plug" aria-hidden="true"></i> Devices
-				</a>
-			</li>
-
+			
 			<li class="nav-item"
 				v-if="utils.getSetting('SHOW_MODERATOR_PANEL', role)">
 				<a class="nav-link text-light" href="#"
@@ -395,14 +388,6 @@ export default {
 			this.stopSharing()
 			this.meetingSession.audioVideo.stop()
 			this.logger.warn('a user leave the session')
-		},
-
-		/*
-		 * User click to Devices button
-		 */
-		plugDevices(){
-			this.logger.info('a Attendee click to Configure Devices button.')
-			this.$emit("configureDevices")
 		},
 
 		/*

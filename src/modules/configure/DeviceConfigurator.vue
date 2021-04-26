@@ -3,7 +3,7 @@
 		<div class="row mt-4">
 			<div class="col col-md-6 offset-md-3">
 				<div class="card ">
-					<div class="card-header bg-info text-light">Configure devices</div>	
+					<div class="card-header bg-info text-light">Configure devices</div>
 					<div class="card-body">
 						<AudioOutputDevice
 							v-bind:audioOutputDevices="audioOutputDevices"
