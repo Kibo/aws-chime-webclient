@@ -58,17 +58,17 @@ $ npm run test
 
 ### Screens
 
-** Login **
+**Login**
 <img src="https://raw.githubusercontent.com/Kibo/aws-chime-webclient/master/src/img/screens/login.jpg" alt="Configure">
 <hr />
 
-** Devices **
+**Devices**
 <img src="https://raw.githubusercontent.com/Kibo/aws-chime-webclient/master/src/img/screens/devices.jpg" alt="Session">
 <hr />
 
-** Prezentation **
+**Prezentation**
 <img src="https://raw.githubusercontent.com/Kibo/aws-chime-webclient/master/src/img/screens/pdf.jpg" alt="Session">
 <hr />
 
-** Video **
+**Video**
 <img src="https://raw.githubusercontent.com/Kibo/aws-chime-webclient/master/src/img/screens/video.jpg" alt="Session">
