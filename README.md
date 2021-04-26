@@ -44,7 +44,7 @@ Passwords (see PINS in [server.js](https://github.com/Kibo/aws-chime-webclient/b
 - "broadcaster"
 
 ### Roles
-- moderator: can set presenter, set foreground, background, prezentation, fps, ...
+- moderator: can set presenter, foreground, background, prezentation, video, fps, ...
 - lektor: can share audio, video and content, can chat
 - listener: can listen, can chat
 - broadcaster: can listen
