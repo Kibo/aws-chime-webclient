@@ -5,7 +5,7 @@
 AWS Chime webclient using Vue.js.
 
 ## Version
-- 0.9.0
+- 0.9.4
 
 - Log as moderator (You can change the role 'Presenter' in Moderator panel.)
 
