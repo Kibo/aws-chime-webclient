@@ -14,4 +14,4 @@ const app = createApp(App, {
 });
 
 app.use(Store)
-const vm = app.mount(`#${Constant.ID_APP}`)
+app.mount(`#${Constant.ID_APP}`)

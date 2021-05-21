@@ -35,18 +35,15 @@ export default {
 		*/
 		onConnect(){
 			this.socket.emit('room', this.room);
+			console.log( 'Connecting to room: ' + this.room )
 		},
 
 		/*
 		* Socket.io - on message handler
 		*/
 		onMessage( msg  ){
-			let room = msg.split('|')[0]
-			let client = msg.split('|')[1]
-			let recipient = msg.split('|')[2]
-			let text = msg.split('|')[3]
-
-			let message = `${client}: ${text}`
+			let messageObj = JSON.parse( msg )
+			let message = `${messageObj.nickname}: ${messageObj.text}`
 			this.messages.push( {text:message, type:"alert-secondary"} )
 		}
 	}

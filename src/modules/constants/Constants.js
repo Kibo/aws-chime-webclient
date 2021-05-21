@@ -370,4 +370,4 @@ export const CHAT_COMMAND_IS_PUBLIC_CHAT = "isPublicChat"
  * @constant
  * @type {string}
  */
-export const SOCKET_SERVER_URL = "http://localhost:3000"
+export const SOCKET_SERVER_URL = "https://rooms.cz"

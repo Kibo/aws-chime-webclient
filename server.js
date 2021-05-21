@@ -9,7 +9,7 @@ const chime = new AWS.Chime({region: 'us-east-1'});
 chime.endpoint = new AWS.Endpoint('https://service.chime.aws.amazon.com');
 
 const MEETINGS = new Map()
-MEETINGS.set('abcdefg', {id:'abcdefg', title:"Demo", isActive: true, isLocked:false, region:"eu-west-1"})
+MEETINGS.set('60045dfb57a5d5294c5ca09f', {id:'60045dfb57a5d5294c5ca09f', title:"Demo", isActive: true, isLocked:false, region:"eu-west-1"})
 
 const PINS = new Map()
 PINS.set('lektor', {id:'1', role:"lektor"})
